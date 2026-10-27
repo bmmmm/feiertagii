@@ -1,14 +1,39 @@
 <!doctype html>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <html lang="de">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Gesetzliche Feiertage je Bundesland, die auf Montag bis Freitag fallen – 1991 bis 2070, interaktiv.">
 <title>Werktags-Feiertage Deutschland</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="canonical" href="https://bmmmm.github.io/feiertagii/">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#f2f4f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#101216" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="de_DE">
+<meta property="og:site_name" content="feiertagii">
+<meta property="og:title" content="Werktags-Feiertage – welche Feiertage fallen auf Mo–Fr?">
+<meta property="og:description" content="Alle 16 Bundesländer, 1991 bis 2070: wie viele gesetzliche Feiertage auf einen Arbeitstag fallen, wann der nächste kommt und was das Wochenende schluckt.">
+<meta property="og:url" content="https://bmmmm.github.io/feiertagii/">
+<meta property="og:image" content="https://bmmmm.github.io/feiertagii/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Schriftzug „Werktags-Feiertage“ neben einem roten Abreißkalenderblatt und einer Strichreihe aus Arbeitstagen.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="fonts/barlow-condensed-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/ibm-plex-sans-var.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+/* Schriften liegen selbst gehostet unter fonts/ (SIL OFL 1.1, Latin-Subset) – keine Anfrage an Dritte */
+@font-face{font-family:"Barlow Condensed";font-style:normal;font-weight:500;font-display:swap;src:url(fonts/barlow-condensed-500.woff2) format("woff2")}
+@font-face{font-family:"Barlow Condensed";font-style:normal;font-weight:600;font-display:swap;src:url(fonts/barlow-condensed-600.woff2) format("woff2")}
+@font-face{font-family:"Barlow Condensed";font-style:normal;font-weight:700;font-display:swap;src:url(fonts/barlow-condensed-700.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/ibm-plex-mono-400.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:500;font-display:swap;src:url(fonts/ibm-plex-mono-500.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:600;font-display:swap;src:url(fonts/ibm-plex-mono-600.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-style:normal;font-weight:400 600;font-display:swap;src:url(fonts/ibm-plex-sans-var.woff2) format("woff2")}
 /* Layout: Wandkalender-Logik – rote Tage sind Feiertage. Antwort mit Abreißblatt oben, dann Länderkarte + Rangliste, Jahresblatt, Matrix */
 :root{
   --paper:#f2f4f7;--panel:#ffffff;--ink:#14171c;--muted:#5b6471;--rule:#dbe0e6;--wk:#98a1ad;
@@ -207,6 +232,11 @@ tfoot th.c1{font:500 11px var(--f-mono);text-transform:uppercase;letter-spacing:
 .notes{font-size:13.5px;color:var(--muted);max-width:78ch}
 .notes h2{font-size:22px;color:var(--ink);margin-bottom:8px}
 .notes ul{margin:0;padding-left:18px;display:grid;gap:4px}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;border-top:2px solid var(--ink);padding-top:14px;font:500 12px/1.5 var(--f-mono);color:var(--muted)}
+.foot nav{display:flex;flex-wrap:wrap;gap:4px 18px}
+.foot a{color:inherit;text-decoration:underline;text-decoration-color:var(--rule);text-underline-offset:3px}
+.foot a:hover{color:var(--red-ink);text-decoration-color:currentColor}
+.foot a:focus-visible{outline:2px solid var(--red-ink);outline-offset:2px}
 
 @keyframes rise{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 .anim{animation:rise .32s ease both}
@@ -295,6 +325,16 @@ tfoot th.c1{font:500 11px var(--f-mono);text-transform:uppercase;letter-spacing:
       <li>Alle Termine werden aus den Feiertagsgesetzen berechnet (Stand Oktober 2026). Jahre ab 2027 sind eine Projektion nach heutiger Rechtslage; künftige Gesetzesänderungen sind nicht absehbar.</li>
     </ul>
   </section>
+
+  <footer class="foot">
+    <span>feiertagii · berechnet alles im Browser, ohne Cookies und ohne Tracking</span>
+    <nav aria-label="Projekt">
+      <a href="https://github.com/bmmmm/feiertagii">Quelltext</a>
+      <a href="https://github.com/bmmmm/feiertagii/issues">Fehler melden</a>
+      <a href="https://github.com/bmmmm/feiertagii/blob/main/LICENSE">GPL-3.0</a>
+      <a href="https://ko-fi.com/bmabma">Ko-fi</a>
+    </nav>
+  </footer>
 </div>
 
 <script>

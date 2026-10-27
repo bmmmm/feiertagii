@@ -1,0 +1,25 @@
+name: ci
+
+# Forgejo-Seite der Prüfung: baut und prüft die Seite bei jedem PR und Push auf main,
+# mit denselben zwei Skripten wie .github/workflows/pages.yml – nur ohne Deploy.
+# Sobald .forgejo/workflows/ existiert, ignoriert Forgejo .github/workflows/ ganz;
+# die laufen nur im GitHub-Spiegel.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  site:
+    runs-on: docker
+    container:
+      image: data.forgejo.org/oci/node:24-bookworm
+    steps:
+      # Auf einen Commit gepinnt wie in den .github-Workflows. Dependabot sieht .forgejo/
+      # nicht – neuere Tags von Hand prüfen: https://data.forgejo.org/actions/checkout
+      - uses: https://data.forgejo.org/actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Seite zusammenstellen
+        run: scripts/build-site.sh _site
+      - name: Seite prüfen
+        run: scripts/check-site.sh _site

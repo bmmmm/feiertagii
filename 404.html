@@ -1,0 +1,39 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Seite nicht gefunden – Werktags-Feiertage</title>
+<!-- GitHub Pages liefert diese Datei unter jedem unbekannten Pfad aus: Verweise deshalb über /feiertagii/, nie relativ -->
+<link rel="icon" href="/feiertagii/favicon.ico" sizes="32x32">
+<link rel="icon" type="image/svg+xml" href="/feiertagii/favicon.svg">
+<style>
+@font-face{font-family:"Barlow Condensed";font-weight:700;font-display:swap;src:url(/feiertagii/fonts/barlow-condensed-700.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:500;font-display:swap;src:url(/feiertagii/fonts/ibm-plex-mono-500.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-weight:400 600;font-display:swap;src:url(/feiertagii/fonts/ibm-plex-sans-var.woff2) format("woff2")}
+:root{--paper:#f2f4f7;--panel:#fff;--ink:#14171c;--muted:#5b6471;--rule:#dbe0e6;--red:#c8102e;--on-red:#fff;--red-ink:#a30c25}
+@media (prefers-color-scheme:dark){:root{--paper:#101216;--panel:#191c21;--ink:#e8ebef;--muted:#97a0ac;--rule:#2a2f37;--red:#ef4a5d;--on-red:#17080b;--red-ink:#ff7d8b;color-scheme:dark}}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--paper);color:var(--ink);font:16px/1.55 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+main{display:flex;flex-wrap:wrap;align-items:center;gap:28px 40px;padding:32px;max-width:760px}
+main>div:last-child{flex:1 1 320px}
+.sheet{width:150px;background:var(--red);color:var(--on-red);border-radius:5px 5px 10px 10px;text-align:center;padding:28px 12px 18px;position:relative}
+.sheet::before{content:"";position:absolute;left:12px;right:12px;top:10px;height:7px;background:radial-gradient(circle,var(--paper) 2.6px,transparent 3.1px) 0 0/14px 7px space no-repeat}
+.n{font:700 92px/.9 "Barlow Condensed","Arial Narrow",sans-serif}
+.l{font:500 12px "IBM Plex Mono",ui-monospace,monospace;text-transform:uppercase;letter-spacing:.14em}
+h1{font:700 44px/.95 "Barlow Condensed","Arial Narrow",sans-serif;text-transform:uppercase;margin:0}
+p{margin:12px 0 0;color:var(--muted);max-width:40ch}
+a{color:var(--red-ink);font-weight:600}
+</style>
+</head>
+<body>
+<main>
+  <div class="sheet" aria-hidden="true"><div class="l">Kein Eintrag</div><div class="n">404</div></div>
+  <div>
+    <h1>Diesen Tag gibt es nicht</h1>
+    <p>Die Seite unter dieser Adresse existiert nicht. Die Übersicht der Werktags-Feiertage liegt hier: <a href="/feiertagii/">bmmmm.github.io/feiertagii</a></p>
+  </div>
+</main>
+</body>
+</html>

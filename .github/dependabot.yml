@@ -1,0 +1,19 @@
+# Statische Seite ohne Build und ohne Pakete: nur die Actions werden aktuell gehalten.
+# Dependabot-PRs sind Signale – lokal übernehmen und auf beide Remotes pushen,
+# nie im GitHub-UI mergen (Forgejo ist die Quelle).
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: chore(deps)
+    labels:
+      - dependencies
+    cooldown:
+      default-days: 3
+    groups:
+      actions:
+        patterns:
+          - "*"
