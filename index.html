@@ -924,7 +924,7 @@ function renderTakt(){
  s+=`<rect class="hit" x="0" y="0" width="${W}" height="${H}"/></svg>`;
  el.innerHTML=s;
  TKG={VY,n,X,cw,lw,yA,rh,hA,yB,lh,hB,evH,W,H,lines,i0,narrow,land:S.land};tovKey='';
- $('tkHint').textContent=`Oben je Land und Jahr die Zahl der Feiertage ${tkMetric==='wk'?'auf Mo–Fr':'am Wochenende'}, dunkler = mehr; Signets am Rand markieren Fahrplanwechsel (Gesetzesänderungen). Unten der Bildfahrplan: jede Linie läuft durch die Jahre über ihren Wochentag – feste Termine wandern jedes Jahr einen Tag weiter, Ostertermine bleiben auf ihrer Spur. Jahr antippen wählt es, Linie antippen verfolgt sie.`;
+ $('tkHint').textContent=`Oben je Land und Jahr die Zahl der Feiertage ${tkMetric==='wk'?'auf Mo–Fr':'am Wochenende'}, kräftiger = mehr; Signets am Rand markieren Fahrplanwechsel (Gesetzesänderungen). Unten der Bildfahrplan: jede Linie läuft durch die Jahre über ihren Wochentag – feste Termine wandern jedes Jahr einen Tag weiter, Ostertermine bleiben auf ihrer Spur. Jahr antippen wählt es, Linie antippen verfolgt sie.`;
  renderTov();updateTkInfo();
 }
 let tovKey='';const tovC={};
@@ -1034,7 +1034,17 @@ document.addEventListener('pointerout',e=>{if(!e.relatedTarget)setHover(null,nul
 document.addEventListener('focusin',e=>hoverFrom(e.target));
 document.addEventListener('focusout',e=>{if(!e.relatedTarget)setHover(null,null);});
 
+// Fokus über das Neuzeichnen retten: gleiches Element (gleicher Bereich, gleiche data-Attribute) wieder fokussieren
+function focusKey(){const e=document.activeElement;if(!e||e===document.body)return null;const c=e.closest('[id]');if(!c)return null;
+ if(e.id)return '#'+e.id;
+ const at=['data-pick','data-h','data-l','data-k','data-ex'].filter(a=>e.hasAttribute(a)).map(a=>`[${a}="${e.getAttribute(a)}"]`).join('');
+ return at?`#${c.id} ${e.tagName.toLowerCase()}${at}`:null;}
 function renderAll(){
+ const fk=focusKey();
+ renderAll2();
+ if(fk&&!document.activeElement.closest('[id]')){const e=document.querySelector(fk);if(e)e.focus({preventScroll:true});}
+}
+function renderAll2(){
  computeLA();
  $('state').value=S.land;$('yv').textContent=S.jahr;$('yprev').disabled=S.jahr<=YMIN;$('ynext').disabled=S.jahr>=YMAX;
  document.querySelectorAll('.y').forEach(e=>e.textContent=S.jahr);document.querySelectorAll('.sn').forEach(e=>e.textContent=stName(S.land));
