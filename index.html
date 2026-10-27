@@ -337,6 +337,52 @@ tfoot th.c1{font:500 11px var(--f-mono);text-transform:uppercase;letter-spacing:
   </footer>
 </div>
 
+<script id="feiertage-daten">
+// Rechtslage, rein rechnerisch und ohne DOM – die einzige Quelle dafür, welcher Tag wo frei ist.
+// Jeder Feiertag hat eine feste id. Geprüft gegen tests/golden-holidays.txt (node tests/holidays.test.mjs).
+(function(g){
+const LAENDER=['SH','MV','HB','HH','BE','NW','NI','ST','BB','RP','HE','TH','SN','SL','BW','BY'];
+const pad=n=>String(n).padStart(2,'0');
+const addD=(d,n)=>new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);
+const key=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const XNOTE='Kein gesetzlicher Feiertag, hier optional für alle Länder als frei gewertet.';
+// Gregorianische Osterformel (Meeus/Jones/Butcher)
+function easter(y){const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),kk=c%4,l=(32+2*e+2*i-h-kk)%7,m=Math.floor((a+11*h+22*l)/451),x=h+l-7*m+114;return new Date(y,Math.floor(x/31)-1,(x%31)+1);}
+// holidays(y, {rm,ha,sv}) → [{id, n, d, k, full, reg, note, x?}], nach Datum sortiert.
+// full: Länder, in denen der Tag landesweit gilt; reg: nur in Teilen des Landes (zählt nicht in Summen).
+function holidays(y,ex){
+ ex=ex||{};
+ const E=easter(y),L=[],D=(m,d)=>new Date(y,m-1,d),ALL=LAENDER;
+ const add=(id,n,d,full,reg,note)=>L.push({id,n,d,full,reg:reg||[],note:note||'',k:key(d)});
+ add('neujahr','Neujahr',D(1,1),ALL);
+ add('drei-koenige','Heilige Drei Könige',D(1,6),y>=1993?['BW','BY','ST']:['BW','BY']);
+ const fr=[];if(y>=2019)fr.push('BE');if(y>=2023)fr.push('MV');if(fr.length)add('frauentag','Internationaler Frauentag',D(3,8),fr);
+ add('karfreitag','Karfreitag',addD(E,-2),ALL);
+ add('ostersonntag','Ostersonntag',E,['BB'],[],'Nur Brandenburg führt ihn ausdrücklich als gesetzlichen Feiertag.');
+ add('ostermontag','Ostermontag',addD(E,1),ALL);
+ add('tag-der-arbeit','Tag der Arbeit',D(5,1),ALL);
+ if(y===2020||y===2025)add('befreiung','Tag der Befreiung',D(5,8),['BE'],[],'Einmaliger Feiertag in Berlin.');
+ add('himmelfahrt','Christi Himmelfahrt',addD(E,39),ALL);
+ add('pfingstsonntag','Pfingstsonntag',addD(E,49),['BB'],[],'Nur Brandenburg führt ihn ausdrücklich als gesetzlichen Feiertag.');
+ add('pfingstmontag','Pfingstmontag',addD(E,50),ALL);
+ add('fronleichnam','Fronleichnam',addD(E,60),['BW','BY','HE','NW','RP','SL'],['SN','TH'],'In Sachsen und Thüringen nur in einzelnen Gemeinden.');
+ add('friedensfest','Augsburger Friedensfest',D(8,8),[],['BY'],'Gilt nur im Stadtgebiet Augsburg.');
+ add('mariae-himmelfahrt','Mariä Himmelfahrt',D(8,15),['SL'],['BY'],'In Bayern nur in Gemeinden mit überwiegend katholischer Bevölkerung.');
+ if(y>=2019)add('weltkindertag','Weltkindertag',D(9,20),['TH']);
+ add('einheit','Tag der Deutschen Einheit',D(10,3),ALL);
+ add('reformationstag','Reformationstag',D(10,31),y===2017?ALL:y>=2018?['BB','MV','SN','ST','TH','HB','HH','NI','SH']:['BB','MV','SN','ST','TH'],[],y===2017?'2017 einmalig bundesweit zum 500. Reformationsjubiläum.':'');
+ add('allerheiligen','Allerheiligen',D(11,1),['BW','BY','NW','RP','SL']);
+ let b=D(11,22);while(b.getDay()!==3)b=addD(b,-1);add('buss-und-bettag','Buß- und Bettag',b,y<1995?ALL:['SN'],[],y<1995?'Bis 1994 bundesweit, seit 1995 nur noch in Sachsen.':'');
+ add('weihnachten-1','1. Weihnachtstag',D(12,25),ALL);
+ add('weihnachten-2','2. Weihnachtstag',D(12,26),ALL);
+ if(ex.rm){add('rosenmontag','Rosenmontag',addD(E,-48),ALL,[],XNOTE+' Im Rheinland vielerorts ohnehin arbeitsfrei.');L[L.length-1].x=true;}
+ if(ex.ha){add('heiligabend','Heiligabend',D(12,24),ALL,[],XNOTE);L[L.length-1].x=true;}
+ if(ex.sv){add('silvester','Silvester',D(12,31),ALL,[],XNOTE);L[L.length-1].x=true;}
+ L.sort((a,b)=>a.d-b.d);return L;
+}
+g.FEIERTAGE={LAENDER,easter,holidays,key};
+})(globalThis);
+</script>
 <script>
 (function(){
 const STATES=[
@@ -365,43 +411,12 @@ let sel='DE';try{const s=localStorage.getItem('wtf-sel');if(s&&(s==='DE'||BY[s])
 let onlyWd=true,detailK=null,first=true;
 let extras={rm:false,ha:false,sv:false};try{const x=JSON.parse(localStorage.getItem('wtf-ex')||'{}');for(const kk in extras)if(typeof x[kk]==='boolean')extras[kk]=x[kk];}catch(e){}
 const exKey=()=>(extras.rm?'r':'')+(extras.ha?'h':'')+(extras.sv?'s':'');
-const XNOTE='Kein gesetzlicher Feiertag, hier optional für alle Länder als frei gewertet.';
 const $=id=>document.getElementById(id);
 const stName=c=>c==='DE'?'Ganz Deutschland':BY[c].n;
 const plural=(n,a,b)=>n===1?a:b;
 
-function easter(y){const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),kk=c%4,l=(32+2*e+2*i-h-kk)%7,m=Math.floor((a+11*h+22*l)/451),x=h+l-7*m+114;return new Date(y,Math.floor(x/31)-1,(x%31)+1);}
 const cache={};
-function holidays(y){
- const ck=y+'|'+exKey();if(cache[ck])return cache[ck];
- const E=easter(y),L=[],D=(m,d)=>new Date(y,m-1,d);
- const add=(n,d,full,reg,note)=>L.push({n,d,full,reg:reg||[],note:note||'',k:k(d)});
- add('Neujahr',D(1,1),ALL);
- add('Heilige Drei Könige',D(1,6),y>=1993?['BW','BY','ST']:['BW','BY']);
- const fr=[];if(y>=2019)fr.push('BE');if(y>=2023)fr.push('MV');if(fr.length)add('Internationaler Frauentag',D(3,8),fr);
- add('Karfreitag',addD(E,-2),ALL);
- add('Ostersonntag',E,['BB'],[],'Nur Brandenburg führt ihn ausdrücklich als gesetzlichen Feiertag.');
- add('Ostermontag',addD(E,1),ALL);
- add('Tag der Arbeit',D(5,1),ALL);
- if(y===2020||y===2025)add('Tag der Befreiung',D(5,8),['BE'],[],'Einmaliger Feiertag in Berlin.');
- add('Christi Himmelfahrt',addD(E,39),ALL);
- add('Pfingstsonntag',addD(E,49),['BB'],[],'Nur Brandenburg führt ihn ausdrücklich als gesetzlichen Feiertag.');
- add('Pfingstmontag',addD(E,50),ALL);
- add('Fronleichnam',addD(E,60),['BW','BY','HE','NW','RP','SL'],['SN','TH'],'In Sachsen und Thüringen nur in einzelnen Gemeinden.');
- add('Augsburger Friedensfest',D(8,8),[],['BY'],'Gilt nur im Stadtgebiet Augsburg.');
- add('Mariä Himmelfahrt',D(8,15),['SL'],['BY'],'In Bayern nur in Gemeinden mit überwiegend katholischer Bevölkerung.');
- if(y>=2019)add('Weltkindertag',D(9,20),['TH']);
- add('Tag der Deutschen Einheit',D(10,3),ALL);
- add('Reformationstag',D(10,31),y===2017?ALL:y>=2018?['BB','MV','SN','ST','TH','HB','HH','NI','SH']:['BB','MV','SN','ST','TH'],[],y===2017?'2017 einmalig bundesweit zum 500. Reformationsjubiläum.':'');
- add('Allerheiligen',D(11,1),['BW','BY','NW','RP','SL']);
- let b=D(11,22);while(b.getDay()!==3)b=addD(b,-1);add('Buß- und Bettag',b,y<1995?ALL:['SN'],[],y<1995?'Bis 1994 bundesweit, seit 1995 nur noch in Sachsen.':'');
- add('1. Weihnachtstag',D(12,25),ALL);
- add('2. Weihnachtstag',D(12,26),ALL);
- if(extras.rm){add('Rosenmontag',addD(E,-48),ALL,[],XNOTE+' Im Rheinland vielerorts ohnehin arbeitsfrei.');L[L.length-1].x=true;}
- if(extras.ha){add('Heiligabend',D(12,24),ALL,[],XNOTE);L[L.length-1].x=true;}
- if(extras.sv){add('Silvester',D(12,31),ALL,[],XNOTE);L[L.length-1].x=true;}
- L.sort((a,b)=>a.d-b.d);return cache[ck]=L;
-}
+const holidays=y=>{const ck=y+'|'+exKey();return cache[ck]||(cache[ck]=FEIERTAGE.holidays(y,extras));};
 const applies=(h,S)=>S==='DE'?h.full.length===16:h.full.includes(S);
 function stats(y,c){const H=holidays(y),full=H.filter(h=>h.full.includes(c));return{full,wk:full.filter(h=>isWd(h.d)),we:full.filter(h=>!isWd(h.d)),rg:H.filter(h=>h.reg.includes(c)&&isWd(h.d))};}
 const scope=h=>h.full.length===16?'bundesweit':h.full.length+' '+plural(h.full.length,'Land','Länder');
