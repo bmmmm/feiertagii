@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Gesetzliche Feiertage je Bundesland, die auf Montag bis Freitag fallen – 1991 bis 2070, interaktiv.">
+<title>Werktags-Feiertage Deutschland</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: Wandkalender-Logik – rote Tage sind Feiertage. Antwort mit Abreißblatt oben, dann Länderkarte + Rangliste, Jahresblatt, Matrix */
+:root{
+  --paper:#f2f4f7;--panel:#ffffff;--ink:#14171c;--muted:#5b6471;--rule:#dbe0e6;--wk:#98a1ad;
+  --red:#c8102e;--on-red:#ffffff;--red-ink:#a30c25;
+  --f-display:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#101216;--panel:#191c21;--ink:#e8ebef;--muted:#97a0ac;--rule:#2a2f37;--wk:#68717d;
+  --red:#ef4a5d;--on-red:#17080b;--red-ink:#ff7d8b;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#101216;--panel:#191c21;--ink:#e8ebef;--muted:#97a0ac;--rule:#2a2f37;--wk:#68717d;
+  --red:#ef4a5d;--on-red:#17080b;--red-ink:#ff7d8b;color-scheme:dark}
+
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 var(--f-body)}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 72px;display:flex;flex-direction:column;gap:24px}
+button{font:inherit;color:inherit}
+button:focus-visible,select:focus-visible{outline:2px solid var(--red-ink);outline-offset:2px}
+
+/* Kopf */
+.mast{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 24px;border-bottom:2px solid var(--ink);padding-bottom:18px}
+.eyebrow{font:500 12px/1 var(--f-mono);letter-spacing:.09em;text-transform:uppercase;color:var(--red-ink);margin:0}
+h1{font:700 clamp(42px,7.5vw,76px)/.9 var(--f-display);margin:10px 0 0;text-transform:uppercase;letter-spacing:-.005em;text-wrap:balance}
+.lede{margin:12px 0 0;color:var(--muted);max-width:58ch}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch}
+.yr{display:flex;align-items:center;border:1px solid var(--rule);background:var(--panel);border-radius:8px}
+.yr button{border:0;background:none;width:40px;height:44px;cursor:pointer;font-size:18px;color:var(--muted)}
+.yr button:disabled{opacity:.3;cursor:default}
+.yr output{font:700 28px/1 var(--f-display);min-width:2.6em;text-align:center;font-variant-numeric:tabular-nums}
+.sel-wrap{position:relative;display:flex}
+select{font:500 15px var(--f-body);padding:0 36px 0 12px;height:46px;border-radius:8px;border:1px solid var(--rule);background:var(--panel);color:var(--ink);appearance:none;-webkit-appearance:none;cursor:pointer;max-width:100%}
+.sel-wrap::after{content:"▾";position:absolute;right:13px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--muted)}
+
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:clamp(16px,3vw,28px);min-width:0}
+
+/* Antwort */
+.ans-grid{display:flex;flex-wrap:wrap;gap:20px 36px;align-items:flex-start;justify-content:space-between}
+.ans-text{flex:1 1 300px;min-width:0}
+.label{font:500 12px/1.3 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:0}
+.ans-kicker{font:600 clamp(21px,3vw,28px)/1.1 var(--f-display);margin:16px 0 0;text-transform:uppercase;letter-spacing:.02em}
+.ans-date{font:700 clamp(88px,17vw,172px)/.84 var(--f-display);margin:6px 0 0;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.ans-sub{font-size:17px;max-width:46ch;margin:16px 0 0;text-wrap:pretty}
+.ans-sub b{font-weight:600}
+.sheet{flex:0 0 auto;width:168px;background:var(--red);color:var(--on-red);border-radius:5px 5px 10px 10px;text-align:center;padding:28px 14px 16px;position:relative;box-shadow:0 14px 28px -18px var(--red)}
+.sheet::before{content:"";position:absolute;left:12px;right:12px;top:10px;height:7px;background:radial-gradient(circle,var(--panel) 2.6px,transparent 3.1px) 0 0/14px 7px repeat-x}
+.sh-wd{font:600 13px var(--f-mono);text-transform:uppercase;letter-spacing:.16em}
+.sh-day{font:700 100px/.9 var(--f-display);font-variant-numeric:tabular-nums}
+.sh-mon{font:600 21px/1 var(--f-display);text-transform:uppercase;letter-spacing:.07em}
+.sh-name{font:500 13px/1.3 var(--f-body);margin-top:12px;padding-top:9px;border-top:1px solid color-mix(in oklab,var(--on-red) 35%,transparent);text-wrap:balance}
+.ticks-wrap{margin-top:24px}
+.ticks{display:flex;flex-wrap:wrap;gap:3px;align-items:flex-end;min-height:26px}
+.t{display:block;width:6px;height:20px;border-radius:2px;background:var(--ink);opacity:.8}
+.t.we{width:4px;background:none}
+.t.now{height:26px;background:var(--muted);opacity:1}
+.t.h{width:11px;height:26px;background:var(--red);opacity:1}
+.ticks-cap{font:500 12px var(--f-mono);color:var(--muted);margin-top:8px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.facts{list-style:none;margin:22px 0 0;padding:0}
+.facts li{padding:11px 0;border-top:1px solid var(--rule);display:grid;grid-template-columns:10em minmax(0,1fr);gap:14px}
+.facts .fk{font:500 12px/1.6 var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+@media (max-width:560px){.facts li{grid-template-columns:minmax(0,1fr);gap:2px}.sheet{width:132px;padding-top:24px}.sh-day{font-size:76px}}
+
+/* Abschnitte */
+.sh{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px 18px;margin-bottom:18px}
+h2{font:700 30px/1 var(--f-display);text-transform:uppercase;margin:0;letter-spacing:.01em;text-wrap:balance}
+.hint{color:var(--muted);font-size:13.5px;margin:6px 0 0}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%;flex:none}
+.dot.f{background:var(--red)}
+.dot.o{box-shadow:inset 0 0 0 1.6px var(--red)}
+.dot.r{background:repeating-linear-gradient(135deg,var(--red) 0 1.6px,transparent 1.6px 3.6px);box-shadow:inset 0 0 0 1.4px var(--red)}
+.dot.n{width:8px;height:2px;border-radius:1px;background:var(--rule)}
+.dot.past{opacity:.35}
+
+/* Karte + Rangliste */
+.duo{display:grid;grid-template-columns:minmax(0,330px) minmax(0,1fr);gap:28px 36px}
+@media (max-width:820px){.duo{grid-template-columns:minmax(0,1fr)}}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;max-width:330px}
+.tile{aspect-ratio:1;border:0;border-radius:8px;padding:7px 8px;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;cursor:pointer;transition:transform .15s ease}
+.tile.span{aspect-ratio:auto}
+.tile .tc{font:700 19px/1 var(--f-display);letter-spacing:.03em}
+.tile .tn{font:700 32px/1 var(--f-display);align-self:flex-end;font-variant-numeric:tabular-nums}
+.tile:hover{transform:translateY(-2px)}
+.tile[aria-pressed="true"]{outline:3px solid var(--ink);outline-offset:2px}
+.scale{display:flex;align-items:center;gap:8px;margin-top:14px;font:500 12px var(--f-mono);color:var(--muted);max-width:330px}
+.scale i{flex:1;height:8px;border-radius:4px;background:linear-gradient(90deg,color-mix(in oklab,var(--red) 18%,var(--panel)),var(--red))}
+.rank{display:grid;gap:1px}
+.rk{display:grid;grid-template-columns:minmax(0,10.5em) minmax(0,1fr) 3.4em;gap:12px;align-items:center;padding:6px 8px;border:0;background:none;text-align:left;border-radius:6px;cursor:pointer}
+.rk:hover{background:var(--paper)}
+.rk[aria-pressed="true"]{background:color-mix(in oklab,var(--red) 11%,var(--panel))}
+.rk-n{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px}
+.rk-d{display:flex;flex-wrap:wrap;gap:4px}
+.rk-c{font:700 23px/1 var(--f-display);text-align:right;font-variant-numeric:tabular-nums}
+.rk-c small{display:block;font:500 10.5px/1.4 var(--f-mono);color:var(--muted)}
+@media (max-width:480px){.rk{grid-template-columns:minmax(0,7.4em) minmax(0,1fr) 2.8em;gap:8px}}
+
+/* Jahresblatt: 12 Zeilen × 31 Tage */
+.yb{display:grid;grid-template-columns:2.6em repeat(31,minmax(0,1fr)) 2.2em;gap:4px 2px;align-items:center}
+.yb-m{font:500 11px var(--f-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.yb-h{font:500 9.5px var(--f-mono);color:var(--wk);text-align:center;white-space:nowrap}
+.yb-n{font:600 11px var(--f-mono);color:var(--red-ink);text-align:right}
+.c{display:block;height:18px;border-radius:3px;background:color-mix(in oklab,var(--rule) 45%,var(--panel));border:0;padding:0;min-width:0;position:relative}
+.c.we{background:var(--rule)}
+.c.x{background:none}
+button.c{cursor:pointer}
+.c.hw{background:var(--red)}
+.c.hp{background:color-mix(in oklab,var(--red) var(--mix,40%),var(--panel))}
+.c.he{box-shadow:inset 0 0 0 1.6px var(--red)}
+.c.rg{background:repeating-linear-gradient(135deg,color-mix(in oklab,var(--red) 45%,transparent) 0 2px,transparent 2px 5px);box-shadow:inset 0 0 0 1.4px color-mix(in oklab,var(--red) 75%,transparent)}
+.c.oth::after{content:"";position:absolute;top:50%;left:50%;width:3px;height:3px;margin:-1.5px 0 0 -1.5px;border-radius:50%;background:var(--muted)}
+.c.past{opacity:.42}
+.c.cur{outline:2px solid var(--red-ink);outline-offset:1px;opacity:1;z-index:1}
+.c.today{outline:2px solid var(--ink);outline-offset:1px;opacity:1;z-index:1}
+@media (max-width:560px){.yb{grid-template-columns:2.3em repeat(31,minmax(0,1fr)) 1.7em;gap:4px 1px}.c{height:16px;border-radius:2px}.yb-h{font-size:8px}}
+.detail{margin-top:24px;padding:14px 18px;border-left:4px solid var(--red);background:var(--paper);border-radius:0 8px 8px 0;display:grid;gap:8px}
+.detail h4{font:700 28px/1 var(--f-display);margin:0;text-transform:uppercase;letter-spacing:.01em}
+.detail p{margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;font:500 12px var(--f-mono);padding:4px 9px;border-radius:999px;border:1px solid var(--rule);background:var(--panel);cursor:pointer}
+.chip:hover{border-color:var(--red)}
+
+/* Matrix */
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden;background:var(--panel)}
+.seg button{border:0;background:none;padding:8px 13px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.mx-wrap{overflow-x:auto;border:1px solid var(--rule);border-radius:10px;margin-top:14px}
+table{border-collapse:collapse;width:100%;font-size:13.5px;font-variant-numeric:tabular-nums}
+th,td{padding:8px 5px;border-bottom:1px solid var(--rule);text-align:center;white-space:nowrap}
+thead th{position:sticky;top:0;background:var(--panel);z-index:2}
+th.c1{position:sticky;left:0;background:var(--panel);z-index:1;text-align:left;min-width:9.8em;max-width:13em;white-space:normal;font-weight:400;padding-left:12px}
+thead th.c1{z-index:3;font:500 11px var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+th.st button{font:600 11px var(--f-mono);background:none;border:0;color:var(--muted);cursor:pointer;padding:4px 3px;border-radius:4px;letter-spacing:.03em}
+th.st button:hover{color:var(--ink)}
+.on{background:color-mix(in oklab,var(--red) 9%,var(--panel))}
+th.st.on button{color:var(--red-ink)}
+.c-date{display:block;font:500 12px var(--f-mono);color:var(--muted)}
+.c-name{display:block;font-weight:500}
+tbody tr[data-k]{cursor:pointer}
+tbody tr[data-k]:hover th.c1{color:var(--red-ink)}
+tr.past th,tr.past td{opacity:.48}
+tr.wkend .c-name::after{content:" · Wochenende";font-weight:400;font-size:12px;color:var(--muted)}
+tr.trow td{padding:0;border-bottom:0}
+.tline{display:flex;align-items:center;gap:10px;font:600 11px var(--f-mono);color:var(--red-ink);text-transform:uppercase;letter-spacing:.06em;padding:6px 12px}
+.tline::after{content:"";flex:1;height:2px;background:var(--red)}
+tfoot th,tfoot td{border-bottom:0;border-top:2px solid var(--ink)}
+tfoot tr+tr th,tfoot tr+tr td{border-top:1px solid var(--rule)}
+tfoot td{font:700 19px/1 var(--f-display)}
+tfoot th.c1{font:500 11px var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+
+/* Liniendiagramm */
+.chart{position:relative;min-height:250px;touch-action:pan-y}
+.chart svg{display:block;max-width:100%;overflow:visible}
+.grid line{stroke:var(--rule)}
+.ax{font:500 11px var(--f-mono);fill:var(--muted)}
+.ax.cury{fill:var(--red-ink);font-weight:600}
+.band{fill:color-mix(in oklab,var(--red) 9%,transparent)}
+.ln{fill:none;stroke:var(--wk);stroke-width:1.8;opacity:.7;stroke-linejoin:round;stroke-linecap:round;transition:opacity .15s,stroke .15s,stroke-width .15s}
+.ln.hot{stroke:var(--ink);stroke-width:2.8;opacity:1}
+.ln.sel{stroke:var(--red);stroke-width:3.2;opacity:1}
+.chart.dim .ln:not(.hot):not(.sel){opacity:.2}
+.avg{fill:none;stroke:var(--ink);stroke-width:1.4;stroke-dasharray:5 4;opacity:.7}
+.guide{stroke:var(--ink);stroke-width:1;opacity:.45}
+.pt{fill:var(--panel);stroke:var(--wk);stroke-width:1.6}
+.pt.sel{fill:var(--red);stroke:var(--red)}
+.pt.hot{stroke:var(--ink);stroke-width:2.2}
+.lb{font:500 11px var(--f-mono);fill:var(--muted)}
+.lb.sel{fill:var(--red-ink);font-weight:600}
+.lb.hot{fill:var(--ink);font-weight:600}
+.lb.av{font-style:italic}
+.tip{margin-top:14px;border-top:1px solid var(--rule);padding-top:12px;display:grid;gap:7px}
+.tip-h{font:500 12px var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
+.tip-h b{font:700 26px/1 var(--f-display);color:var(--ink);letter-spacing:0}
+.tv{display:grid;grid-template-columns:2.2em minmax(0,1fr);gap:12px;align-items:center}
+.tv>b{font:700 24px/1 var(--f-display);text-align:right;font-variant-numeric:tabular-nums}
+.codes{display:flex;flex-wrap:wrap;gap:4px}
+.code{font:600 11.5px var(--f-mono);padding:4px 7px;border-radius:5px;border:1px solid var(--rule);background:var(--panel);cursor:pointer;letter-spacing:.03em;transition:border-color .12s}
+.code.hot{border-color:var(--ink)}
+.code.sel{background:var(--red);color:var(--on-red);border-color:var(--red)}
+
+.opts{display:flex;flex-wrap:wrap;align-items:center;gap:8px 8px}
+.opts .label{margin-right:4px}
+.opt{border:1px dashed var(--muted);background:var(--panel);padding:7px 13px;border-radius:999px;font-size:13.5px;font-weight:500;cursor:pointer;color:var(--muted)}
+.opt:hover{color:var(--ink)}
+.opt[aria-pressed="true"]{border-style:solid;border-color:var(--red);background:color-mix(in oklab,var(--red) 12%,var(--panel));color:var(--red-ink)}
+.opt[aria-pressed="true"]::before{content:"✓ "}
+.xtag{font:500 10.5px var(--f-mono);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);border:1px dashed var(--muted);border-radius:4px;padding:0 4px;margin-left:4px;vertical-align:1px}
+.ctl{display:flex;flex-wrap:wrap;gap:8px}
+.fut{fill:color-mix(in oklab,var(--ink) 4%,transparent)}
+.era{font:500 10.5px var(--f-mono);fill:var(--muted);letter-spacing:.05em;text-transform:uppercase}
+.nowl{stroke:var(--red);stroke-width:1.5;stroke-dasharray:2 3}
+.evl{stroke:var(--muted);stroke-width:1;stroke-dasharray:1 3;opacity:.55}
+.evd{fill:var(--red-ink)}
+.tip-h .ev{color:var(--red-ink);text-transform:none;letter-spacing:0;font-size:12.5px}
+.notes{font-size:13.5px;color:var(--muted);max-width:78ch}
+.notes h2{font-size:22px;color:var(--ink);margin-bottom:8px}
+.notes ul{margin:0;padding-left:18px;display:grid;gap:4px}
+
+@keyframes rise{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.anim{animation:rise .32s ease both}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <div>
+      <p class="eyebrow">Gesetzliche Feiertage · Montag bis Freitag</p>
+      <h1>Werktags-Feiertage</h1>
+      <p class="lede">Welche Feiertage fallen tatsächlich auf einen Arbeitstag, welche sind schon vorbei und ab wann gilt wieder der normale Wochenrhythmus? Für alle 16 Bundesländer, 1991 bis 2070.</p>
+    </div>
+    <div class="controls">
+      <div class="sel-wrap"><select id="state" aria-label="Bundesland"></select></div>
+      <div class="yr" role="group" aria-label="Jahr">
+        <button id="yprev" aria-label="Vorheriges Jahr">‹</button>
+        <output id="yv"></output>
+        <button id="ynext" aria-label="Nächstes Jahr">›</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="opts" role="group" aria-label="Zusätzlich als frei werten">
+    <span class="label">Zusätzlich als frei werten</span>
+    <button class="opt" data-ex="rm" aria-pressed="false">Rosenmontag</button>
+    <button class="opt" data-ex="ha" aria-pressed="false">Heiligabend</button>
+    <button class="opt" data-ex="sv" aria-pressed="false">Silvester</button>
+  </div>
+
+  <section class="card">
+    <div class="sh">
+      <div><h2 id="trendTitle">Feiertage Mo–Fr pro Jahr</h2><p class="hint">Alle 16 Länder, 1991–2070; ab 2027 nach heutiger Rechtslage berechnet. Rote Punkte markieren Gesetzesänderungen. Länder mit identischem Verlauf teilen sich eine Linie; Linien leicht versetzt, damit gleiche Werte sichtbar bleiben. Jahr antippen springt dorthin, Kürzel wählt das Land.</p></div>
+      <div class="ctl"><div class="seg" role="group" aria-label="Zeitraum"><button id="rAll" aria-pressed="true">1991–2070</button><button id="rMid" aria-pressed="false">2000–2040</button><button id="rNear" aria-pressed="false">±10 J.</button></div><div class="seg" role="group" aria-label="Kennzahl">
+        <button id="mWd" aria-pressed="true">Mo–Fr</button>
+        <button id="mWe" aria-pressed="false">Aufs Wochenende</button>
+      </div></div>
+    </div>
+    <div class="chart" id="chart"></div>
+    <div class="tip" id="tip"></div>
+  </section>
+
+  <section class="card" id="answer" aria-live="polite"></section>
+
+  <section class="card">
+    <div class="sh">
+      <div><h2>Länder im Vergleich <span class="y"></span></h2><p class="hint">Zahl = Feiertage, die auf Mo–Fr fallen. Antippen wählt ein Land.</p></div>
+      <div class="legend"><span><i class="dot f"></i>Mo–Fr</span><span><i class="dot o"></i>Wochenende</span><span><i class="dot r"></i>nur regional</span><span><i class="dot f past"></i>vorbei</span></div>
+    </div>
+    <div class="duo">
+      <div><div class="tiles" id="tiles"></div><div class="scale" id="scale"></div></div>
+      <div class="rank" id="rank"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="sh">
+      <div><h2>Jahresblatt <span class="y"></span> · <span class="sn"></span></h2><p class="hint">Jede Zeile ein Monat, jedes Kästchen ein Tag. Rote Kästchen antippen für Details, Punkt = Feiertag nur in anderen Ländern.</p></div>
+      <div class="legend" id="callegend"></div>
+    </div>
+    <div class="yb" id="months"></div>
+    <div class="detail" id="detail"></div>
+  </section>
+
+  <section class="card">
+    <div class="sh">
+      <div><h2>Alle Feiertage <span class="y"></span></h2><p class="hint">Zeile antippen zeigt Details im Jahresblatt, Länderkürzel wählt das Land.</p></div>
+      <div class="seg" role="group" aria-label="Filter">
+        <button id="fWd" aria-pressed="true">Nur Mo–Fr</button>
+        <button id="fAll" aria-pressed="false">Alle</button>
+      </div>
+    </div>
+    <div class="legend"><span><i class="dot f"></i>Feiertag Mo–Fr</span><span><i class="dot o"></i>fällt aufs Wochenende</span><span><i class="dot r"></i>nur in Teilen des Landes</span></div>
+    <div class="mx-wrap"><table id="mx"></table></div>
+  </section>
+
+  <section class="notes">
+    <h2>Hinweise</h2>
+    <ul>
+      <li>Maßgeblich ist das Bundesland des Arbeitsorts, nicht des Wohnorts.</li>
+      <li>Regional: Fronleichnam gilt in Sachsen und Thüringen nur in einzelnen Gemeinden, Mariä Himmelfahrt in Bayern nur in Gemeinden mit überwiegend katholischer Bevölkerung, das Friedensfest (8. August) nur in Augsburg. Diese Tage zählen nicht in die Landessummen.</li>
+      <li>Brandenburg führt Oster- und Pfingstsonntag ausdrücklich als Feiertage; beide fallen immer auf einen Sonntag.</li>
+      <li>Einmalige Feiertage: Berlin, 8. Mai 2020 und 8. Mai 2025. Rosenmontag, Heiligabend und Silvester sind keine gesetzlichen Feiertage. Oben lassen sie sich optional für alle Länder als frei werten; alle Zahlen, Diagramme und Tabellen rechnen dann mit.</li>
+      <li>Historie: Bis 1994 war der Buß- und Bettag bundesweit frei, seit 1995 nur in Sachsen. Sachsen-Anhalt hat den 6. Januar seit 1993. Der Reformationstag galt 2017 einmalig bundesweit und seit 2018 zusätzlich in Bremen, Hamburg, Niedersachsen und Schleswig-Holstein.</li>
+      <li>Alle Termine werden aus den Feiertagsgesetzen berechnet (Stand Oktober 2026). Jahre ab 2027 sind eine Projektion nach heutiger Rechtslage; künftige Gesetzesänderungen sind nicht absehbar.</li>
+    </ul>
+  </section>
+</div>
+
+<script>
+(function(){
+const STATES=[
+ {c:'SH',n:'Schleswig-Holstein',r:0,col:2},{c:'MV',n:'Mecklenburg-Vorpommern',r:0,col:3},
+ {c:'HB',n:'Bremen',r:1,col:1},{c:'HH',n:'Hamburg',r:1,col:2},{c:'BE',n:'Berlin',r:1,col:3},
+ {c:'NW',n:'Nordrhein-Westfalen',r:2,col:0},{c:'NI',n:'Niedersachsen',r:2,col:1},{c:'ST',n:'Sachsen-Anhalt',r:2,col:2},{c:'BB',n:'Brandenburg',r:2,col:3},
+ {c:'RP',n:'Rheinland-Pfalz',r:3,col:0},{c:'HE',n:'Hessen',r:3,col:1},{c:'TH',n:'Thüringen',r:3,col:2},{c:'SN',n:'Sachsen',r:3,col:3},
+ {c:'SL',n:'Saarland',r:4,col:0},{c:'BW',n:'Baden-Württemberg',r:4,col:1},{c:'BY',n:'Bayern',r:4,col:2,span:true}
+];
+const BY=Object.fromEntries(STATES.map(s=>[s.c,s]));
+const ALPHA=[...STATES].sort((a,b)=>a.n.localeCompare(b.n,'de'));
+const ALL=STATES.map(s=>s.c);
+const WD=['So','Mo','Di','Mi','Do','Fr','Sa'];
+const WDL=['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+const MON=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+const pad=n=>String(n).padStart(2,'0');
+const dm=d=>pad(d.getDate())+'.'+pad(d.getMonth()+1)+'.';
+const fmt=d=>WD[d.getDay()]+' '+dm(d);
+const isWd=d=>{const w=d.getDay();return w>0&&w<6};
+const addD=(d,n)=>new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);
+const k=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const now=new Date();const TODAY=new Date(now.getFullYear(),now.getMonth(),now.getDate());const TK=k(TODAY);
+const YMIN=1991,YMAX=2070;
+let year=Math.min(YMAX,Math.max(YMIN,TODAY.getFullYear()));
+let sel='DE';try{const s=localStorage.getItem('wtf-sel');if(s&&(s==='DE'||BY[s]))sel=s;}catch(e){}
+let onlyWd=true,detailK=null,first=true;
+let extras={rm:false,ha:false,sv:false};try{const x=JSON.parse(localStorage.getItem('wtf-ex')||'{}');for(const kk in extras)if(typeof x[kk]==='boolean')extras[kk]=x[kk];}catch(e){}
+const exKey=()=>(extras.rm?'r':'')+(extras.ha?'h':'')+(extras.sv?'s':'');
+const XNOTE='Kein gesetzlicher Feiertag, hier optional für alle Länder als frei gewertet.';
+const $=id=>document.getElementById(id);
+const stName=c=>c==='DE'?'Ganz Deutschland':BY[c].n;
+const plural=(n,a,b)=>n===1?a:b;
+
+function easter(y){const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),kk=c%4,l=(32+2*e+2*i-h-kk)%7,m=Math.floor((a+11*h+22*l)/451),x=h+l-7*m+114;return new Date(y,Math.floor(x/31)-1,(x%31)+1);}
+const cache={};
+function holidays(y){
+ const ck=y+'|'+exKey();if(cache[ck])return cache[ck];
+ const E=easter(y),L=[],D=(m,d)=>new Date(y,m-1,d);
+ const add=(n,d,full,reg,note)=>L.push({n,d,full,reg:reg||[],note:note||'',k:k(d)});
+ add('Neujahr',D(1,1),ALL);
+ add('Heilige Drei Könige',D(1,6),y>=1993?['BW','BY','ST']:['BW','BY']);
+ const fr=[];if(y>=2019)fr.push('BE');if(y>=2023)fr.push('MV');if(fr.length)add('Internationaler Frauentag',D(3,8),fr);
+ add('Karfreitag',addD(E,-2),ALL);
+ add('Ostersonntag',E,['BB'],[],'Nur Brandenburg führt ihn ausdrücklich als gesetzlichen Feiertag.');
+ add('Ostermontag',addD(E,1),ALL);
+ add('Tag der Arbeit',D(5,1),ALL);
+ if(y===2020||y===2025)add('Tag der Befreiung',D(5,8),['BE'],[],'Einmaliger Feiertag in Berlin.');
+ add('Christi Himmelfahrt',addD(E,39),ALL);
+ add('Pfingstsonntag',addD(E,49),['BB'],[],'Nur Brandenburg führt ihn ausdrücklich als gesetzlichen Feiertag.');
+ add('Pfingstmontag',addD(E,50),ALL);
+ add('Fronleichnam',addD(E,60),['BW','BY','HE','NW','RP','SL'],['SN','TH'],'In Sachsen und Thüringen nur in einzelnen Gemeinden.');
+ add('Augsburger Friedensfest',D(8,8),[],['BY'],'Gilt nur im Stadtgebiet Augsburg.');
+ add('Mariä Himmelfahrt',D(8,15),['SL'],['BY'],'In Bayern nur in Gemeinden mit überwiegend katholischer Bevölkerung.');
+ if(y>=2019)add('Weltkindertag',D(9,20),['TH']);
+ add('Tag der Deutschen Einheit',D(10,3),ALL);
+ add('Reformationstag',D(10,31),y===2017?ALL:y>=2018?['BB','MV','SN','ST','TH','HB','HH','NI','SH']:['BB','MV','SN','ST','TH'],[],y===2017?'2017 einmalig bundesweit zum 500. Reformationsjubiläum.':'');
+ add('Allerheiligen',D(11,1),['BW','BY','NW','RP','SL']);
+ let b=D(11,22);while(b.getDay()!==3)b=addD(b,-1);add('Buß- und Bettag',b,y<1995?ALL:['SN'],[],y<1995?'Bis 1994 bundesweit, seit 1995 nur noch in Sachsen.':'');
+ add('1. Weihnachtstag',D(12,25),ALL);
+ add('2. Weihnachtstag',D(12,26),ALL);
+ if(extras.rm){add('Rosenmontag',addD(E,-48),ALL,[],XNOTE+' Im Rheinland vielerorts ohnehin arbeitsfrei.');L[L.length-1].x=true;}
+ if(extras.ha){add('Heiligabend',D(12,24),ALL,[],XNOTE);L[L.length-1].x=true;}
+ if(extras.sv){add('Silvester',D(12,31),ALL,[],XNOTE);L[L.length-1].x=true;}
+ L.sort((a,b)=>a.d-b.d);return cache[ck]=L;
+}
+const applies=(h,S)=>S==='DE'?h.full.length===16:h.full.includes(S);
+function stats(y,c){const H=holidays(y),full=H.filter(h=>h.full.includes(c));return{full,wk:full.filter(h=>isWd(h.d)),we:full.filter(h=>!isWd(h.d)),rg:H.filter(h=>h.reg.includes(c)&&isWd(h.d))};}
+const scope=h=>h.full.length===16?'bundesweit':h.full.length+' '+plural(h.full.length,'Land','Länder');
+
+function renderAnswer(){
+ const t=TODAY,S=sel,ty=t.getFullYear();
+ const hs=[...holidays(ty),...holidays(ty+1)].filter(h=>h.d>=t);
+ const nx=hs.find(h=>applies(h,S)&&isWd(h.d));
+ const isToday=nx.k===TK;
+ let last=addD(nx.d,-1);while(!isWd(last))last=addD(last,-1);
+ let wdc=0;for(let d=new Date(t);d<nx.d;d=addD(d,1))if(isWd(d))wdc++;
+ const weB=hs.filter(h=>h.d<nx.d&&!isWd(h.d)&&(S==='DE'?h.full.length>0:h.full.includes(S)));
+ const regB=hs.filter(h=>h.d<nx.d&&isWd(h.d)&&(S==="DE"?h.reg.length>0&&h.full.length===0:h.reg.includes(S)));
+ let exc=[];
+ if(S==='DE'){const g={};STATES.forEach(s=>{const n2=hs.find(h=>h.full.includes(s.c)&&isWd(h.d));if(n2&&n2.d<nx.d)(g[n2.k]=g[n2.k]||{h:n2,st:[]}).st.push(s.n);});exc=Object.values(g).sort((a,b)=>a.h.d-b.h.d);}
+ const facts=[];
+ facts.push(['Dann frei',`<b>${fmt(nx.d)}${nx.d.getFullYear()!==ty?nx.d.getFullYear():''}</b> · ${nx.n}${S==='DE'?'':' · '+scope(nx)}`]);
+ if(S==='DE')facts.push(['Früher frei',exc.length?exc.map(e=>`${e.st.join(', ')}: <b>${fmt(e.h.d)}</b> ${e.h.n}`).join('<br>'):'Kein Land hat vorher einen Werktags-Feiertag.']);
+ facts.push(['Aufs Wochenende',weB.length?weB.map(h=>`${h.n} (${fmt(h.d)}${S==='DE'?', '+scope(h):''})`).join(', '):'Bis dahin fällt kein Feiertag aufs Wochenende.']);
+ if(regB.length)facts.push(['Nur regional',regB.map(h=>`${h.n} (${fmt(h.d)}) – ${h.note}`).join('<br>')]);
+ if(S!=='DE'){const st=stats(ty,S),p=st.wk.filter(h=>h.d<t).length,f=st.wk.length-p;
+  facts.push([`Bilanz ${ty}`,`${st.wk.length} Feiertage Mo–Fr: <b>${p} vorbei</b>, ${f} ${plural(f,'kommt','kommen')} noch · ${st.we.length} ${plural(st.we.length,'fällt','fallen')} aufs Wochenende`]);}
+ else{const nat=holidays(ty).filter(h=>h.full.length===16),wk=nat.filter(h=>isWd(h.d)),p=wk.filter(h=>h.d<t).length;
+  facts.push([`Bilanz ${ty}`,`Von 9 bundesweiten Feiertagen liegen ${wk.length} auf Mo–Fr: <b>${p} vorbei</b>, ${wk.length-p} ${plural(wk.length-p,'kommt','kommen')} noch`]);}
+ let ticks='';for(let d=new Date(t);d<=nx.d;d=addD(d,1)){const key=k(d);let c='t';if(key===nx.k)c+=' h';else if(!isWd(d))c+=' we';else if(key===TK)c+=' now';ticks+=`<i class="${c}" title="${fmt(d)}"></i>`;}
+ const kicker=isToday?'Heute ist':'Normale Arbeitstage bis '+WDL[last.getDay()];
+ const big=isToday?'frei':dm(last);
+ const sub=isToday?`${nx.n}${S==='DE'?' – bundesweit.':' in '+BY[S].n+'.'}`:`<b>${wdc} ${plural(wdc,'Arbeitstag','Arbeitstage')}</b> am Stück (ab heute), dann ist ${fmt(nx.d)} frei${S==='DE'?' – in allen 16 Ländern':''}.`;
+ $('answer').innerHTML=`<div class="ans-grid"><div class="ans-text">
+  <p class="label">Stand heute, ${fmt(t)}${ty} · ${stName(S)}</p>
+  <p class="ans-kicker">${kicker}</p><p class="ans-date">${big}</p><p class="ans-sub">${sub}</p></div>
+  <div class="sheet" aria-label="Nächster freier Werktag"><div class="sh-wd">${WDL[nx.d.getDay()]}</div><div class="sh-day">${nx.d.getDate()}</div><div class="sh-mon">${MON[nx.d.getMonth()]}</div><div class="sh-name">${nx.n}</div></div></div>
+  <div class="ticks-wrap"><div class="ticks">${ticks}</div><div class="ticks-cap"><span>Heute</span><span>Jeder Strich ein Arbeitstag, Lücken sind Wochenenden</span><span>${dm(nx.d)}</span></div></div>
+  <ul class="facts">${facts.map(f=>`<li><span class="fk">${f[0]}</span><span>${f[1]}</span></li>`).join('')}</ul>`;
+}
+
+function renderMap(){
+ const counts=STATES.map(s=>stats(year,s.c).wk.length),mn=Math.min(...counts),mx=Math.max(...counts);
+ $('tiles').innerHTML=STATES.map((s,i)=>{const n=counts[i],p=Math.round(18+(n-mn)/((mx-mn)||1)*82),fg=p>=58?'var(--on-red)':'var(--ink)';
+  return `<button class="tile${s.span?' span':''}" style="grid-row:${s.r+1};grid-column:${s.col+1}${s.span?' / span 2':''};background:color-mix(in oklab,var(--red) ${p}%,var(--panel));color:${fg}" data-state="${s.c}" aria-pressed="${sel===s.c}" title="${s.n}: ${n} Feiertage Mo–Fr"><span class="tc">${s.c}</span><span class="tn">${n}</span></button>`;}).join('');
+ $('scale').innerHTML=`<span>${mn}</span><i></i><span>${mx} Tage</span>`;
+}
+function renderRank(){
+ const rows=STATES.map(s=>Object.assign({s},stats(year,s.c))).sort((a,b)=>b.wk.length-a.wk.length||a.s.n.localeCompare(b.s.n,'de'));
+ $('rank').innerHTML=rows.map(r=>{
+  const dots=[...r.full.map(h=>({h,cl:isWd(h.d)?'f':'o'})),...r.rg.map(h=>({h,cl:'r'}))].sort((a,b)=>a.h.d-b.h.d)
+   .map(o=>`<i class="dot ${o.cl}${o.h.d<TODAY?' past':''}" title="${fmt(o.h.d)} ${o.h.n}${o.cl==='o'?' – Wochenende':o.cl==='r'?' – regional':''}"></i>`).join('');
+  return `<button class="rk" data-state="${r.s.c}" aria-pressed="${sel===r.s.c}"><span class="rk-n">${r.s.n}</span><span class="rk-d">${dots}</span><span class="rk-c">${r.wk.length}${r.rg.length?`<small>+${r.rg.length} reg.</small>`:''}</span></button>`;}).join('');
+}
+function ensureDetail(){
+ const H=holidays(year);if(detailK&&H.some(h=>h.k===detailK))return;
+ const rel=h=>sel==='DE'||h.full.includes(sel)||h.reg.includes(sel);
+ const nx=H.find(h=>h.d>=TODAY&&rel(h)&&isWd(h.d))||H.find(h=>h.d>=TODAY&&rel(h))||[...H].reverse().find(h=>rel(h)&&isWd(h.d))||H[0];
+ detailK=nx.k;
+}
+function renderCal(){
+ const H=holidays(year),byK={};H.forEach(h=>(byK[h.k]=byK[h.k]||[]).push(h));
+ let html='<span class="yb-m"></span>';
+ for(let d=1;d<=31;d++)html+=`<span class="yb-h">${d===1||d%5===0?d:''}</span>`;
+ html+='<span class="yb-h yb-n">frei</span>';
+ for(let m=0;m<12;m++){
+  const days=new Date(year,m+1,0).getDate();let mc=0,row='';
+  for(let dd=1;dd<=31;dd++){
+   if(dd>days){row+='<span class="c x"></span>';continue;}
+   const d=new Date(year,m,dd),key=k(d),L=byK[key]||[],wd=isWd(d);let cls='c'+(wd?'':' we'),style='';
+   if(L.length){
+    if(sel==='DE'){const set=new Set();L.forEach(h=>h.full.forEach(c=>set.add(c)));const n=set.size;
+     if(n===16){cls+=wd?' hw':' he';if(wd)mc++;}
+     else if(n>0){if(wd){cls+=' hp';style=` style="--mix:${Math.round(22+n/16*48)}%"`;mc++;}else cls+=' he';}
+     else cls+=' rg';}
+    else{const f=L.some(h=>h.full.includes(sel)),r=L.some(h=>h.reg.includes(sel));
+     if(f){cls+=wd?' hw':' he';if(wd)mc++;}else if(r)cls+=' rg';else cls+=' oth';}
+   }
+   if(d<TODAY)cls+=' past';if(key===TK)cls+=' today';if(key===detailK)cls+=' cur';
+   const tt=`${fmt(d)}${year}${key===TK?' · heute':''}${L.length?': '+L.map(h=>h.n).join(', '):''}`;
+   row+=L.length?`<button class="${cls}"${style} data-k="${key}" title="${tt}" aria-label="${tt}"></button>`:`<span class="${cls}" title="${tt}"></span>`;
+  }
+  html+=`<span class="yb-m">${MON[m].slice(0,3)}</span>${row}<span class="yb-n">${mc?mc+'×':''}</span>`;
+ }
+ $('months').innerHTML=html;
+ $('callegend').innerHTML=sel==='DE'
+  ?`<span><i class="dot f"></i>bundesweit Mo–Fr</span><span><i class="dot" style="background:color-mix(in oklab,var(--red) 40%,var(--panel))"></i>in einzelnen Ländern</span><span><i class="dot o"></i>Wochenende</span>`
+  :`<span><i class="dot f"></i>frei Mo–Fr</span><span><i class="dot o"></i>Wochenende</span><span><i class="dot r"></i>regional</span>`;
+}
+function renderDetail(){
+ const L=holidays(year).filter(h=>h.k===detailK);if(!L.length){$('detail').innerHTML='';return;}
+ const d=L[0].d,diff=Math.round((d-TODAY)/864e5);
+ const when=diff===0?'heute':diff>0?`in ${diff} ${plural(diff,'Tag','Tagen')}`:`vor ${-diff} ${plural(-diff,'Tag','Tagen')}`;
+ $('detail').innerHTML=L.map(h=>{
+  let status;
+  if(sel==='DE')status=h.full.length===16?(isWd(d)?'Bundesweit frei.':'Bundesweit, fällt aber aufs Wochenende.'):h.full.length?`Feiertag in ${scope(h)}${isWd(d)?'':', fällt aufs Wochenende'}.`:'Nur regional.';
+  else{const s=BY[sel].n;status=h.full.includes(sel)?(isWd(d)?`In ${s} frei.`:`In ${s} Feiertag, fällt aber aufs Wochenende.`):h.reg.includes(sel)?`In ${s} nur regional.`:`In ${s} kein Feiertag.`;}
+  const chips=h.full.length===16?`<span class="chip"><i class="dot ${isWd(d)?'f':'o'}"></i>alle 16 Länder</span>`
+   :[...ALPHA.filter(s=>h.full.includes(s.c)).map(s=>`<button class="chip" data-state="${s.c}"><i class="dot ${isWd(d)?'f':'o'}"></i>${s.n}</button>`),...ALPHA.filter(s=>h.reg.includes(s.c)).map(s=>`<button class="chip" data-state="${s.c}"><i class="dot r"></i>${s.n} (regional)</button>`)].join('');
+  return `<p class="label">${WDL[d.getDay()]}, ${dm(d)}${year} · ${when}</p><h4>${h.n}</h4><p>${status}${h.note?' '+h.note:''}</p><div class="chips">${chips}</div>`;}).join('');
+}
+function renderMatrix(){
+ const H=holidays(year).filter(h=>!onlyWd||isWd(h.d)),cur=year===TODAY.getFullYear();
+ const trow=`<tr class="trow"><td colspan="17"><div class="tline">Heute · ${fmt(TODAY)}</div></td></tr>`;
+ let rows='',done=!cur;
+ H.forEach(h=>{if(!done&&h.d>=TODAY){rows+=trow;done=true;}
+  const cells=ALPHA.map(s=>{const f=h.full.includes(s.c),r=h.reg.includes(s.c),cl=f?(isWd(h.d)?'f':'o'):r?'r':'n';return `<td class="${sel===s.c?'on':''}"><i class="dot ${cl}"></i></td>`;}).join('');
+  rows+=`<tr class="${h.d<TODAY?'past':''}${isWd(h.d)?'':' wkend'}" data-k="${h.k}"><th class="c1" scope="row"><span class="c-date">${fmt(h.d)}</span><span class="c-name">${h.n}${h.x?' <span class="xtag">optional</span>':''}</span></th>${cells}</tr>`;});
+ if(!done)rows+=trow;
+ const st=ALPHA.map(s=>stats(year,s.c));
+ let foot=`<tr><th class="c1">Mo–Fr gesamt</th>${st.map((x,i)=>`<td class="${sel===ALPHA[i].c?'on':''}">${x.wk.length}</td>`).join('')}</tr>`;
+ if(year>=TODAY.getFullYear()&&cur)foot+=`<tr><th class="c1">Noch offen</th>${st.map((x,i)=>`<td class="${sel===ALPHA[i].c?'on':''}">${x.wk.filter(h=>h.d>=TODAY).length}</td>`).join('')}</tr>`;
+ $('mx').innerHTML=`<thead><tr><th class="c1">Datum · Feiertag</th>${ALPHA.map(s=>`<th class="st${sel===s.c?' on':''}"><button data-state="${s.c}" title="${s.n}">${s.c}</button></th>`).join('')}</tr></thead><tbody>${rows}</tbody><tfoot>${foot}</tfoot>`;
+}
+/* ---- Liniendiagramm ---- */
+const YEARS=[];for(let y=YMIN;y<=YMAX;y++)YEARS.push(y);
+let metric='wk',rng='all',hovY=null,hotG=-1,TG=null;const sCache={};
+const EVENTS={1993:'Sachsen-Anhalt führt den 6. Januar ein',1995:'Buß- und Bettag entfällt, außer in Sachsen',2017:'Reformationstag einmalig bundesweit',2018:'Reformationstag neu in HB, HH, NI, SH',2019:'Neu: Frauentag in BE, Weltkindertag in TH',2020:'Berlin: 8. Mai einmalig frei',2023:'Neu: Frauentag in MV',2025:'Berlin: 8. Mai einmalig frei'};
+function seriesAll(){
+ const sk=metric+'|'+exKey();if(sCache[sk])return sCache[sk];const o={};
+ STATES.forEach(s=>{o[s.c]=YEARS.map(y=>{const x=stats(y,s.c);return metric==='wk'?x.wk.length:x.we.length;});});
+ return sCache[sk]=o;
+}
+const fmtN=v=>v.toFixed(1).replace('.',',');
+function viewYears(){
+ if(rng==='mid')return YEARS.filter(y=>y>=2000&&y<=2040);
+ if(rng==='near'){let b=Math.min(YMAX,year+10),a=Math.max(YMIN,b-20);b=Math.min(YMAX,a+20);return YEARS.filter(y=>y>=a&&y<=b);}
+ return YEARS;
+}
+function renderTrend(){
+ const el=$('chart'),W=Math.max(300,Math.floor(el.clientWidth||600)),narrow=W<560,H=narrow?270:350;
+ const S=seriesAll(),VY=viewYears(),i0=YEARS.indexOf(VY[0]),n=VY.length,sl=a=>a.slice(i0,i0+n),gm={};
+ ALPHA.forEach(s=>{const v=sl(S[s.c]),key=v.join(',');(gm[key]=gm[key]||{v,st:[]}).st.push(s.c);});
+ const G=Object.values(gm).map(g=>Object.assign(g,{mean:g.v.reduce((a,b)=>a+b,0)/g.v.length})).sort((a,b)=>a.mean-b.mean);
+ const avg=VY.map((_,i)=>ALPHA.reduce((a,s)=>a+S[s.c][i0+i],0)/16);
+ const all=G.flatMap(g=>g.v),lo=Math.min(...all),hi=Math.max(...all);
+ const m={l:30,r:narrow?12:122,t:30,b:30},pw=W-m.l-m.r,ph=H-m.t-m.b,y0=lo-0.6,y1=hi+0.6,step=pw/(n-1);
+ const X=i=>m.l+i*step,Yv=v=>m.t+(y1-v)/(y1-y0)*ph,f1=v=>v.toFixed(1);
+ G.forEach((g,i)=>{g.o=(i-(G.length-1)/2)*1.4;g.pts=g.v.map((v,j)=>[X(j),Yv(v)+g.o]);g.d='M'+g.pts.map(p=>f1(p[0])+','+f1(p[1])).join('L');});
+ const ty=TODAY.getFullYear(),ti=VY.indexOf(ty),yi=VY.indexOf(year);
+ let s=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Liniendiagramm: ${metric==='wk'?'Feiertage Montag bis Freitag':'Feiertage am Wochenende'} je Bundesland, ${VY[0]} bis ${VY[n-1]}">`;
+ if(ti>=0&&ti<n-1)s+=`<rect class="fut" x="${f1(X(ti))}" y="${m.t}" width="${f1(X(n-1)-X(ti))}" height="${ph}"/>`;
+ else if(VY[0]>ty)s+=`<rect class="fut" x="${m.l}" y="${m.t}" width="${pw}" height="${ph}"/>`;
+ const pastTxt=narrow?'← bisher':'← Vergangenheit',futTxt=narrow?'Prognose →':'Prognose nach heutigem Recht →';
+ if(ti>0)s+=`<text class="era" x="${f1(X(ti)-7)}" y="${m.t-12}" text-anchor="end">${pastTxt}</text>`;
+ if(ti>=0&&ti<n-1)s+=`<text class="era" x="${f1(X(ti)+7)}" y="${m.t-12}">${futTxt}</text>`;
+ else if(VY[0]>ty)s+=`<text class="era" x="${m.l}" y="${m.t-12}">${futTxt}</text>`;
+ else if(VY[n-1]<ty)s+=`<text class="era" x="${W-m.r}" y="${m.t-12}" text-anchor="end">${pastTxt}</text>`;
+ if(yi>=0)s+=`<rect class="band" x="${f1(X(yi)-step/2)}" y="${m.t}" width="${f1(step)}" height="${ph}"/>`;
+ s+='<g class="grid">';
+ for(let v=Math.ceil(y0);v<=Math.floor(y1);v++)s+=`<line x1="${m.l}" x2="${W-m.r}" y1="${f1(Yv(v))}" y2="${f1(Yv(v))}"/><text class="ax" x="${m.l-8}" y="${f1(Yv(v)+4)}" text-anchor="end">${v}</text>`;
+ s+='</g>';
+ if(ti>=0)s+=`<line class="nowl" x1="${f1(X(ti))}" x2="${f1(X(ti))}" y1="${m.t-6}" y2="${H-m.b}"/>`;
+ VY.forEach((y,j)=>{if(EVENTS[y])s+=`<line class="evl" x1="${f1(X(j))}" x2="${f1(X(j))}" y1="${m.t}" y2="${H-m.b}"/><circle class="evd" cx="${f1(X(j))}" cy="${H-m.b}" r="3"/>`;});
+ const tstep=n<=16?(narrow?2:1):n<=45?5:(narrow&&n>60?20:10);
+ VY.forEach((y,j)=>{const show=tstep<=2?j%tstep===0:y%tstep===0;if(!show)return;
+  s+=`<text class="ax${y===year?' cury':''}" x="${f1(X(j))}" y="${H-9}" text-anchor="middle">${tstep<=2&&narrow?"'"+String(y).slice(2):y}</text>`;});
+ s+=`<path class="avg" d="M${avg.map((v,j)=>f1(X(j))+','+f1(Yv(v))).join('L')}"/>`;
+ G.forEach((g,i)=>{s+=`<path class="ln${g.st.includes(sel)?' sel':''}" data-g="${i}" d="${g.d}"/>`;});
+ const sg=G.findIndex(g=>g.st.includes(sel));
+ if(sg>=0&&step>=9)G[sg].pts.forEach(p=>{s+=`<circle class="pt sel" cx="${f1(p[0])}" cy="${f1(p[1])}" r="3"/>`;});
+ s+='<g id="hov"></g>';
+ if(!narrow){
+  const items=G.map((g,i)=>({i,y:g.pts[n-1][1],t:g.st.join('·')}));items.push({i:-1,y:Yv(avg[n-1]),t:'Ø '+fmtN(avg[n-1])});
+  items.sort((a,b)=>a.y-b.y);for(let q=1;q<items.length;q++)if(items[q].y<items[q-1].y+13)items[q].y=items[q-1].y+13;
+  const lim=H-m.b+2;if(items[items.length-1].y>lim){items[items.length-1].y=lim;for(let q=items.length-2;q>=0;q--)if(items[q].y>items[q+1].y-13)items[q].y=items[q+1].y-13;}
+  items.forEach(it=>{s+=`<text class="lb${it.i<0?' av':''}${it.i>=0&&it.i===sg?' sel':''}" data-g="${it.i}" x="${W-m.r+10}" y="${f1(it.y+4)}">${it.t}</text>`;});
+ }
+ s+=`<rect id="ov" x="${f1(m.l-step/2)}" y="0" width="${f1(pw+step)}" height="${H}" fill="transparent" style="cursor:pointer"/></svg>`;
+ el.innerHTML=s;
+ TG={G,avg,X,m,W,H,pw,step,n,el,VY};
+ const svg=el.querySelector('svg'),ov=$('ov');
+ ov.addEventListener('pointermove',e=>{
+  const r=svg.getBoundingClientRect(),sx=(e.clientX-r.left)*(W/r.width),sy=(e.clientY-r.top)*(H/r.height);
+  const fx=Math.max(0,Math.min(n-1,(sx-m.l)/step)),j=Math.round(fx),j0=Math.floor(fx),j1=Math.min(n-1,j0+1),t=fx-j0;
+  let best=-1,bd=9;G.forEach((g,i)=>{const yy=g.pts[j0][1]*(1-t)+g.pts[j1][1]*t,dd=Math.abs(yy-sy);if(dd<bd){bd=dd;best=i;}});
+  const ch=VY[j]!==hovY;hovY=VY[j];hotG=best;if(ch)updateHover();updateHot();
+ });
+ ov.addEventListener('pointerleave',()=>{hovY=null;hotG=-1;updateHover();updateHot();});
+ ov.addEventListener('click',()=>{if(hovY!=null&&hovY!==year){year=hovY;hovY=null;detailK=null;render();}});
+ updateHover();updateHot();
+}
+function updateHover(){
+ if(!TG)return;const{G,avg,X,m,H,VY}=TG,yv=hovY??Math.min(VY[VY.length-1],Math.max(VY[0],year)),j=VY.indexOf(yv);
+ let h='';if(hovY!=null)h+=`<line class="guide" x1="${X(j).toFixed(1)}" x2="${X(j).toFixed(1)}" y1="${m.t}" y2="${H-m.b}"/>`;
+ G.forEach((g,i)=>{const p=g.pts[j],on=g.st.includes(sel);h+=`<circle class="pt${on?' sel':''}" data-g="${i}" cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="${on?4.2:3}"/>`;});
+ $('hov').innerHTML=h;
+ const byV={},ord=c=>ALPHA.findIndex(s=>s.c===c);
+ G.forEach(g=>{(byV[g.v[j]]=byV[g.v[j]]||[]).push(...g.st);});
+ const vals=Object.keys(byV).map(Number).sort((a,b)=>b-a);
+ const label=metric==='wk'?'Feiertage Mo–Fr':'Feiertage am Wochenende';
+ const era=yv>TODAY.getFullYear()?'Prognose':yv===TODAY.getFullYear()?'laufendes Jahr':'vergangen';
+ $('tip').innerHTML=`<div class="tip-h"><b>${yv}</b><span>${label}</span><span>Ø ${fmtN(avg[j])}</span><span>Spanne ${vals[vals.length-1]}–${vals[0]}</span><span>${era}</span>${EVENTS[yv]?`<span class="ev">● ${EVENTS[yv]}</span>`:''}${exKey()?`<span>inkl. ${[extras.rm&&'Rosenmontag',extras.ha&&'Heiligabend',extras.sv&&'Silvester'].filter(Boolean).join(', ')}</span>`:''}</div>`+
+  vals.map(v=>`<div class="tv"><b>${v}</b><div class="codes">${byV[v].sort((a,b)=>ord(a)-ord(b)).map(c=>`<button class="code${c===sel?' sel':''}" data-state="${c}" data-c="${c}" title="${BY[c].n}">${c}</button>`).join('')}</div></div>`).join('');
+}
+function updateHot(){
+ if(!TG)return;const el=TG.el,hs=hotG>=0?TG.G[hotG].st:[];
+ el.classList.toggle('dim',hotG>=0);
+ el.querySelectorAll('[data-g]').forEach(e=>e.classList.toggle('hot',+e.dataset.g===hotG&&hotG>=0));
+ $('tip').querySelectorAll('.code').forEach(e=>e.classList.toggle('hot',hs.includes(e.dataset.c)));
+}
+$('tip').addEventListener('pointerover',e=>{if(!TG)return;const b=e.target.closest('.code');const g=b?TG.G.findIndex(x=>x.st.includes(b.dataset.c)):-1;if(g!==hotG){hotG=g;updateHot();}});
+$('tip').addEventListener('pointerleave',()=>{hotG=-1;updateHot();});
+function setMetric(mt){metric=mt;$('mWd').setAttribute('aria-pressed',mt==='wk');$('mWe').setAttribute('aria-pressed',mt==='we');$('trendTitle').textContent=mt==='wk'?'Feiertage Mo–Fr pro Jahr':'Feiertage am Wochenende pro Jahr';hotG=-1;renderTrend();}
+function setRange(r){rng=r;[['rAll','all'],['rMid','mid'],['rNear','near']].forEach(([id,v])=>$(id).setAttribute('aria-pressed',r===v));hovY=null;hotG=-1;renderTrend();}
+$('rAll').addEventListener('click',()=>setRange('all'));$('rMid').addEventListener('click',()=>setRange('mid'));$('rNear').addEventListener('click',()=>setRange('near'));
+$('mWd').addEventListener('click',()=>setMetric('wk'));
+$('mWe').addEventListener('click',()=>setMetric('we'));
+let lastW=0;if('ResizeObserver' in window)new ResizeObserver(()=>{const w=Math.floor($('chart').clientWidth);if(w&&w!==lastW){lastW=w;requestAnimationFrame(renderTrend);}}).observe($('chart'));
+
+function render(){
+ $('state').value=sel;$('yv').textContent=year;$('yprev').disabled=year<=YMIN;$('ynext').disabled=year>=YMAX;
+ document.querySelectorAll('.y').forEach(e=>e.textContent=year);document.querySelectorAll('.sn').forEach(e=>e.textContent=stName(sel));
+ document.querySelectorAll('[data-ex]').forEach(b=>b.setAttribute('aria-pressed',extras[b.dataset.ex]));
+ renderTrend();renderAnswer();ensureDetail();renderMap();renderRank();renderCal();renderDetail();renderMatrix();
+ if(!first)['tiles','rank','months','mx'].forEach(id=>{const e=$(id);e.classList.remove('anim');void e.offsetWidth;e.classList.add('anim');});
+ first=false;
+}
+function setSel(s){sel=s;detailK=null;try{localStorage.setItem('wtf-sel',s);}catch(e){}render();}
+$('state').innerHTML=`<option value="DE">Ganz Deutschland</option>`+ALPHA.map(s=>`<option value="${s.c}">${s.n}</option>`).join('');
+$('state').addEventListener('change',e=>setSel(e.target.value));
+$('yprev').addEventListener('click',()=>{if(year>YMIN){year--;detailK=null;render();}});
+$('ynext').addEventListener('click',()=>{if(year<YMAX){year++;detailK=null;render();}});
+$('fWd').addEventListener('click',()=>{onlyWd=true;$('fWd').setAttribute('aria-pressed','true');$('fAll').setAttribute('aria-pressed','false');renderMatrix();});
+$('fAll').addEventListener('click',()=>{onlyWd=false;$('fAll').setAttribute('aria-pressed','true');$('fWd').setAttribute('aria-pressed','false');renderMatrix();});
+document.addEventListener('click',e=>{
+ const ex=e.target.closest('[data-ex]');
+ if(ex){const kk=ex.dataset.ex;extras[kk]=!extras[kk];try{localStorage.setItem('wtf-ex',JSON.stringify(extras));}catch(err){}detailK=null;hovY=null;render();return;}
+ const st=e.target.closest('[data-state]');
+ if(st){const c=st.dataset.state;setSel(c===sel&&(st.classList.contains('tile')||st.classList.contains('rk')||st.classList.contains('code'))?'DE':c);return;}
+ const dk=e.target.closest('[data-k]');
+ if(dk){detailK=dk.dataset.k;renderCal();renderDetail();if(dk.tagName==='TR')$('detail').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});}
+});
+render();
+})();
+</script>
+
+</body>
+</html>
