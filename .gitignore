@@ -1,0 +1,5 @@
+.DS_Store
+# Ausgabe von scripts/build-site.sh
+/_site/
+# Sitzungsstand von Agenten, pro Maschine
+/.claude/
