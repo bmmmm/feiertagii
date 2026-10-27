@@ -239,12 +239,12 @@ h2.sign .pk svg{width:20px;height:20px}
 .lbb:focus-visible{outline:3px solid var(--hl);outline-offset:-3px;box-shadow:none}
 .lbb .ln{font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lbb[aria-pressed="true"] .ln{font-weight:600}
-.gp{display:inline-grid;place-items:center;min-width:31px;height:22px;padding:0 4px;border-radius:4px;background:var(--sign);color:var(--on-sign);font:700 14.5px/1 var(--f-disp);letter-spacing:.04em;flex:none;transition:background .15s,opacity .15s}
+.gp{display:inline-grid;place-items:center;min-width:31px;height:22px;padding:0 4px;border-radius:4px;background:var(--sign);color:var(--on-sign);font:700 14.5px/1 var(--f-disp);letter-spacing:.04em;flex:none}
 .np td.tot{background:none;text-align:right;padding:0 6px 0 4px;white-space:nowrap;line-height:1}
 .np td.tot b{font:700 19px/1 var(--f-disp);font-variant-numeric:tabular-nums}
 .np td.tot em{font:600 11px/1 var(--f-disp);font-style:normal;color:var(--muted);margin-left:3px}
 .np td.tot small{display:block;font:500 10px/1.2 var(--f-mono);color:var(--muted)}
-.np i{position:absolute;left:50%;pointer-events:none;transition:opacity .15s}
+.np i{position:absolute;left:50%;pointer-events:none}
 .np i.v{top:50%;bottom:50%;width:6px;margin-left:-3px;background:var(--lc);box-shadow:0 0 0 1px var(--edge)}
 .np i.v.u{top:-1px}.np i.v.d{bottom:-1px}
 .np td.w i.v{width:0;margin-left:-1px;background:none;box-shadow:none;border-left:2px dashed var(--ls)}
@@ -287,10 +287,10 @@ h2.sign .pk svg{width:20px;height:20px}
 .js .d{display:grid;place-items:center;height:28px;position:relative;border:0;padding:0;min-width:0;background:linear-gradient(var(--track),var(--track)) 0 50%/100% 2px no-repeat}
 .js .d.wd::before{content:"";position:absolute;left:50%;top:50%;width:3px;height:12px;margin:-6px 0 0 -1.5px;background:var(--sleeper);border-radius:1px}
 .js .d.x{background:none}
-.js span.d.past{opacity:.55}.js button.d.past .sg{opacity:.75}
+.js span.d.past{opacity:.55}.js button.d.past .sg{opacity:.75}.js button.d.past .sg.we{opacity:.3}
 .js .d.today::after{content:"";position:absolute;left:50%;top:-3px;width:11px;height:11px;margin-left:-5.5px;border-radius:50%;background:var(--alert);box-shadow:0 0 0 2px var(--panel);z-index:2}
 .js button.d{cursor:pointer;z-index:1}
-.js button.d .sg{width:min(24px,100%);height:auto;aspect-ratio:1;transition:transform .15s,opacity .15s}
+.js button.d .sg{width:min(24px,100%);height:auto;aspect-ratio:1}
 .js button.d.o .sg{transform:scale(.62);opacity:.45}
 .js button.d.r .sg{outline:2px dotted var(--ls);outline-offset:1px;border-radius:3px}
 .js button.d .plus{position:absolute;right:-2px;top:-2px;font:700 11px/1 var(--f-disp);color:var(--ink)}
@@ -313,6 +313,8 @@ h2.sign .pk svg{width:20px;height:20px}
 .vz-y.we{color:var(--alert-ink)}
 .vz-y.na{color:var(--muted);font-weight:500}
 .vz-g{grid-column:3;font:500 11px var(--f-mono);color:var(--muted);text-align:right;max-width:12em;line-height:1.25}
+.vz.na .vz-n{font-weight:500;color:var(--muted)}.vz.na .sg{opacity:.4}
+.vz-g b{color:var(--ink);background:var(--hl-soft);padding:0 2px;border-radius:2px}
 .vz-x{display:flex;justify-content:flex-end;padding:2px 8px 6px}
 .vz-x button{font:500 12.5px var(--f-body);border:1.5px dashed var(--muted);background:none;border-radius:999px;padding:3px 10px;cursor:pointer;color:var(--muted)}
 .vz-x button[aria-pressed="true"]{border-style:solid;border-color:var(--ink);color:var(--ink)}
@@ -342,9 +344,7 @@ h2.sign .pk svg{width:20px;height:20px}
 .tk .lsep{stroke:var(--ink);stroke-width:1.4}
 .tk .lt{font:500 10.5px var(--f-mono);fill:var(--muted)}
 .tk .lt.we{fill:var(--alert-ink)}
-.bfl path{fill:none;stroke:var(--ls);stroke-width:1.7;stroke-linejoin:round;stroke-linecap:round;opacity:.62;transition:opacity .15s,stroke-width .15s}
-.bfl{transition:opacity .15s}
-.bfs{display:none}
+.bfl path{fill:none;stroke:var(--ls);stroke-width:1.7;stroke-linejoin:round;stroke-linecap:round;opacity:.62}
 .bfs .f{fill:var(--lc);stroke:var(--panel);stroke-width:1}
 .bfs .w{fill:var(--panel);stroke:var(--ls);stroke-width:1.6}
 .bfs .r{fill:var(--panel);stroke:var(--ls);stroke-width:1.6;stroke-dasharray:1.5 1.5}
@@ -383,7 +383,7 @@ h2.sign .pk svg{width:20px;height:20px}
 .rk[aria-pressed="true"]{background:var(--hl-soft)}
 .rk-n{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:15px}
 .rk-s{display:flex;flex-wrap:wrap;gap:3px}
-.rk-s .sg{width:19px;height:19px;transition:opacity .15s}
+.rk-s .sg{width:19px;height:19px;border-radius:50%}
 .rk-c{font:700 24px/1 var(--f-disp);text-align:right;font-variant-numeric:tabular-nums}
 .rk-c small{display:block;font:500 10.5px/1.4 var(--f-mono);color:var(--muted)}
 @media (max-width:520px){.rk{grid-template-columns:34px minmax(0,1fr) 2.8em}.rk-n{grid-column:2;grid-row:1}.rk-s{grid-column:2;grid-row:2}.rk-c{grid-row:span 2;grid-column:3}.rk .gp{grid-row:span 2}}
@@ -457,7 +457,7 @@ h2.sign .pk svg{width:20px;height:20px}
       <span id="npKeyFz"></span>
     </div>
     <div class="np-wrap"><table class="np" id="np"></table></div>
-    <div class="ldet" id="ldet" aria-live="polite"></div>
+    <div class="ldet" id="ldet"></div>
   </section>
 
   <section class="card bx" id="strecke" aria-labelledby="jsTitle">
@@ -486,7 +486,7 @@ h2.sign .pk svg{width:20px;height:20px}
     </div>
     <p class="hint" id="tkHint"></p>
     <div class="tk" id="tk" tabindex="0" role="group" aria-label="Taktfahrplan: Feiertage je Land und Jahr, darunter der Bildfahrplan der Wochentage. Pfeiltasten links und rechts wechseln das Jahr."></div>
-    <div class="tk-info" id="tkInfo" aria-live="polite"></div>
+    <div class="tk-info" id="tkInfo"></div>
   </section>
 
   <section class="card bx" id="laender" aria-labelledby="lvTitle">
@@ -853,9 +853,10 @@ function renderVerz(){
  $('vz').innerHTML=Object.keys(CATS).map(cat=>{
   const ids=ORDER.filter(id=>LN[id].cat===cat);
   return `<div class="vz-cat"><h3>${shape(cat)}${CATS[cat].n}<small>${CATS[cat].s}</small></h3><ul>${ids.map(id=>{const L=LN[id],h=byId[id];
-   const yv=h?`<span class="vz-y${isWd(h.d)?'':' we'}">${fmt(h.d)}</span><span class="vz-g">${gleise(h)}</span>`:`<span class="vz-y na">${L.cat==='opt'?'aus':'nicht '+y}</span><span class="vz-g"></span>`;
+   const Ld=S.land,na=Ld!=='DE'&&(!h||(!h.full.includes(Ld)&&!h.reg.includes(Ld)));
+   const yv=h?`<span class="vz-y${isWd(h.d)?'':' we'}">${fmt(h.d)}</span><span class="vz-g">${Ld==='DE'?gleise(h):gleise(h).replace(new RegExp('\\b'+Ld+'\\b'),'<b>'+Ld+'</b>')}</span>`:`<span class="vz-y na">${L.cat==='opt'?'aus':'nicht '+y}</span><span class="vz-g"></span>`;
    const ex=exOf(id);
-   return `<li><button class="vz dm" data-pick="h" data-h="${id}" aria-pressed="${S.fid===id}" aria-label="Linie ${L.c}: ${L.n}">${sig(id,h&&!isWd(h.d)?'':'')}<span class="vz-n">${L.n}</span><span class="vz-r">${L.c} · ${L.r}</span>${yv}</button>${ex?`<div class="vz-x"><button data-ex="${ex}" aria-pressed="${extras[ex]}">als frei werten</button></div>`:''}</li>`;}).join('')}</ul></div>`;}).join('');
+   return `<li><button class="vz dm${na?' na':''}" data-pick="h" data-h="${id}" aria-pressed="${S.fid===id}" aria-label="Linie ${L.c}: ${L.n}">${sig(id,h&&!isWd(h.d)?'':'')}<span class="vz-n">${L.n}</span><span class="vz-r">${L.c} · ${L.r}</span>${yv}</button>${ex?`<div class="vz-x"><button data-ex="${ex}" aria-pressed="${extras[ex]}">als frei werten</button></div>`:''}</li>`;}).join('')}</ul></div>`;}).join('');
 }
 
 /* ---- Taktfahrplan + Bildfahrplan ---- */
@@ -918,23 +919,18 @@ function renderTakt(){
   Ln.pts.forEach((p,j)=>{if(!p){pen=false;return;}const x=f1(X(j)+cw/2);const pr=Ln.pts[j-1];
    if(pen&&pr&&(p.w-pr.w===0||p.w-pr.w===1||p.w-pr.w===2))d+=`L${x},${f1(p.y)}`;else d+=`M${x},${f1(p.y)}`;pen=true;});
   s+=`<g class="bfl" data-h="${Ln.id}"><path d="${d}"/></g>`;});
- const rr=Math.max(1.6,Math.min(3.6,cw*.42));
- lines.forEach(Ln=>{let m='';Ln.pts.forEach((p,j)=>{if(!p)return;const h=p.h,wd=isWd(h.d);
-   const rel=L==='DE'?(h.full.length?(wd?'f':'w'):'r'):(h.full.includes(L)?(wd?'f':'w'):h.reg.includes(L)?'r':'o');
-   m+=`<circle class="${rel}" cx="${f1(X(j)+cw/2)}" cy="${f1(p.y)}" r="${rel==='o'?f1(rr*.55):f1(rr)}"/>`;});
-  s+=`<g class="bfs" data-h="${Ln.id}">${m}</g>`;});
  if(si>=0)s+=`<rect class="sely" x="${f1(X(si))}" y="${yA-1}" width="${f1(cw)}" height="${f1(yB+hB-yA+2)}" rx="2"/>`;
- s+=`<g id="tov"></g><rect id="tkx" class="xcol" x="0" y="${yA}" width="${f1(cw)}" height="${f1(yB+hB-yA)}" visibility="hidden"/>`;
+ s+=`<g id="tov"></g><g id="bfm" class="bfs"></g><rect id="tkx" class="xcol" x="0" y="${yA}" width="${f1(cw)}" height="${f1(yB+hB-yA)}" visibility="hidden"/>`;
  s+=`<rect class="hit" x="0" y="0" width="${W}" height="${H}"/></svg>`;
  el.innerHTML=s;
- TKG={VY,n,X,cw,lw,yA,rh,hA,yB,lh,hB,evH,W,H,lines,i0,narrow};tovKey='';
+ TKG={VY,n,X,cw,lw,yA,rh,hA,yB,lh,hB,evH,W,H,lines,i0,narrow,land:S.land};tovKey='';
  $('tkHint').textContent=`Oben je Land und Jahr die Zahl der Feiertage ${tkMetric==='wk'?'auf Mo–Fr':'am Wochenende'}, dunkler = mehr; Signets am Rand markieren Fahrplanwechsel (Gesetzesänderungen). Unten der Bildfahrplan: jede Linie läuft durch die Jahre über ihren Wochentag – feste Termine wandern jedes Jahr einen Tag weiter, Ostertermine bleiben auf ihrer Spur. Jahr antippen wählt es, Linie antippen verfolgt sie.`;
  renderTov();updateTkInfo();
 }
 let tovKey='';const tovC={};
 function renderTov(){
  if(!TKG)return;const f=HV.fid||S.fid,key=(f||'')+'|'+TKG.VY[0]+'|'+TKG.n+'|'+TKG.W+'|'+exKey();if(key===tovKey)return;tovKey=key;
- const g=$('tov');if(!g)return;if(!f){g.removeAttribute('data-h');g.innerHTML='';return;}
+ const g=$('tov');if(!g)return;if(!f){g.removeAttribute('data-h');g.innerHTML='';$('bfm').innerHTML='';return;}
  if(!tovC[key]){const{VY,n,X,cw,yA,rh}=TKG;let s='';
   for(let j=0;j<n;j++){const h=findH(VY[j],f);if(!h)continue;const wd=isWd(h.d);
    NETZ.forEach((c,ri)=>{const yy=yA+ri*rh+rh-3.5;
@@ -942,6 +938,15 @@ function renderTov(){
     else if(h.reg.includes(c))s+=`<circle class="r" cx="${f1(X(j)+cw/2)}" cy="${f1(yy+1.5)}" r="${f1(Math.min(2,cw*.3))}"/>`;});}
   tovC[key]=s;}
  g.setAttribute('data-h',f);g.setAttribute('class','tov');g.innerHTML=tovC[key];
+ const Ln=TKG.lines.find(x=>x.id===f),bm=$('bfm');bm.setAttribute('data-h',f);
+ if(!Ln){bm.innerHTML='';return;}
+ const mk=key+'|m|'+TKG.land;
+ if(!tovC[mk]){const{X,cw}=TKG,L=TKG.land,rr=Math.max(1.6,Math.min(3.6,cw*.42));let m='';
+  Ln.pts.forEach((p,j)=>{if(!p)return;const h=p.h,wd=isWd(h.d);
+   const rel=L==='DE'?(h.full.length?(wd?'f':'w'):'r'):(h.full.includes(L)?(wd?'f':'w'):h.reg.includes(L)?'r':'o');
+   m+=`<circle class="${rel}" cx="${f1(X(j)+cw/2)}" cy="${f1(p.y)}" r="${rel==='o'?f1(rr*.55):f1(rr)}"/>`;});
+  tovC[mk]=m;}
+ bm.innerHTML=tovC[mk];
 }
 function updateTkInfo(){
  if(!TKG)return;const{VY,i0}=TKG;const yv=tkJ>=0?VY[tkJ]:Math.min(VY[VY.length-1],Math.max(VY[0],S.jahr)),j=YEARS.indexOf(yv);
@@ -977,7 +982,7 @@ function renderLaender(){
  const rows=STATES.map(s=>Object.assign({s},stats(y,s.c))).sort((a,b)=>b.wk.length-a.wk.length||a.s.n.localeCompare(b.s.n,'de'));
  $('rank').innerHTML=rows.map(r=>{
   const items=[...r.full.map(h=>({h,c:isWd(h.d)?'':'we'})),...hol(y).filter(h=>h.reg.includes(r.s.c)).map(h=>({h,c:'we'}))].sort((a,b)=>a.h.d-b.h.d);
-  const sg=items.map(o=>sig(o.h.id,'dm '+o.c+(o.h.reg.includes(r.s.c)?' rg':''))).join('');
+  const sg=items.map(o=>sig(o.h.id,o.c+(o.h.reg.includes(r.s.c)?' rg':''))).join('');
   return `<button class="rk" data-pick="l" data-l="${r.s.c}" ${LA[r.s.c]} aria-pressed="${S.land===r.s.c}" aria-label="${r.s.n}: ${r.wk.length} Feiertage Mo–Fr"><span class="gp">${r.s.c}</span><span class="rk-n">${r.s.n}</span><span class="rk-s">${sg}</span><span class="rk-c">${r.wk.length}${r.rg.length?`<small>+${r.rg.length} reg.</small>`:''}</span></button>`;}).join('');
 }
 
@@ -989,23 +994,31 @@ function renderBar(){
   el.innerHTML=`<span class="cur-k">${pv?'Vorschau':'Linie'}</span>${sig(f)}<span class="cur-n">${L.n}</span><span class="cur-d">${h?fmt(h.d)+S.jahr+(isWd(h.d)?' · Mo–Fr':' · Wochenende'):'nicht '+S.jahr}</span>${S.fid&&!pv?'<button class="cur-x" data-clear aria-label="Linie lösen (Esc)">×</button>':''}`;}
  else el.innerHTML=`<span class="cur-hint">Feiertag antippen, um seine Linie durch alle Ansichten zu verfolgen · Esc löst</span>`;
 }
-function brush(){
- const f=HV.fid||S.fid,l=HV.land||(S.land!=='DE'?S.land:null);let c='';
- if(f){const q=`[data-h="${f}"]`,L=LN[f],hf=`[data-hf~="${f}"]`,hw=`[data-hw~="${f}"]`,hr=`[data-hr~="${f}"]`,no=`:not(${hf}):not(${hw}):not(${hr})`;
-  c+=`.dm[data-h]:not(${q}){opacity:.16}`;
-  c+=`.np td[data-h]:not(${q}) i{opacity:.12}.np th.st:not(${q}) .stb{opacity:.3}.np td${q},.np th${q}{background-color:color-mix(in oklab,var(--lc) 15%,transparent)}.np th${q} .stb .sg{transform:scale(1.2)}`;
-  c+=`.np tbody tr${no} .gp{opacity:.3}.np tbody tr${hf} .gp,.rk${hf} .gp{background:${L.bg};color:${L.fg}}`;
-  c+=`.tile${no}{opacity:.25}.tile${hf}{background:${L.bg}!important;color:${L.fg}!important}.tile${hw}{background:var(--panel)!important;color:var(--ink)!important;box-shadow:inset 0 0 0 3px ${L.ed||L.bg}}.tile${hr}{background:repeating-linear-gradient(135deg,${L.bg} 0 3px,transparent 3px 7px),var(--panel)!important;color:var(--ink)!important}`;
-  c+=`.rk${no}{opacity:.35}`;
-  c+=`.bfl:not(${q}){opacity:.1}.bfl${q} path{stroke-width:3.4;opacity:1}.bfs${q}{display:inline}`;
-  c+=`.js button.d:not(${q}) .sg{opacity:.14}.js button.d${q} .sg{transform:scale(1.25);opacity:1}`;
-  c+=`.bd-list tr${q}{background:color-mix(in oklab,var(--lc) 22%,#0c0d10)}`;
- }
- if(l){const q=`[data-l="${l}"]`;
-  c+=`.np tbody tr${q}>td{background-color:var(--hl-soft)}.np tbody tr${q}>td:not(.nowc){--track:var(--ink);background-size:100% 5px}.np tbody tr${q}>td.nowc{--track:var(--ink);background-size:100% 5px,2px 100%}.np tbody tr${q} th.lb{background:linear-gradient(var(--hl-soft),var(--hl-soft)),var(--panel)}`;
-  c+=`.tk .rowhl${q}{opacity:.55}.tk .tl${q}{fill:var(--ink);font-weight:700}.tile${q}{outline:3px solid var(--ink);outline-offset:2px}.rk${q}{background:var(--hl-soft)}.code${q}{background:var(--hl);color:#111}`;
- }
+/* Brushing: Regeln einmal vorab je Linie und je Land erzeugen; eine Vorschau setzt nur
+   zwei Attribute an <html> – der Browser muss so nur die betroffenen Elemente neu bewerten. */
+(function brushRules(){
+ let c='';
+ ORDER.forEach(f=>{const R=`:root[data-fx="${f}"]`,q=`[data-h="${f}"]`,L=LN[f],hf=`[data-hf~="${f}"]`,hw=`[data-hw~="${f}"]`,hr=`[data-hr~="${f}"]`,no=`:not(${hf}):not(${hw}):not(${hr})`;
+  c+=`${R} .dm[data-h]:not(${q}){opacity:.16}`;
+  c+=`${R} .np td:not(${q}) .v,${R} .np td:not(${q}) .m{opacity:.12}${R} .np th.st:not(${q}) .stb{opacity:.3}${R} .np td${q},${R} .np th${q}{background-color:color-mix(in oklab,var(--lc) 15%,transparent)}${R} .np th${q} .sg{transform:scale(1.2)}`;
+  c+=`${R} .np tr${no} .gp{opacity:.3}${R} .np tr${hf} .gp,${R} .rk${hf} .gp{background:${L.bg};color:${L.fg}}`;
+  c+=`${R} .tile${no}{opacity:.25}${R} .tile${hf}{background:${L.bg}!important;color:${L.fg}!important}${R} .tile${hw}{background:var(--panel)!important;color:var(--ink)!important;box-shadow:inset 0 0 0 3px ${L.ed||L.bg}}${R} .tile${hr}{background:repeating-linear-gradient(135deg,${L.bg} 0 3px,transparent 3px 7px),var(--panel)!important;color:var(--ink)!important}`;
+  c+=`${R} .rk${no}{opacity:.35}${R} .rk-s ${q}{transform:scale(1.32);outline:2px solid var(--ink);outline-offset:1px}`;
+  c+=`${R} .bfl:not(${q}){opacity:.1}${R} .bfl${q} path{stroke-width:3.4;opacity:1}`;
+  c+=`${R} .js .d.h:not(${q}) .sg{opacity:.14}${R} .js .d${q} .sg{transform:scale(1.25);opacity:1}`;
+  c+=`${R} .bd-list tr${q}{background:color-mix(in oklab,var(--lc) 22%,#0c0d10)}`;
+ });
+ NETZ.forEach(l=>{const R=`:root[data-lx="${l}"]`,q=`[data-l="${l}"]`;
+  c+=`${R} .np tr${q}>td{background-color:var(--hl-soft)}${R} .np tr${q}>td.s,${R} .np tr${q}>td[data-h]{--track:var(--ink);background-size:100% 5px}${R} .np tr${q}>td.nowc{--track:var(--ink);background-size:100% 5px,2px 100%}${R} .np tr${q} .lb{background:linear-gradient(var(--hl-soft),var(--hl-soft)),var(--panel)}`;
+  c+=`${R} .rowhl${q}{opacity:.55}${R} .tl${q}{fill:var(--ink);font-weight:700}${R} .tile${q}{outline:3px solid var(--ink);outline-offset:2px}${R} .rk${q}{background:var(--hl-soft)}${R} .code${q}{background:var(--hl);color:#111}`;
+ });
  $('brush').textContent=c;
+})();
+const ROOT=document.documentElement;
+function brush(){
+ const f=HV.fid||S.fid,l=HV.land||(S.land!=='DE'?S.land:null);
+ if(f)ROOT.setAttribute('data-fx',f);else ROOT.removeAttribute('data-fx');
+ if(l)ROOT.setAttribute('data-lx',l);else ROOT.removeAttribute('data-lx');
 }
 let rafP=0;
 function preview(){rafP=0;brush();renderBar();renderBoardLine();renderLdet();renderTov();updateTkInfo();}
