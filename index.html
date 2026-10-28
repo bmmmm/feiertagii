@@ -95,7 +95,7 @@ h1{font:700 clamp(44px,8.4vw,92px)/.88 var(--f-disp);margin:8px 0 0;letter-spaci
 .strip i{flex:1;background:var(--sbg)}
 
 /* Leiste: Ihre Auswahl, immer sichtbar */
-.bar{position:sticky;top:0;z-index:30;margin:0 calc(-1 * max(14px,env(safe-area-inset-left,0px)));padding:8px max(14px,env(safe-area-inset-left,0px));background:color-mix(in oklab,var(--paper) 88%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+.bar{position:sticky;top:0;z-index:30;margin:0 calc(-1 * max(14px,env(safe-area-inset-left,0px)));padding:8px max(14px,env(safe-area-inset-left,0px));background:color-mix(in oklab,var(--paper) 96%,transparent);border-bottom:1px solid var(--rule)}
 .bar-in{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center}
 .gl{display:flex;align-items:center;background:var(--sign);color:var(--on-sign);border-radius:8px;padding-left:10px;position:relative}
 .gl>span:first-child{font:600 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:#ffd400}
@@ -127,8 +127,9 @@ select option{color:#111;background:#fff}
 /* Abschnittsschilder */
 .card{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:clamp(14px,2.6vw,26px);min-width:0}
 .sh{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 18px;margin-bottom:10px}
-h2.sign{display:inline-flex;align-items:center;gap:10px;font:700 clamp(22px,3vw,28px)/1 var(--f-disp);margin:0;background:var(--sign);color:var(--on-sign);padding:6px 14px 6px 6px;border-radius:7px;letter-spacing:.005em}
-h2.sign .pk{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:5px;background:var(--on-sign);color:var(--sign)}
+h2.sign{display:inline-flex;align-items:center;gap:10px;max-width:100%;font:700 clamp(22px,3vw,28px)/1 var(--f-disp);margin:0;background:var(--sign);color:var(--on-sign);padding:6px 14px 6px 6px;border-radius:7px;letter-spacing:.005em}
+h2.sign .tx{min-width:0;overflow-wrap:anywhere}
+h2.sign .pk{flex:none;display:inline-grid;place-items:center;width:30px;height:30px;border-radius:5px;background:var(--on-sign);color:var(--sign)}
 h2.sign .pk svg{width:20px;height:20px}
 .hint{color:var(--muted);font-size:14.5px;margin:4px 0 0;max-width:80ch;text-wrap:pretty}
 .seg{display:inline-flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden;background:var(--panel)}
@@ -197,6 +198,7 @@ h2.sign .pk svg{width:20px;height:20px}
 .bd-list .c-t small{display:block;font-size:11.5px;color:var(--flap-dim);font-weight:500}
 .bd-list .c-l{width:40px}
 .bd-list .c-l button{all:unset;cursor:pointer;display:inline-flex;border-radius:50%}
+.bd-list .c-l button:focus-visible{outline:3px solid var(--hl);outline-offset:2px;box-shadow:0 0 0 5px #0c0d10}
 .bd-list .c-l .sg{width:30px;height:30px}
 .bd-list .zn{display:block;font-weight:600;font-size:16.5px;color:#fff}
 .bd-list .zv{display:block;font-size:13px;color:var(--flap-dim);line-height:1.3}
@@ -287,6 +289,8 @@ h2.sign .pk svg{width:20px;height:20px}
 .wdh i{display:block;width:16px;background:var(--lc);border-radius:2px 2px 0 0;min-height:1px}
 .wdh .we i{background:none;border:1.5px dashed var(--ls);border-bottom:0}
 .ldet.empty{display:block;color:var(--muted);font-size:14.5px}
+/* Feste Mindesthöhen, damit eine Vorschau per Maus nichts darunter verschiebt (sonst müsste der Browser alles Folgende neu zeichnen) */
+@media (hover:hover) and (min-width:561px){.ldet{min-height:272px}.tk-info{min-height:248px;align-content:start}}
 
 /* Jahresstrecke: zwölf Monatsstrecken, jede Schwelle ein Arbeitstag */
 .js{display:grid;grid-template-columns:2.7em repeat(31,minmax(0,1fr)) 2.4em;align-items:center;row-gap:5px;margin-top:8px}
@@ -387,8 +391,8 @@ h2.sign .pk svg{width:20px;height:20px}
 .tk .ax.cur{fill:var(--ink);font-weight:600}
 .tk .bl{font:600 10.5px var(--f-mono);fill:var(--muted);letter-spacing:.06em;text-transform:uppercase}
 .tk .q0{fill:color-mix(in oklab,var(--heat) 6%,var(--panel))}.tk .q1{fill:color-mix(in oklab,var(--heat) 14%,var(--panel))}.tk .q2{fill:color-mix(in oklab,var(--heat) 23%,var(--panel))}
-.tk .q3{fill:color-mix(in oklab,var(--heat) 33%,var(--panel))}.tk .q4{fill:color-mix(in oklab,var(--heat) 44%,var(--panel))}.tk .q5{fill:color-mix(in oklab,var(--heat) 56%,var(--panel))}
-.tk .q6{fill:color-mix(in oklab,var(--heat) 68%,var(--panel))}.tk .q7{fill:color-mix(in oklab,var(--heat) 81%,var(--panel))}.tk .q8{fill:var(--heat)}
+.tk .q3{fill:color-mix(in oklab,var(--heat) 33%,var(--panel))}.tk .q4{fill:color-mix(in oklab,var(--heat) 43%,var(--panel))}.tk .q5{fill:color-mix(in oklab,var(--heat) 52%,var(--panel))}
+.tk .q6{fill:color-mix(in oklab,var(--heat) 66%,var(--panel))}.tk .q7{fill:color-mix(in oklab,var(--heat) 80%,var(--panel))}.tk .q8{fill:var(--heat)}
 .tk .cv{font:600 10px var(--f-disp);text-anchor:middle;fill:var(--ink);pointer-events:none}
 .tk .cv.inv{fill:var(--on-heat)}
 .tk .rowhl{fill:var(--hl);opacity:0}
@@ -444,10 +448,40 @@ h2.sign .pk svg{width:20px;height:20px}
 .foot a{color:inherit;text-decoration:underline;text-decoration-color:var(--rule);text-underline-offset:3px}
 .foot a:hover{color:var(--ink);text-decoration-color:currentColor}
 
+/* Brushing (siehe brush()): Abschnitt .has-f, Treffer .fx-on, Zeilen .fx-hf/.fx-hw/.fx-hr/.fx-no, Land .lx-on */
+.has-f .dm:not(.fx-on){opacity:.16}
+#np.has-f td:not(.fx-on)>i{opacity:.12}
+#np.has-f th.st:not(.fx-on) .stb{opacity:.3}
+#np.has-f td.fx-on,#np.has-f th.fx-on{background-color:color-mix(in oklab,var(--lc) 15%,transparent)}
+#np.has-f th.fx-on .stb .sg{transform:scale(1.2)}
+#np.has-f tr.fx-no .gp{opacity:.3}
+#np.has-f tr.fx-hf .gp,#rank.has-f .rk.fx-hf .gp{background:var(--xb);color:var(--xf)}
+#tiles.has-f .tile.fx-no{opacity:.25}
+#tiles.has-f .tile.fx-hf{background:var(--xb)!important;color:var(--xf)!important}
+#tiles.has-f .tile.fx-hw{background:var(--panel)!important;color:var(--ink)!important;box-shadow:inset 0 0 0 3px var(--xe)}
+#tiles.has-f .tile.fx-hr{background:repeating-linear-gradient(135deg,var(--xb) 0 3px,transparent 3px 7px),var(--panel)!important;color:var(--ink)!important}
+#rank.has-f .rk.fx-no{opacity:.35}
+#rank.has-f .rk-s .sg.fx-on{transform:scale(1.32);outline:2px solid var(--ink);outline-offset:1px}
+#tksvg.has-f .fpl:not(.fx-on){opacity:.22}
+#tksvg.has-f .fpl.fx-on .band{fill:color-mix(in oklab,var(--lc) 13%,transparent)}
+#tkl.has-f .fph:not(.fx-on){opacity:.5}
+#tkl.has-f .fph.fx-on{background:color-mix(in oklab,var(--lc) 16%,var(--panel))}
+#js.has-f button[data-h]:not(.fx-on) .sg{opacity:.14}
+#js.has-f button.fx-on .sg{transform:scale(1.25);opacity:1}
+#bdMain.has-f .bd-list tr.fx-on{background:color-mix(in oklab,var(--lc) 22%,#0c0d10)}
+#np tr.lx-on>td{background-color:var(--hl-soft)}
+#np tr.lx-on>td.s,#np tr.lx-on>td[data-h]{--track:var(--ink);background-size:100% 5px}
+#np tr.lx-on>td.nowc{--track:var(--ink);background-size:100% 5px,2px 100%}
+#np tr.lx-on .lb{background:linear-gradient(var(--hl-soft),var(--hl-soft)),var(--panel)}
+.tk .rowhl.lx-on{opacity:.55}
+.tkr.lx-on{background:var(--hl-soft)}
+.tile.lx-on{outline:3px solid var(--ink);outline-offset:2px}
+.rk.lx-on{background:var(--hl-soft)}
+.code.lx-on{background:var(--hl);color:#111}
+
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 <style id="linecss"></style>
-<style id="brush"></style>
 </head>
 <body>
 <div class="wrap">
@@ -489,7 +523,7 @@ h2.sign .pk svg{width:20px;height:20px}
 
   <section class="card bx" id="netz" aria-labelledby="npTitle">
     <div class="sh">
-      <h2 class="sign" id="npTitle"><span class="pk" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M2 6h16M2 14h16" stroke="currentColor" stroke-width="2.4"/><path d="M7 2v16M13 6v12" stroke="currentColor" stroke-width="3"/><circle cx="7" cy="6" r="2.2" fill="#fff" stroke="currentColor" stroke-width="1.6"/><circle cx="13" cy="14" r="2.2" fill="#fff" stroke="currentColor" stroke-width="1.6"/></svg></span>Liniennetz <span class="y"></span></h2>
+      <h2 class="sign" id="npTitle"><span class="pk" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M2 6h16M2 14h16" stroke="currentColor" stroke-width="2.4"/><path d="M7 2v16M13 6v12" stroke="currentColor" stroke-width="3"/><circle cx="7" cy="6" r="2.2" fill="#fff" stroke="currentColor" stroke-width="1.6"/><circle cx="13" cy="14" r="2.2" fill="#fff" stroke="currentColor" stroke-width="1.6"/></svg></span><span class="tx">Liniennetz <span class="y"></span></span></h2>
       <div class="seg" role="group" aria-label="Filter">
         <button id="fAll" aria-pressed="true">Alle Halte</button>
         <button id="fWd" aria-pressed="false">Nur Mo–Fr</button>
@@ -510,15 +544,15 @@ h2.sign .pk svg{width:20px;height:20px}
 
   <section class="card bx" id="strecke" aria-labelledby="jsTitle">
     <div class="sh">
-      <h2 class="sign" id="jsTitle"><span class="pk" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M1 7h18M1 13h18" stroke="currentColor" stroke-width="1.8"/><path d="M4 4v12M8 4v12M12 4v12" stroke="currentColor" stroke-width="2.2"/><circle cx="16" cy="10" r="3.2" fill="currentColor"/></svg></span>Jahresstrecke <span class="y"></span> · <span class="sn"></span></h2>
+      <h2 class="sign" id="jsTitle"><span class="pk" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M1 7h18M1 13h18" stroke="currentColor" stroke-width="1.8"/><path d="M4 4v12M8 4v12M12 4v12" stroke="currentColor" stroke-width="2.2"/><circle cx="16" cy="10" r="3.2" fill="currentColor"/></svg></span><span class="tx">Jahresstrecke <span class="y"></span> · <span class="sn"></span></span></h2>
     </div>
-    <p class="hint">Jede Zeile ein Monat, jede Schwelle ein Arbeitstag, Lücken sind Wochenenden. An den Halten steht das Signet des Feiertags; blass und klein = gilt nur in anderen Ländern. Rechts: freie Werktage im Monat.</p>
+    <p class="hint">Jede Zeile ein Monat, jede Schwelle ein Arbeitstag, Lücken sind Wochenenden. An den Halten steht das Signet des Feiertags; blass und klein = gilt nur in anderen Ländern. Rechts: freie Werktage im Monat (bei ganz Deutschland: bundesweit freie).</p>
     <div class="js" id="js"></div>
   </section>
 
   <section class="card bx" id="verz" aria-labelledby="vzTitle">
     <div class="sh">
-      <h2 class="sign" id="vzTitle"><span class="pk" aria-hidden="true"><svg viewBox="0 0 20 20"><circle cx="4" cy="4.5" r="2.6" fill="currentColor"/><rect x="1.6" y="8" width="5" height="5" rx="1" fill="currentColor"/><path d="M4 14.5l2.6 2.6L4 19.7 1.4 17.1Z" fill="currentColor"/><path d="M9 4.5h10M9 10.5h10M9 17h10" stroke="currentColor" stroke-width="2"/></svg></span>Linienverzeichnis</h2>
+      <h2 class="sign" id="vzTitle"><span class="pk" aria-hidden="true"><svg viewBox="0 0 20 20"><circle cx="4" cy="4.5" r="2.6" fill="currentColor"/><rect x="1.6" y="8" width="5" height="5" rx="1" fill="currentColor"/><path d="M4 14.5l2.6 2.6L4 19.7 1.4 17.1Z" fill="currentColor"/><path d="M9 4.5h10M9 10.5h10M9 17h10" stroke="currentColor" stroke-width="2"/></svg></span><span class="tx">Linienverzeichnis</span></h2>
     </div>
     <p class="hint">Alle Feiertage einzeln, mit Kürzel und Linienfarbe. Die Form des Signets nennt die Art, rechts steht der Termin <span class="y"></span> und wo er gilt. Eintrag antippen verfolgt die Linie durch alle Ansichten.</p>
     <div class="vz-grid" id="vz"></div>
@@ -526,7 +560,7 @@ h2.sign .pk svg{width:20px;height:20px}
 
   <section class="card bx" id="takt" aria-labelledby="tkTitle">
     <div class="sh">
-      <h2 class="sign" id="tkTitle"><span class="pk" aria-hidden="true"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M10 5v5l3.5 2.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>Fahrplan 1991–2070</h2>
+      <h2 class="sign" id="tkTitle"><span class="pk" aria-hidden="true"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M10 5v5l3.5 2.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span><span class="tx">Fahrplan 1991–2070</span></h2>
       <div class="ctl">
         <div class="seg" role="group" aria-label="Zeitraum"><button id="rAll" aria-pressed="true">1991–2070</button><button id="rMid" aria-pressed="false">2000–2040</button><button id="rNear" aria-pressed="false">±10 J.</button></div>
         <div class="seg" role="group" aria-label="Kennzahl"><button id="mWd" aria-pressed="true">Mo–Fr</button><button id="mWe" aria-pressed="false">Aufs Wochenende</button></div>
@@ -551,7 +585,7 @@ h2.sign .pk svg{width:20px;height:20px}
 
   <section class="card bx" id="laender" aria-labelledby="lvTitle">
     <div class="sh">
-      <h2 class="sign" id="lvTitle"><span class="pk" aria-hidden="true"><svg viewBox="0 0 20 20"><rect x="1.5" y="3" width="7.5" height="14" rx="1.5" fill="currentColor"/><rect x="11" y="3" width="7.5" height="14" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/></svg></span>Gleise im Vergleich <span class="y"></span></h2>
+      <h2 class="sign" id="lvTitle"><span class="pk" aria-hidden="true"><svg viewBox="0 0 20 20"><rect x="1.5" y="3" width="7.5" height="14" rx="1.5" fill="currentColor"/><rect x="11" y="3" width="7.5" height="14" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/></svg></span><span class="tx">Gleise im Vergleich <span class="y"></span></span></h2>
     </div>
     <p class="hint">Zahl = Feiertage, die auf Mo–Fr fallen. Jede Zeile ist ein Haltestellenschild: Diese Linien halten dort, blasse fallen aufs Wochenende. Antippen wählt das Land.</p>
     <div class="duo">
@@ -561,7 +595,7 @@ h2.sign .pk svg{width:20px;height:20px}
   </section>
 
   <section class="notes">
-    <h2 class="sign"><span class="pk" aria-hidden="true"><svg viewBox="0 0 20 20"><circle cx="10" cy="4" r="2.2" fill="currentColor"/><path d="M10 8.5v9" stroke="currentColor" stroke-width="3.2"/></svg></span>Hinweise</h2>
+    <h2 class="sign"><span class="pk" aria-hidden="true"><svg viewBox="0 0 20 20"><circle cx="10" cy="4" r="2.2" fill="currentColor"/><path d="M10 8.5v9" stroke="currentColor" stroke-width="3.2"/></svg></span><span class="tx">Hinweise</span></h2>
     <ul>
       <li>Maßgeblich ist das Bundesland des Arbeitsorts, nicht des Wohnorts.</li>
       <li>Regional: Fronleichnam gilt in Sachsen und Thüringen nur in einzelnen Gemeinden, Mariä Himmelfahrt in Bayern nur in Gemeinden mit überwiegend katholischer Bevölkerung, das Friedensfest (8. August) nur in Augsburg. Diese Tage zählen nicht in die Landessummen.</li>
@@ -659,6 +693,8 @@ const plural=(n,a,b)=>n===1?a:b;
 const $=id=>document.getElementById(id);
 const stName=c=>c==='DE'?'Ganz Deutschland':BY[c].n;
 const daysTo=d=>Math.round((d-TODAY)/864e5);
+const relDays=n=>n===0?'heute':n===1?'morgen':n===-1?'gestern':n>0?`in ${n} Tagen`:`vor ${-n} Tagen`;
+const inDays=d=>relDays(daysTo(d));
 function wdBetween(a,b){let n=0;for(let d=new Date(a);d<b;d=addD(d,1))if(isWd(d))n++;return n;}
 const RM=matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -701,6 +737,10 @@ const LN={
 };
 const ORDER=['neujahr','drei-koenige','rosenmontag','frauentag','karfreitag','ostersonntag','ostermontag','tag-der-arbeit','befreiung','himmelfahrt','pfingstsonntag','pfingstmontag','fronleichnam','friedensfest','mariae-himmelfahrt','weltkindertag','einheit','reformationstag','allerheiligen','buss-und-bettag','heiligabend','weihnachten-1','weihnachten-2','silvester'];
 const EXID={rm:'rosenmontag',ha:'heiligabend',sv:'silvester'};
+// Fremdeingaben (Hash, localStorage, data-*) nur als eigene Schlüssel annehmen – nie „constructor“, „__proto__“ …
+const own=(o,k)=>typeof k==='string'&&Object.prototype.hasOwnProperty.call(o,k);
+const isLand=c=>c==='DE'||own(BY,c);
+const isLine=f=>own(LN,f);
 (function lineCSS(){
  let a='',d='';
  ORDER.forEach(id=>{const L=LN[id];
@@ -724,8 +764,8 @@ const shape=cat=>`<svg class="shape" viewBox="0 0 32 32" aria-hidden="true">${SH
 /* ---- Zustand: ein Auswahlmodell für alle Ansichten ---- */
 const S={land:'DE',jahr:Math.min(YMAX,Math.max(YMIN,TY)),fid:null,tag:null};
 const HV={fid:null,land:null,jahr:null};           // flüchtige Vorschau (Hover/Fokus)
-try{const s=localStorage.getItem('wtf-sel');if(s&&(s==='DE'||BY[s]))S.land=s;}catch(e){}
-let extras={rm:false,ha:false,sv:false};try{const x=JSON.parse(localStorage.getItem('wtf-ex')||'{}');for(const kk in extras)if(typeof x[kk]==='boolean')extras[kk]=x[kk];}catch(e){}
+try{const s=localStorage.getItem('wtf-sel');if(isLand(s))S.land=s;}catch(e){}
+let extras={rm:false,ha:false,sv:false};try{const x=JSON.parse(localStorage.getItem('wtf-ex')||'{}');if(x&&typeof x==='object')for(const kk of Object.keys(extras))if(own(x,kk)&&typeof x[kk]==='boolean')extras[kk]=x[kk];}catch(e){}
 const exKey=()=>(extras.rm?'r':'')+(extras.ha?'h':'')+(extras.sv?'s':'');
 const cache={};
 const hol=y=>{const ck=y+'|'+exKey();return cache[ck]||(cache[ck]=F.holidays(y,extras));};
@@ -737,10 +777,10 @@ const codes=a=>NETZ.filter(c=>a.includes(c)).join(' ');
 const gleise=h=>h.full.length===16?'alle 16':[codes(h.full),h.reg.length?codes(h.reg)+' (reg.)':''].filter(Boolean).join(' · ');
 function readHash(){
  const p=new URLSearchParams(location.hash.slice(1));
- if(p.has('jahr'))S.jahr=clampY(p.get('jahr'));
- const l=p.get('land');if(l&&(l==='DE'||BY[l]))S.land=l;
- const f=p.get('linie');S.fid=f&&LN[f]?f:null;
- const t=p.get('tag');S.tag=t&&/^\d{4}-\d\d-\d\d$/.test(t)?t:null;
+ const j=p.get('jahr');if(j&&/^\d{4}$/.test(j))S.jahr=clampY(j);
+ const l=p.get('land');if(isLand(l))S.land=l;
+ const f=p.get('linie');S.fid=isLine(f)?f:null;
+ const t=p.get('tag');S.tag=t&&/^\d{4}-\d\d-\d\d$/.test(t)&&+t.slice(0,4)>=YMIN&&+t.slice(0,4)<=YMAX?t:null;
  if(S.tag)S.jahr=clampY(S.tag.slice(0,4));
 }
 function writeHash(){
@@ -749,11 +789,13 @@ function writeHash(){
 }
 function normalize(){
  S.jahr=clampY(S.jahr);
+ if(!isLand(S.land))S.land='DE';
+ if(S.fid&&!isLine(S.fid))S.fid=null;
  if(S.tag){const L=hol(+S.tag.slice(0,4)).filter(h=>h.k===S.tag);if(!L.length)S.tag=null;else if(!S.fid||!L.some(h=>h.id===S.fid))S.fid=L[0].id;}
  if(S.fid){const h=findH(S.jahr,S.fid);S.tag=h?h.k:null;}else S.tag=null;
 }
 function commit(p){Object.assign(S,p);normalize();writeHash();renderAll();}
-function setLand(c){S.land=c;try{localStorage.setItem('wtf-sel',c);}catch(e){}commit({});}
+function setLand(c){if(!isLand(c))c='DE';S.land=c;HV.land=null;HV.fid=null;HV.jahr=null;try{localStorage.setItem('wtf-sel',c);}catch(e){}commit({});}
 
 /* ---- Abfahrtstafel ---- */
 function flaps(txt,cls,i0){let i=i0||0;return `<span class="flaps ${cls||''}" aria-hidden="true">${txt.split(' ').map(w=>`<span class="w">${[...w].map(ch=>`<b style="--i:${i++}">${ch}</b>`).join('')}</span>`).join('')}</span>`;}
@@ -761,11 +803,15 @@ let boardKey='';
 function renderBoard(){
  const t=TODAY,L=S.land,ty=TY,key=L+'|'+exKey();
  if(key===boardKey)return;boardKey=key;
- const hs=[...hol(ty),...hol(ty+1)].filter(h=>h.d>=t);
+ const head=`<div class="bd-head"><span class="bd-title" id="bdTitle"><span class="pk" aria-hidden="true"><svg viewBox="0 0 20 20"><rect x="3" y="2" width="14" height="13" rx="3" fill="currentColor"/><rect x="5.5" y="4.5" width="9" height="4.5" rx="1" fill="#ffd400"/><circle cx="7" cy="12" r="1.3" fill="#ffd400"/><circle cx="13" cy="12" r="1.3" fill="#ffd400"/><path d="M6 15l-2.5 4M14 15l2.5 4" stroke="currentColor" stroke-width="2"/></svg></span>Abfahrt ab heute</span><span class="bd-clock">${WDL[t.getDay()]}, ${dm(t)}${ty}</span><span class="bd-gl">Gleis <b>${L}</b></span></div>`;
+ // Daten gibt es nur für 1991–2070: nichts aus 2071 anzeigen
+ const hs=[ty,ty+1].filter(y=>y>=YMIN&&y<=YMAX).flatMap(hol).filter(h=>h.d>=t);
  const nx=hs.find(h=>applies(h,L)&&isWd(h.d));
+ if(!nx){$('bdMain').innerHTML=head+`<div class="bd-main"><div><p class="bd-k">Fahrplanende</p><p style="margin:0">${flaps('KEIN HALT','xl')}<span class="sr">Kein Halt mehr</span></p><p class="bd-sub">${ty>YMAX||ty<YMIN?'Die Seite rechnet für die Jahre 1991 bis 2070; für heute liegen keine Daten vor.':`Bis Ende 2070 kommt ${L==='DE'?'kein bundesweiter Feiertag':'in '+BY[L].n+' kein Feiertag'} mehr auf einen Werktag. Für die Zeit nach 2070 liegen keine Daten vor.`}</p></div></div>`;$('bdFoot').innerHTML='';return;}
+ const inR=ty>=YMIN&&ty<=YMAX;
  const isToday=nx.k===TK,nxSame=hs.filter(h=>h.k===nx.k&&h!==nx);
- let last=addD(nx.d,-1);while(!isWd(last))last=addD(last,-1);
  const wdc=wdBetween(t,nx.d);
+ let last=null;if(wdc>0){last=addD(nx.d,-1);while(!isWd(last))last=addD(last,-1);}
  const rows=[];let after=0;
  for(const h of hs){
   if(h.d<nx.d){let kind=null;
@@ -777,8 +823,8 @@ function renderBoard(){
  }
  const ST={nx:['stat-nx','Nächster Halt'],halt:['stat-halt','Halt'],aus:['stat-aus','fällt aus'],frueh:['','früher frei'],durch:['','Durchfahrt'],reg:['','Teilhalt']};
  const via=r=>{const h=r.h;switch(r.kind){
-  case 'nx':return isToday?'heute frei':`${wdc} ${plural(wdc,'Arbeitstag','Arbeitstage')} am Stück bis dahin`;
-  case 'halt':return `${scope(h)} · in ${daysTo(h.d)} Tagen`;
+  case 'nx':return isToday?'heute frei':wdc?`${wdc} ${plural(wdc,'Arbeitstag','Arbeitstage')} am Stück bis dahin`:'kein Arbeitstag bis dahin';
+  case 'halt':return `${scope(h)} · ${inDays(h.d)}`;
   case 'aus':return `fällt auf ${WDL[h.d.getDay()]}${L==='DE'?' · '+scope(h):''}`;
   case 'frueh':return 'nur '+NETZ.filter(c=>h.full.includes(c)).map(c=>BY[c].n).join(', ');
   case 'durch':return 'hält nicht in '+BY[L].n;
@@ -787,11 +833,15 @@ function renderBoard(){
  const list=rows.map(r=>{const h=r.h,[sc,st]=ST[r.kind],also=alsoOf(h);
   return `<tr class="bk-${r.kind}" data-h="${h.id}" data-k="${h.k}" data-pick="h"><td class="c-t">${fmt(h.d)}${h.d.getFullYear()!==ty?`<small>${h.d.getFullYear()}</small>`:''}</td><td class="c-l"><button data-pick="h" data-h="${h.id}" data-k="${h.k}" aria-label="Linie ${LN[h.id].c}: ${h.n} wählen">${sig(h.id,isWd(h.d)?'':'we')}</button></td><td class="c-z"><span class="zn">${h.n}</span><span class="zv">${via(r)}${also.length?' · zugleich '+also.join(', '):''}</span><span class="zs"><span class="stat ${sc}">${st}</span></span></td><td class="c-g">${gleise(h)}</td><td class="c-s"><span class="stat ${sc}">${st}</span></td></tr>`;}).join('');
  let ticks='';for(let d=new Date(t);d<=nx.d;d=addD(d,1)){const k=kf(d);if(k===nx.k)break;ticks+=k===TK?'<i class="now"></i>':isWd(d)?'<i class="sl"></i>':'<i></i>';}
- const bigTxt=isToday?'HEUTE FREI':WD[last.getDay()].toUpperCase()+' '+dm(last);
- const sub=isToday?`${nx.n}${L==='DE'?' – bundesweit.':' in '+BY[L].n+'.'}`:`<b>${wdc} ${plural(wdc,'Arbeitstag','Arbeitstage')}</b> am Stück (ab heute), dann ist ${fmt(nx.d)}${nx.d.getFullYear()!==ty?nx.d.getFullYear():''} frei${L==='DE'?' – in allen 16 Ländern':''}.`;
- $('bdMain').innerHTML=`<div class="bd-head"><span class="bd-title" id="bdTitle"><span class="pk" aria-hidden="true"><svg viewBox="0 0 20 20"><rect x="3" y="2" width="14" height="13" rx="3" fill="currentColor"/><rect x="5.5" y="4.5" width="9" height="4.5" rx="1" fill="#ffd400"/><circle cx="7" cy="12" r="1.3" fill="#ffd400"/><circle cx="13" cy="12" r="1.3" fill="#ffd400"/><path d="M6 15l-2.5 4M14 15l2.5 4" stroke="currentColor" stroke-width="2"/></svg></span>Abfahrt ab heute</span><span class="bd-clock">${WDL[t.getDay()]}, ${dm(t)}${ty}</span><span class="bd-gl">Gleis <b>${L}</b></span></div>
- <div class="bd-main"><div><p class="bd-k">${isToday?'Heute ist':'Normale Arbeitstage bis'}</p><p style="margin:0">${flaps(bigTxt,'xl')}<span class="sr">${isToday?'heute frei':WDL[last.getDay()]+', '+dm(last)}</span></p><p class="bd-sub">${sub}</p></div>
- <div data-h="${nx.id}"><p class="bd-k">Nächster Halt · ${stName(L)}</p><div class="bd-dest">${sig(nx.id)}<span>${flaps(nx.n.toUpperCase(),'lg',10)}<span class="sr">${nx.n}</span></span></div>${nxSame.map(x=>`<div class="bd-dest bd-also" data-h="${x.id}">${sig(x.id)}<span>zugleich <b>${x.n}</b></span></div>`).join('')}<p class="bd-when">${WDL[nx.d.getDay()]}, ${dm(nx.d)}${nx.d.getFullYear()} <span>· ${scope(nx)} · in ${daysTo(nx.d)} Tagen</span></p></div></div>
+ // Kein Arbeitstag vor dem Halt (z. B. Samstag vor Ostermontag): nicht „bis gestern“ anzeigen, sondern den Halt selbst
+ const nxY=nx.d.getFullYear()!==ty?nx.d.getFullYear():'';
+ const kick=isToday?'Heute ist':wdc?'Normale Arbeitstage bis':'Kein Arbeitstag mehr bis';
+ const bigTxt=isToday?'HEUTE FREI':wdc?WD[last.getDay()].toUpperCase()+' '+dm(last):WD[nx.d.getDay()].toUpperCase()+' '+dm(nx.d);
+ const bigSr=isToday?'heute frei':wdc?WDL[last.getDay()]+', '+dm(last):'(kein Arbeitstag vor dem Halt)';
+ const sub=isToday?`${nx.n}${L==='DE'?' – bundesweit.':' in '+BY[L].n+'.'}`:wdc?`<b>${wdc} ${plural(wdc,'Arbeitstag','Arbeitstage')}</b> am Stück (ab heute), dann ist ${fmt(nx.d)}${nxY} frei${L==='DE'?' – in allen 16 Ländern':''}.`:`Kein Arbeitstag bis dahin: Der nächste Werktag, ${fmt(nx.d)}${nxY}, ist schon frei${L==='DE'?' – in allen 16 Ländern':''}.`;
+ $('bdMain').innerHTML=`${head}
+ <div class="bd-main"><div><p class="bd-k">${kick}</p><p style="margin:0">${flaps(bigTxt,'xl')}<span class="sr">${bigSr}</span></p><p class="bd-sub">${sub}</p></div>
+ <div data-h="${nx.id}"><p class="bd-k">Nächster Halt · ${stName(L)}</p><div class="bd-dest">${sig(nx.id)}<span>${flaps(nx.n.toUpperCase(),'lg',10)}<span class="sr">${nx.n}</span></span></div>${nxSame.map(x=>`<div class="bd-dest bd-also" data-h="${x.id}">${sig(x.id)}<span>zugleich <b>${x.n}</b></span></div>`).join('')}<p class="bd-when">${WDL[nx.d.getDay()]}, ${dm(nx.d)}${nx.d.getFullYear()} <span>· ${scope(nx)} · ${inDays(nx.d)}</span></p></div></div>
  <div class="trk-wrap" aria-hidden="true"><div class="trk">${ticks}<span class="end">${sig(nx.id)}</span></div><div class="trk-cap"><span>Heute</span><span>Jede Schwelle ein Arbeitstag, Lücken sind Wochenenden</span><span>${dm(nx.d)}</span></div></div>
  <table class="bd-list"><caption>Weitere Abfahrten${L==='DE'?' – alle Länder':' – Gleis '+L}</caption><thead><tr><th scope="col">Datum</th><th scope="col">Linie</th><th scope="col">Ziel</th><th scope="col" class="c-g">Gleise</th><th scope="col" class="c-s">Hinweis</th></tr></thead><tbody>${list}</tbody></table>`;
  let bil;
@@ -799,13 +849,13 @@ function renderBoard(){
   bil=`${st.wk.length} Feiertage Mo–Fr: <b>${p} vorbei</b>, ${f} ${plural(f,'kommt','kommen')} noch · ${st.we.length} ${plural(st.we.length,'fällt','fallen')} aufs Wochenende`;}
  else{const nat=hol(ty).filter(h=>h.full.length===16),wk=nat.filter(h=>isWd(h.d)),p=wk.filter(h=>h.d<t).length;
   bil=`Von ${nat.length} bundesweiten Feiertagen liegen ${wk.length} auf Mo–Fr: <b>${p} vorbei</b>, ${wk.length-p} ${plural(wk.length-p,'kommt','kommen')} noch`;}
- $('bdFoot').innerHTML=`<div class="bd-foot"><span class="k">Bilanz ${ty}</span><span>${bil}</span></div>`;
+ $('bdFoot').innerHTML=inR?`<div class="bd-foot"><span class="k">Bilanz ${ty}</span><span>${bil}</span></div>`:'';
 }
 function nextOcc(id,L){
  const rel=h=>L==='DE'?(h.full.length?'f':h.reg.length?'r':''):(h.full.includes(L)?'f':h.reg.includes(L)?'r':'');
  let first=null;
- for(let y=TY;y<=YMAX;y++){const h=findH(y,id);if(!h||h.d<TODAY)continue;const r=rel(h);if(!r)continue;if(!first)first={h,r};if(r==='f'&&isWd(h.d))return{first,stop:h};}
- let lastP=null;for(let y=TY;y>=YMIN;y--){const h=findH(y,id);if(h&&h.d<TODAY&&rel(h)){lastP=h;break;}}
+ for(let y=Math.max(TY,YMIN);y<=YMAX;y++){const h=findH(y,id);if(!h||h.d<TODAY)continue;const r=rel(h);if(!r)continue;if(!first)first={h,r};if(r==='f'&&isWd(h.d))return{first,stop:h};}
+ let lastP=null;for(let y=Math.min(TY,YMAX);y>=YMIN;y--){const h=findH(y,id);if(h&&h.d<TODAY&&rel(h)){lastP=h;break;}}
  return{first,stop:null,lastP};
 }
 let lineKey='';
@@ -815,22 +865,26 @@ function renderBoardLine(){
  if(!f){el.innerHTML=`<div class="bd-line off">Linie wählen (Signet, Station oder Eintrag im Linienverzeichnis antippen), dann zeigt die Tafel ihren nächsten Halt${S.land==='DE'?'':' auf Gleis '+S.land}.</div>`;return;}
  const L=LN[f],o=nextOcc(f,S.land),where=S.land==='DE'?'':' in '+BY[S.land].n;
  let t;
- if(o.stop&&o.first.h===o.stop)t=`nächster Halt${where}: <b>${WDL[o.stop.d.getDay()]}, ${dm(o.stop.d)}${o.stop.d.getFullYear()}</b> · in ${daysTo(o.stop.d)} Tagen${S.land==='DE'?' · '+gleise(o.stop):''}`;
+ if(o.stop&&o.first.h===o.stop)t=`nächster Halt${where}: <b>${WDL[o.stop.d.getDay()]}, ${dm(o.stop.d)}${o.stop.d.getFullYear()}</b> · ${inDays(o.stop.d)}${S.land==='DE'?' · '+gleise(o.stop):''}`;
  else if(o.stop)t=`nächstes Mal${where} ${fmt(o.first.h.d)}${o.first.h.d.getFullYear()} – ${o.first.r==='r'?'nur in Teilen des Landes':isWd(o.first.h.d)?'':'fällt aufs Wochenende'}; nächster freier Werktag: <b>${fmt(o.stop.d)}${o.stop.d.getFullYear()}</b>`;
- else if(o.first)t=`hält bis 2070${where} nicht als landesweiter Feiertag an einem Werktag${o.first.r==='r'?' – nur regional, z. B. '+fmt(o.first.h.d)+o.first.h.d.getFullYear():''}`;
- else if(o.lastP)t=`verkehrt nicht mehr${where} – zuletzt <b>${fmt(o.lastP.d)}${o.lastP.d.getFullYear()}</b>`;
+ else if(o.first)t=o.first.r==='r'?`gilt bis Ende 2070${where} nur regional, nächstes Mal ${fmt(o.first.h.d)}${o.first.h.d.getFullYear()}`:`fällt bis Ende 2070${where} auf keinen Werktag mehr – nächstes Mal ${fmt(o.first.h.d)}${o.first.h.d.getFullYear()}, am Wochenende`;
+ else if(o.lastP)t=`verkehrt bis Ende 2070${where} nicht mehr – zuletzt <b>${fmt(o.lastP.d)}${o.lastP.d.getFullYear()}</b>`;
  else t=`hält${where} nicht${extras[Object.keys(EXID).find(k=>EXID[k]===f)]===false?' – oben zuschalten':''}`;
  const sd=o.stop?hol(o.stop.d.getFullYear()).filter(x=>x.k===o.stop.k&&x.id!==f):[];if(sd.length)t+=` · am selben Tag auch ${sd.map(x=>x.n).join(', ')}`;
  el.innerHTML=`<div class="bd-line on" data-h="${f}">${sig(f)}<span class="bl-n">${L.n}</span><span class="bl-t">${t}</span></div>`;
 }
 
 /* ---- Liniennetzplan ---- */
-let netzAll=true,LA={};
+const setP=(e,v)=>{v=String(v);if(e.getAttribute('aria-pressed')!==v)e.setAttribute('aria-pressed',v);};
+let netzAll=true,LA={},laKey='',netzKey='',jsKey='',vzKey='',lvKey='';
 function computeLA(){
+ const k=S.jahr+'|'+exKey();if(k===laKey)return;laKey=k;
  const H=hol(S.jahr);LA={};
  NETZ.forEach(c=>{const f=[],w=[],r=[];H.forEach(h=>{if(h.full.includes(c))(isWd(h.d)?f:w).push(h.id);else if(h.reg.includes(c))r.push(h.id);});LA[c]=`data-hf="${f.join(' ')}" data-hw="${w.join(' ')}" data-hr="${r.join(' ')}"`;});
 }
 function renderNetz(){
+ const nk=[S.jahr,S.land,exKey(),netzAll].join('|');
+ if(nk===netzKey){$('np').querySelectorAll('.stb').forEach(b=>setP(b,b.dataset.h===S.fid));return;}netzKey=nk;
  const y=S.jahr,cur=y===TY,H=hol(y).filter(h=>netzAll||isWd(h.d));
  const nowAt=cur?H.findIndex(h=>h.d>=TODAY):-2;
  const st=(h,c)=>h.full.includes(c)?(isWd(h.d)?'f':'w'):h.reg.includes(c)?'r':'';
@@ -874,8 +928,8 @@ function renderLdet(){
  el.className='ldet';
  const L=LN[f],y=yv,h=findH(y,f),o=occ(f),mx=Math.max(...o.w,1);
  let when='',status='',chips='',same='';
- if(h){const dd=daysTo(h.d);when=`<b>${WDL[h.d.getDay()]}, ${dm(h.d)}${y}</b> · ${isWd(h.d)?'Mo–Fr':'Wochenende'} · ${dd===0?'heute':dd>0?'in '+dd+' '+plural(dd,'Tag','Tagen'):'vor '+(-dd)+' '+plural(-dd,'Tag','Tagen')}`;
-  if(S.land==='DE')status=h.full.length===16?(isWd(h.d)?'Bundesweit frei.':'Bundesweit, fällt aber aufs Wochenende.'):h.full.length?`Feiertag in ${scope(h)}${isWd(h.d)?'':', fällt aufs Wochenende'}.`:'Nur regional.';
+ if(h){const dd=daysTo(h.d);when=`<b>${WDL[h.d.getDay()]}, ${dm(h.d)}${y}</b> · ${isWd(h.d)?'Mo–Fr':'Wochenende'} · ${relDays(dd)}`;
+  if(S.land==='DE')status=h.full.length===16?(isWd(h.d)?'Bundesweit frei.':'Bundesweit, fällt aber aufs Wochenende.'):h.full.length?`Feiertag in ${h.full.length} ${plural(h.full.length,'Land','Ländern')}${isWd(h.d)?'':', fällt aufs Wochenende'}.`:'Nur regional.';
   else{const s=BY[S.land].n;status=h.full.includes(S.land)?(isWd(h.d)?`In ${s} frei.`:`In ${s} Feiertag, fällt aber aufs Wochenende.`):h.reg.includes(S.land)?`In ${s} nur regional.`:`In ${s} kein Feiertag.`;}
   if(h.note)status+=' '+h.note;
   const sm=hol(y).filter(x=>x.k===h.k&&x.id!==f);
@@ -889,6 +943,7 @@ function renderLdet(){
 
 /* ---- Jahresstrecke ---- */
 function renderStrecke(){
+ const jk=[S.jahr,S.land,exKey()].join('|');if(jk===jsKey)return;jsKey=jk;
  const y=S.jahr,H=hol(y),byK={},L=S.land;H.forEach(h=>(byK[h.k]=byK[h.k]||[]).push(h));
  const rank=h=>L==='DE'?(h.full.length?2:1):(h.full.includes(L)?3:h.reg.includes(L)?2:1);
  let html='<span class="js-m"></span>';for(let d=1;d<=31;d++)html+=`<span class="js-h">${d===1||d%5===0?d:''}</span>`;html+='<span class="js-h">frei</span>';
@@ -899,10 +954,10 @@ function renderStrecke(){
    const d=new Date(y,m,dd),key=kf(d),wd=isWd(d),past=d<TODAY?' past':'',today=key===TK?' today':'';
    const Ls=byK[key];
    if(Ls){const srt=[...Ls].sort((a,b)=>rank(b)-rank(a)),relOf=h=>L==='DE'?(h.full.length?'f':'r'):(h.full.includes(L)?'f':h.reg.includes(L)?'r':'o');
-    if(wd&&srt.some(h=>L==='DE'?h.full.length>0:relOf(h)==='f'))mc++;
+    if(wd&&srt.some(h=>applies(h,L)))mc++;
     const btn=(h,cls)=>{const rel=relOf(h),lab=`${fmt(d)}${y}: ${h.n}${Ls.length>1?' (zugleich '+Ls.filter(x=>x!==h).map(x=>x.n).join(', ')+')':''}${rel==='o'?' – nicht in '+BY[L].n:rel==='r'?' – nur regional':''}${wd?'':' – Wochenende'}`;
      return `<button class="${cls} ${rel}" data-pick="h" data-h="${h.id}" data-k="${key}" title="${lab}" aria-label="${lab}">${sig(h.id,wd?'':'we')}</button>`;};
-    if(srt.length===1)row+=btn(srt[0],`d h ${wd?'wd':'we'}${past}${today}`).replace('<button class="d h','<button class="d h');
+    if(srt.length===1)row+=btn(srt[0],`d h ${wd?'wd':'we'}${past}${today}`);
     else row+=`<span class="d h2 ${wd?'wd':'we'}${past}${today}">${srt.map(h=>btn(h,'dh')).join('')}</span>`;}
    else row+=`<span class="d ${wd?'wd':'we'}${past}${today}"${today?' title="heute"':''}></span>`;
   }
@@ -913,6 +968,8 @@ function renderStrecke(){
 
 /* ---- Linienverzeichnis ---- */
 function renderVerz(){
+ const vk=[S.jahr,S.land,exKey()].join('|');
+ if(vk===vzKey){$('vz').querySelectorAll('.vz').forEach(b=>setP(b,b.dataset.h===S.fid));$('vz').querySelectorAll('[data-ex]').forEach(b=>setP(b,extras[b.dataset.ex]));return;}vzKey=vk;
  const y=S.jahr,H=hol(y),byId={};H.forEach(h=>{if(!byId[h.id])byId[h.id]=h;});
  const exOf=id=>Object.keys(EXID).find(k=>EXID[k]===id);
  $('vz').innerHTML=Object.keys(CATS).map(cat=>{
@@ -950,8 +1007,8 @@ function mark(cat,cx,cy,r,cls,fill){const a=fill?` style="fill:${fill}"`:'',c=`c
 const FPCATS=['bund','teil','reg','einm','so','opt'];
 const LH=28,LG=3.2,LMO=22,FH=24;   // Spurhöhe, Abstand der Wochentagslinien, Lage der Mo-Linie, Kopf je Kategorie
 function buildTakt(){
- const sc=$('tks'),nar=narrowTk(),VY=viewYears(),n=VY.length,i0=YEARS.indexOf(VY[0]),SR=series(),L=S.land;
- const PADL=4,PADR=10,minCw=nar?11:9,cw=Math.max(minCw,((sc.clientWidth||700)-PADL-PADR)/n),W=Math.round(PADL+PADR+cw*n);
+ const nar=narrowTk(),VY=viewYears(),n=VY.length,i0=YEARS.indexOf(VY[0]),SR=series(),L=S.land;
+ const PADL=4,PADR=10,minCw=nar?11:9,cw=Math.max(minCw,((tksW||700)-PADL-PADR)/n),W=Math.round(PADL+PADR+cw*n);
  const evH=32,axH=18,rh=nar?15:17,yA=evH+axH,hA=16*rh,yB0=yA+hA+40;
  const X=j=>PADL+j*cw,XC=j=>PADL+(j+.5)*cw;
  let lo=99,hi=0;NETZ.forEach(c=>{for(let j=0;j<n;j++){const v=SR[c][i0+j];if(v<lo)lo=v;if(v>hi)hi=v;}});
@@ -975,7 +1032,7 @@ function buildTakt(){
  NETZ.forEach((c,ri)=>{const yy=yA+ri*rh;
   for(let j=0;j<n;j++){const v=SR[c][i0+j],q=qn(v);
    s+=`<rect class="q${q}" x="${f1(X(j)+.5)}" y="${yy+.5}" width="${f1(Math.max(1,cw-1))}" height="${rh-1}"/>`;
-   if(cw>=11)s+=`<text class="cv${q>=5?' inv':''}" x="${f1(XC(j))}" y="${f1(yy+rh/2+3.5)}">${v}</text>`;}});
+   if(cw>=11)s+=`<text class="cv${q>=6?' inv':''}" x="${f1(XC(j))}" y="${f1(yy+rh/2+3.5)}">${v}</text>`;}});
  if(!nar&&ti>=0&&ti<n-6)s+=`<text class="bl" x="${f1(X(ti+1)+3)}" y="${yA+hA+14}">Prognose nach heutigem Recht →</text>`;
  // Kategorie-Trenner
  groups.forEach(g=>{s+=`<path class="fpg" d="M${PADL},${g.top+FH-4}H${W-PADR}"/>`;});
@@ -1021,11 +1078,14 @@ function buildTakt(){
  TKG={VY,n,X,XC,cw,PADL,yA,rh,hA,yB0,W,H,lanes,groups,i0,land:L};tovKey='';
  $('tkHint').textContent=`Oben der Taktfahrplan: je Land und Jahr die Zahl der Feiertage ${tkMetric==='wk'?'auf Mo–Fr':'am Wochenende'}, kräftiger = mehr. Darunter der Fahrplan: jede Linie hat eine eigene Spur, ihre Marke steht auf dem Wochentag – feste Termine wandern jedes Jahr eine Linie weiter, Ostertermine bleiben auf ihrer. Steigt die Marke über Fr hinaus, fällt der Feiertag aufs Wochenende aus. Fahnen zeigen Fahrplanwechsel, Klammern mit Jahreszahl Betriebspausen.`;
 }
+let tksW=0;
 function renderTakt(){
- const k=[tkRange,tkRange==='near'?S.jahr:'',$('tks').clientWidth,exKey(),tkMetric,S.land,narrowTk()].join('|');
- const fresh=k!==tkKey;if(fresh){tkKey=k;buildTakt();}
- markTakt();renderTov();updateTkInfo();
- if(fresh||!tkInView())keepTkVisible();
+ if(!tksW)tksW=Math.floor($('tks').clientWidth);   // nur beim ersten Mal gemessen, danach liefert der ResizeObserver die Breite
+ const k=[tkRange,tkRange==='near'?S.jahr:'',tksW,exKey(),tkMetric,S.land,narrowTk()].join('|');
+ const fresh=k!==tkKey;if(fresh){tkKey=k;buildTakt();brush(true);}
+ markTakt();renderTov();if(!$('tkInfo').contains(document.activeElement))updateTkInfo();
+ // Scrollposition nur prüfen, wenn die Spuren überhaupt breiter sind als der Ausschnitt – und erst im nächsten Frame
+ if(TKG&&TKG.W>tksW+2)requestAnimationFrame(()=>{if(fresh||!tkInView())keepTkVisible();});
 }
 function markTakt(){
  if(!TKG)return;const{VY,X,XC,cw}=TKG,si=VY.indexOf(S.jahr);
@@ -1038,33 +1098,35 @@ function markTakt(){
   if(!h){t='Pause';c+=' na';}
   else if(L!=='DE'&&!h.full.includes(L)&&!h.reg.includes(L)){t='–';c+=' na';}
   else{t=WD[h.d.getDay()];if(!isWd(h.d))c+=' we';if(L!=='DE'&&h.reg.includes(L))t+='<small> reg.</small>';}
-  o.innerHTML=t;o.className=c;
+  if(o.innerHTML!==t)o.innerHTML=t;if(o.className!==c)o.className=c;
   b.title=`${LN[id].n} ${S.jahr}: ${h?fmt(h.d)+' · '+gleise(h):'verkehrt nicht'}`;});
  document.querySelectorAll('#tkl .tkr').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===S.land));
 }
 function tkInView(){if(!TKG)return true;const sc=$('tks'),i=TKG.VY.indexOf(S.jahr);if(i<0)return true;const x=TKG.XC(i);return x>=sc.scrollLeft+20&&x<=sc.scrollLeft+sc.clientWidth-20;}
 function keepTkVisible(){const sc=$('tks');if(!TKG||sc.scrollWidth<=sc.clientWidth+2)return;const i=TKG.VY.indexOf(S.jahr);if(i<0)return;sc.scrollLeft=Math.max(0,TKG.XC(i)-sc.clientWidth/2);}
-let tovKey='';const tovC={};
+let tovKey='',tkInfoKey='';const tovC={};
 function renderTov(){
  if(!TKG)return;const f=HV.fid||S.fid,key=(f||'')+'|'+TKG.VY[0]+'|'+TKG.n+'|'+TKG.W+'|'+exKey();if(key===tovKey)return;tovKey=key;
  const g=$('tov');if(!g)return;if(!f){g.removeAttribute('data-h');g.innerHTML='';return;}
- if(!tovC[key]){const{VY,n,X,XC,cw,yA,rh}=TKG;let s='';
+ if(!tovC[key]){const{VY,n,X,XC,cw,yA,rh}=TKG;let pf='',pw='',pr='';const w1=f1(Math.max(1,cw-1)),w2=f1(Math.max(.6,cw-2.4)),rr=Math.min(2,cw*.3);
   for(let j=0;j<n;j++){const h=findH(VY[j],f);if(!h)continue;const wd=isWd(h.d);
    NETZ.forEach((c,ri)=>{const yy=yA+ri*rh+rh-3.5;
-    if(h.full.includes(c))s+=wd?`<rect class="f" x="${f1(X(j)+.5)}" y="${f1(yy)}" width="${f1(Math.max(1,cw-1))}" height="3"/>`:`<rect class="w" x="${f1(X(j)+1.2)}" y="${f1(yy+.4)}" width="${f1(Math.max(.6,cw-2.4))}" height="2.2"/>`;
-    else if(h.reg.includes(c))s+=`<circle class="r" cx="${f1(XC(j))}" cy="${f1(yy+1.5)}" r="${f1(Math.min(2,cw*.3))}"/>`;});}
-  tovC[key]=s;}
+    if(h.full.includes(c)){if(wd)pf+=`M${f1(X(j)+.5)},${f1(yy)}h${w1}v3h-${w1}z`;else pw+=`M${f1(X(j)+1.2)},${f1(yy+.4)}h${w2}v2.2h-${w2}z`;}
+    else if(h.reg.includes(c))pr+=`M${f1(XC(j)-rr)},${f1(yy+1.5-rr)}h${f1(2*rr)}v${f1(2*rr)}h-${f1(2*rr)}z`;});}
+  tovC[key]=`<path class="f" d="${pf}"/><path class="w" d="${pw}"/><path class="r" d="${pr}"/>`;}
  g.setAttribute('data-h',f);g.setAttribute('class','tov');g.innerHTML=tovC[key];
 }
 function updateTkInfo(){
- if(!TKG)return;const{VY}=TKG;const yv=tkJ>=0?VY[tkJ]:Math.min(VY[VY.length-1],Math.max(VY[0],S.jahr)),j=YEARS.indexOf(yv);
+ if(!TKG)return;const{VY}=TKG;const yv=tkJ>=0?VY[tkJ]:S.jahr,j=YEARS.indexOf(yv);
+ const ik=[yv,HV.fid||S.fid,S.land,exKey(),tkMetric].join('|');if(ik===tkInfoKey)return;tkInfoKey=ik;
  const SR=series(),byV={};NETZ.forEach(c=>{(byV[SR[c][j]]=byV[SR[c][j]]||[]).push(c);});
  const vals=Object.keys(byV).map(Number).sort((a,b)=>b-a),avg=NETZ.reduce((a,c)=>a+SR[c][j],0)/16;
  const era=yv>TY?'Prognose':yv===TY?'laufendes Jahr':'vergangen';
  const f=HV.fid||S.fid;let ln='';
  if(f){const h=findH(yv,f),same=h?hol(yv).filter(x=>x.k===h.k&&x.id!==f):[];ln=`<div class="ti-l" data-h="${f}">${sig(f)}<b>${LN[f].n}</b> ${h?`${yv}: ${fmt(h.d)} – ${isWd(h.d)?'Mo–Fr':'Wochenende'} · ${gleise(h)}${same.length?' · zugleich '+same.map(x=>x.n).join(', '):''}`:`verkehrt ${yv} nicht`}</div>`;}
- $('tkInfo').innerHTML=`<div class="ti-h"><b>${yv}</b><span>${tkMetric==='wk'?'Feiertage Mo–Fr':'Feiertage am Wochenende'}</span><span>Ø ${avg.toFixed(1).replace('.',',')}</span><span>Spanne ${vals[vals.length-1]}–${vals[0]}</span><span>${era}</span>${EVENTS[yv]?`<span class="ev">${EVH[yv].map(id=>sig(id)).join('')}Fahrplanwechsel: ${EVENTS[yv]}</span>`:''}${exKey()?`<span>inkl. ${[extras.rm&&'Rosenmontag',extras.ha&&'Heiligabend',extras.sv&&'Silvester'].filter(Boolean).join(', ')}</span>`:''}</div>`+
-  vals.map(v=>`<div class="tv"><b>${v}</b><div class="codes">${byV[v].map(c=>`<button class="code" data-pick="l" data-l="${c}" title="${BY[c].n}" aria-pressed="${S.land===c}">${c}</button>`).join('')}</div></div>`).join('')+ln;
+ const _ti=`<div class="ti-h"><b>${yv}</b><span>${tkMetric==='wk'?'Feiertage Mo–Fr':'Feiertage am Wochenende'}</span><span>Ø ${avg.toFixed(1).replace('.',',')}</span><span>Spanne ${vals[vals.length-1]}–${vals[0]}</span><span>${era}</span>${EVENTS[yv]?`<span class="ev">${EVH[yv].map(id=>sig(id)).join('')}Fahrplanwechsel: ${EVENTS[yv]}</span>`:''}${exKey()?`<span>inkl. ${[extras.rm&&'Rosenmontag',extras.ha&&'Heiligabend',extras.sv&&'Silvester'].filter(Boolean).join(', ')}</span>`:''}</div>`;
+ const al=(APPLIED.takt||{}).l;
+ $('tkInfo').innerHTML=_ti+vals.map(v=>`<div class="tv"><b>${v}</b><div class="codes">${byV[v].map(c=>`<button class="code${c===al?' lx-on':''}" data-pick="l" data-l="${c}" title="${BY[c].n}" aria-pressed="${S.land===c}">${c}</button>`).join('')}</div></div>`).join('')+ln;
 }
 function tkPos(e){const sv=$('tksvg');if(!TKG)return null;const r=sv.getBoundingClientRect(),G=TKG;
  const sx=(e.clientX-r.left)*(G.W/r.width),sy=(e.clientY-r.top)*(G.H/r.height);
@@ -1073,14 +1135,13 @@ function tkPos(e){const sv=$('tksvg');if(!TKG)return null;const r=sv.getBounding
  else if(sy<G.yA-14){const ev=EVH[yr];if(ev)fid=ev[Math.min(ev.length-1,Math.max(0,Math.floor((32-sy)/13.5)))];}
  else{const ln=G.lanes.find(l=>sy>=l.top&&sy<l.top+LH);if(ln){fid=ln.id;const p=ln.pts[j];if(p)tag=p.h.k;}}
  return{j,yr,land,fid,tag};}
-function setTkJ(j){if(j===tkJ)return;tkJ=j;const x=$('tkx');if(x&&TKG){if(j<0)x.setAttribute('visibility','hidden');else{x.setAttribute('x',f1(TKG.X(j)));x.setAttribute('visibility','visible');}}updateTkInfo();}
+function setTkJ(j){if(j===tkJ)return;tkJ=j;const x=$('tkx');if(x&&TKG){if(j<0)x.setAttribute('visibility','hidden');else{x.setAttribute('x',f1(TKG.X(j)));x.setAttribute('visibility','visible');}}if(!$('tkInfo').contains(document.activeElement))updateTkInfo();}
 $('tksvg').addEventListener('pointermove',e=>{if(e.pointerType==='touch')return;const p=tkPos(e);if(!p){setTkJ(-1);setHover(null,null);return;}setTkJ(p.j);setHover(p.fid,p.land,p.fid?p.yr:null);});
 $('tksvg').addEventListener('pointerleave',()=>{setTkJ(-1);setHover(null,null);});
-$('tksvg').addEventListener('click',e=>{const p=tkPos(e);if(!p)return;tkJ=-1;
+$('tksvg').addEventListener('click',e=>{const p=tkPos(e);if(!p)return;tkJ=-1;HV.fid=null;HV.jahr=null;HV.land=null;
  if(p.fid&&p.tag){if(S.fid===p.fid&&S.tag===p.tag)commit({fid:null,tag:null});else commit({fid:p.fid,tag:p.tag,jahr:p.yr});}
  else if(p.fid)commit({fid:p.fid,tag:null,jahr:p.yr});
- else commit({jahr:p.yr});
- HV.fid=null;HV.jahr=null;});
+ else commit({jahr:p.yr});});
 $('tks').addEventListener('keydown',e=>{
  if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();commit({jahr:S.jahr+(e.key==='ArrowLeft'?-1:1)});}
  else if((e.key==='ArrowUp'||e.key==='ArrowDown')&&TKG){e.preventDefault();const ids=TKG.lanes.map(l=>l.id);let i=ids.indexOf(S.fid);i=e.key==='ArrowDown'?(i+1)%ids.length:(i<=0?ids.length-1:i-1);commit({fid:ids[i],tag:null});}
@@ -1088,8 +1149,11 @@ $('tks').addEventListener('keydown',e=>{
 
 /* ---- Gleise im Vergleich ---- */
 function renderLaender(){
+ const lk=[S.jahr,S.land,exKey()].join('|');if(lk===lvKey)return;lvKey=lk;
  const y=S.jahr,counts=STATES.map(s=>stats(y,s.c).wk.length),mn=Math.min(...counts),mx=Math.max(...counts);
- $('tiles').innerHTML=STATES.map((s,i)=>{const n=counts[i],p=Math.round(12+(n-mn)/((mx-mn)||1)*88),fg=p>=50?'var(--on-heat)':'var(--ink)';
+ // Stufen wie im Taktfahrplan: 52 % und 66 % liegen um die Totzone, in der weder helle noch dunkle Schrift 4,5:1 erreicht
+ const TL=[14,23,33,43,52,66,80,100];
+ $('tiles').innerHTML=STATES.map((s,i)=>{const n=counts[i],p=TL[Math.round((n-mn)/((mx-mn)||1)*7)],fg=p>=66?'var(--on-heat)':'var(--ink)';
   return `<button class="tile${s.span?' span':''}" style="grid-row:${s.r+1};grid-column:${s.col+1}${s.span?' / span 2':''};background:color-mix(in oklab,var(--heat) ${p}%,var(--panel));color:${fg}" data-pick="l" data-l="${s.c}" ${LA[s.c]} aria-pressed="${S.land===s.c}" title="${s.n}: ${n} Feiertage Mo–Fr"><span class="tc">${s.c}</span><span class="tn">${n}</span></button>`;}).join('');
  $('scale').innerHTML=`<span>${mn}</span><i></i><span>${mx} Tage</span>`;
  const rows=STATES.map(s=>Object.assign({s},stats(y,s.c))).sort((a,b)=>b.wk.length-a.wk.length||a.s.n.localeCompare(b.s.n,'de'));
@@ -1100,53 +1164,74 @@ function renderLaender(){
 }
 
 /* ---- Leiste + Vorschau (brushing & linking) ---- */
+let barKey='';
 function renderBar(){
+ const bk=[HV.fid,HV.jahr,S.fid,S.jahr,S.tag,exKey()].join('|');if(bk===barKey)return;barKey=bk;
  const f=HV.fid||S.fid,pv=!!HV.fid&&HV.fid!==S.fid,el=$('cur');
  el.classList.toggle('pv',pv||(!!HV.jahr&&HV.jahr!==S.jahr));el.classList.toggle('empty',!f);
  if(f){const yr=(HV.fid&&HV.jahr)||S.jahr,h=findH(yr,f),L=LN[f],pvy=!!HV.jahr&&HV.jahr!==S.jahr;
   const same=h?hol(yr).filter(x=>x.k===h.k&&x.id!==f):[];
-  const sw=!pv&&!pvy?same.map(x=>`<button class="cur-sw" data-pick="h" data-h="${x.id}" data-k="${x.k}" title="Am selben Tag: ${x.n} – umschalten">⇄ ${sig(x.id)}<span>${x.n}</span></button>`).join(''):(same.length?`<span class="cur-d">+ ${same.map(x=>x.n).join(', ')}</span>`:'');
+  const sw=!pv&&!pvy?same.map(x=>`<button class="cur-sw" data-pick="h" data-h="${x.id}" data-k="${x.k}" title="Am selben Tag: ${x.n} – umschalten" aria-label="Umschalten auf ${x.n}, am selben Tag">⇄ ${sig(x.id)}<span>${x.n}</span></button>`).join(''):(same.length?`<span class="cur-d">+ ${same.map(x=>x.n).join(', ')}</span>`:'');
   el.innerHTML=`<span class="cur-k">${pv||pvy?'Vorschau':'Linie'}</span>${sig(f)}<span class="cur-n">${L.n}</span><span class="cur-d">${h?fmt(h.d)+yr+(isWd(h.d)?' · Mo–Fr':' · Wochenende'):'nicht '+yr}</span>${sw}${S.fid&&!pv?'<button class="cur-x" data-clear aria-label="Linie lösen (Esc)">×</button>':''}`;}
  else el.innerHTML=`<span class="cur-hint">Feiertag antippen, um seine Linie durch alle Ansichten zu verfolgen · Esc löst</span>`;
 }
-/* Brushing: Regeln einmal vorab je Linie und je Land erzeugen; eine Vorschau setzt nur
-   zwei Attribute an <html> – der Browser muss so nur die betroffenen Elemente neu bewerten. */
-(function brushRules(){
- let c='';
- ORDER.forEach(f=>{const R=`:root[data-fx="${f}"]`,q=`[data-h="${f}"]`,L=LN[f],hf=`[data-hf~="${f}"]`,hw=`[data-hw~="${f}"]`,hr=`[data-hr~="${f}"]`,no=`:not(${hf}):not(${hw}):not(${hr})`;
-  c+=`${R} .dm[data-h]:not(${q}){opacity:.16}`;
-  c+=`${R} .np td:not(${q}) .v,${R} .np td:not(${q}) .m{opacity:.12}${R} .np th.st:not(${q}) .stb{opacity:.3}${R} .np td${q},${R} .np th${q}{background-color:color-mix(in oklab,var(--lc) 15%,transparent)}${R} .np th${q} .sg{transform:scale(1.2)}`;
-  c+=`${R} .np tr${no} .gp{opacity:.3}${R} .np tr${hf} .gp,${R} .rk${hf} .gp{background:${L.bg};color:${L.fg}}`;
-  c+=`${R} .tile${no}{opacity:.25}${R} .tile${hf}{background:${L.bg}!important;color:${L.fg}!important}${R} .tile${hw}{background:var(--panel)!important;color:var(--ink)!important;box-shadow:inset 0 0 0 3px ${L.ed||L.bg}}${R} .tile${hr}{background:repeating-linear-gradient(135deg,${L.bg} 0 3px,transparent 3px 7px),var(--panel)!important;color:var(--ink)!important}`;
-  c+=`${R} .rk${no}{opacity:.35}${R} .rk-s ${q}{transform:scale(1.32);outline:2px solid var(--ink);outline-offset:1px}`;
-  c+=`${R} .fpl:not(${q}){opacity:.22}${R} .fpl${q} .band{fill:color-mix(in oklab,var(--lc) 13%,transparent)}${R} .fph:not(${q}){opacity:.5}${R} .fph${q}{background:color-mix(in oklab,var(--lc) 16%,var(--panel))}`;
-  c+=`${R} .js button[data-h]:not(${q}) .sg{opacity:.14}${R} .js button${q} .sg{transform:scale(1.25);opacity:1}`;
-  c+=`${R} .bd-list tr${q}{background:color-mix(in oklab,var(--lc) 22%,#0c0d10)}`;
- });
- NETZ.forEach(l=>{const R=`:root[data-lx="${l}"]`,q=`[data-l="${l}"]`;
-  c+=`${R} .np tr${q}>td{background-color:var(--hl-soft)}${R} .np tr${q}>td.s,${R} .np tr${q}>td[data-h]{--track:var(--ink);background-size:100% 5px}${R} .np tr${q}>td.nowc{--track:var(--ink);background-size:100% 5px,2px 100%}${R} .np tr${q} .lb{background:linear-gradient(var(--hl-soft),var(--hl-soft)),var(--panel)}`;
-  c+=`${R} .rowhl${q}{opacity:.55}${R} .tkr${q}{background:var(--hl-soft)}${R} .tile${q}{outline:3px solid var(--ink);outline-offset:2px}${R} .rk${q}{background:var(--hl-soft)}${R} .code${q}{background:var(--hl);color:#111}`;
- });
- $('brush').textContent=c;
-})();
+/* Brushing: keine Regeln an <html> (die erzwangen eine Neuberechnung des ganzen Dokuments).
+   Eine Vorschau setzt .has-f an den Abschnitten und .fx-on/.lx-on nur an den Treffern;
+   beim Wechsel A → B ändern sich so nur die Elemente von A und B. data-fx/data-lx an <html>
+   bleiben als Zustandsanzeige, ohne dass eine Regel daran hängt. */
 const ROOT=document.documentElement;
-function brush(){
- const f=HV.fid||S.fid,l=HV.land||(S.land!=='DE'?S.land:null);
+// Abschnitte und ihre Brushing-Container. Nur sichtbare Abschnitte zeigen eine Vorschau (Hover/Fokus);
+// unsichtbare behalten den festen Zustand und holen die Vorschau nach, sobald sie ins Bild kommen.
+// So muss der Browser bei einem Hover nur neu zeichnen, was man sieht.
+const SECS={board:['bdMain'],netz:['np'],strecke:['js'],verz:['vz'],takt:['tksvg','tkl'],laender:['tiles','rank']};
+const VIS={},APPLIED={};
+function applySec(id,f,l,force){
+ const a=APPLIED[id]||(APPLIED[id]={}),sec=$(id);
+ if(force||a.f!==f){
+  a.f=f;
+  sec.querySelectorAll('.fx-on').forEach(e=>e.classList.remove('fx-on'));
+  SECS[id].forEach(b=>$(b).classList.toggle('has-f',!!f));
+  const L=f?LN[f]:null;
+  sec.querySelectorAll('#np tbody tr,.tile,.rk').forEach(r=>{
+   let c='';
+   if(f){const t=x=>(' '+(r.getAttribute(x)||'')+' ').indexOf(' '+f+' ')>=0;c=t('data-hf')?'fx-hf':t('data-hw')?'fx-hw':t('data-hr')?'fx-hr':'fx-no';}
+   if(r._fx!==c){if(r._fx)r.classList.remove(r._fx);if(c)r.classList.add(c);r._fx=c;}
+   if(c&&c!=='fx-no'){const g=r.classList.contains('tile')?r:r.querySelector('.gp');if(g._xb!==f){g._xb=f;g.style.setProperty('--xb',L.bg);g.style.setProperty('--xf',L.fg);g.style.setProperty('--xe',L.ed||L.bg);}}
+  });
+  if(f)sec.querySelectorAll(`[data-h="${f}"]`).forEach(e=>e.classList.add('fx-on'));
+ }
+ if(force||a.l!==l){
+  a.l=l;
+  sec.querySelectorAll('.lx-on').forEach(e=>e.classList.remove('lx-on'));
+  if(l)sec.querySelectorAll(`[data-l="${l}"]`).forEach(e=>e.classList.add('lx-on'));
+ }
+}
+function brush(force){
+ const f=HV.fid||S.fid,l=HV.land||(S.land!=='DE'?S.land:null),cf=S.fid,cl=S.land!=='DE'?S.land:null;
  if(f)ROOT.setAttribute('data-fx',f);else ROOT.removeAttribute('data-fx');
  if(l)ROOT.setAttribute('data-lx',l);else ROOT.removeAttribute('data-lx');
+ ROOT.toggleAttribute('data-hover',!!(HV.fid||HV.land));   // Zustandsanzeige: gerade nur Vorschau (Hover/Fokus)
+ for(const id in SECS){const v=VIS[id]!==false;applySec(id,v?f:cf,v?l:cl,force);}
 }
 let rafP=0;
-function preview(){rafP=0;brush();renderBar();renderBoardLine();renderLdet();renderTov();updateTkInfo();}
-function setHover(f,l,y){f=f||null;l=l||null;y=f&&y||null;if(f===HV.fid&&l===HV.land&&y===HV.jahr)return;HV.fid=f;HV.land=l;HV.jahr=y;if(!rafP)rafP=requestAnimationFrame(preview);}
+// force: nach einem Neuzeichnen (renderAll) alles aktualisieren; sonst (Hover/Fokus) keinen Bereich ersetzen,
+// in dem gerade der Tastaturfokus steht – sonst fiele der Fokus auf <body> und Tab käme nie weiter.
+function preview(force){rafP=0;brush(force);
+ const ok=id=>force||!$(id).contains(document.activeElement);
+ if(ok('cur'))renderBar();if(ok('bdLine'))renderBoardLine();if(ok('ldet'))renderLdet();
+ if(force||VIS.takt!==false){renderTov();if(ok('tkInfo'))updateTkInfo();}}
+function setHover(f,l,y){f=f||null;l=l||null;y=f&&y||null;if(f===HV.fid&&l===HV.land&&y===HV.jahr)return;HV.fid=f;HV.land=l;HV.jahr=y;if(!rafP)rafP=requestAnimationFrame(()=>preview(false));}
 function hoverFrom(t){
  if(!t||!t.closest||t.closest('#tksvg'))return;
  const box=t.closest('.bx,.bar,.mast');if(!box){setHover(null,null);return;}
- const he=t.closest('[data-h]'),le=t.closest('[data-l]');
- setHover(he?he.dataset.h:null,le?le.dataset.l:null);
+ const he=t.closest('[data-h]'),le=t.closest('[data-l]'),h=he&&he.dataset.h,l=le&&le.dataset.l;
+ setHover(isLine(h)?h:null,isLand(l)&&l!=='DE'?l:null);
 }
 document.addEventListener('pointerover',e=>{if(e.pointerType==='touch')return;hoverFrom(e.target);});
 document.addEventListener('pointerout',e=>{if(!e.relatedTarget)setHover(null,null);});
-document.addEventListener('focusin',e=>hoverFrom(e.target));
+// Fokus als Vorschau nur bei Tastatur (:focus-visible), nicht bei Klick/Tippen und nicht beim Zurücksetzen des Fokus
+let restoring=false;
+document.addEventListener('focusin',e=>{if(restoring)return;const t=e.target;if(t.matches&&!t.matches(':focus-visible'))return;hoverFrom(t);});
 document.addEventListener('focusout',e=>{if(!e.relatedTarget)setHover(null,null);});
 
 // Fokus über das Neuzeichnen retten: gleiches Element (gleicher Bereich, gleiche data-Attribute) wieder fokussieren
@@ -1157,15 +1242,18 @@ function focusKey(){const e=document.activeElement;if(!e||e===document.body)retu
 function renderAll(){
  const fk=focusKey();
  renderAll2();
- if(fk&&!document.activeElement.closest('[id]')){const e=document.querySelector(fk);if(e)e.focus({preventScroll:true});}
+ if(fk&&!document.activeElement.closest('[id]')){const e=document.querySelector(fk);if(e){restoring=true;try{e.focus({preventScroll:true});}finally{restoring=false;}}}
 }
 function renderAll2(){
  computeLA();
- $('state').value=S.land;$('yv').textContent=S.jahr;$('yprev').disabled=S.jahr<=YMIN;$('ynext').disabled=S.jahr>=YMAX;
+ $('state').value=S.land;$('yv').textContent=S.jahr;
+ const yp=$('yprev'),yn=$('ynext'),dp=S.jahr<=YMIN,dn=S.jahr>=YMAX,ae=document.activeElement;
+ if(dp&&ae===yp)yn.focus({preventScroll:true});if(dn&&ae===yn)yp.focus({preventScroll:true});
+ yp.disabled=dp;yn.disabled=dn;
  document.querySelectorAll('.y').forEach(e=>e.textContent=S.jahr);document.querySelectorAll('.sn').forEach(e=>e.textContent=stName(S.land));
  document.querySelectorAll('[data-ex]').forEach(b=>b.setAttribute('aria-pressed',extras[b.dataset.ex]));
  renderBoard();renderNetz();renderStrecke();renderVerz();renderTakt();renderLaender();
- lineKey='';ldetKey='';if(rafP){cancelAnimationFrame(rafP);rafP=0;}preview();
+ lineKey='';ldetKey='';barKey='';if(rafP){cancelAnimationFrame(rafP);rafP=0;}preview(true);
 }
 
 /* ---- Bedienung ---- */
@@ -1173,30 +1261,36 @@ $('state').innerHTML=`<option value="DE">Ganz Deutschland</option>`+ALPHA.map(s=
 $('state').addEventListener('change',e=>setLand(e.target.value));
 $('yprev').addEventListener('click',()=>commit({jahr:S.jahr-1}));
 $('ynext').addEventListener('click',()=>commit({jahr:S.jahr+1}));
-$('fAll').addEventListener('click',()=>{netzAll=true;$('fAll').setAttribute('aria-pressed','true');$('fWd').setAttribute('aria-pressed','false');renderNetz();brush();});
-$('fWd').addEventListener('click',()=>{netzAll=false;$('fWd').setAttribute('aria-pressed','true');$('fAll').setAttribute('aria-pressed','false');renderNetz();brush();});
+$('fAll').addEventListener('click',()=>{netzAll=true;$('fAll').setAttribute('aria-pressed','true');$('fWd').setAttribute('aria-pressed','false');renderNetz();brush(true);});
+$('fWd').addEventListener('click',()=>{netzAll=false;$('fWd').setAttribute('aria-pressed','true');$('fAll').setAttribute('aria-pressed','false');renderNetz();brush(true);});
 function setRange(r){tkRange=r;[['rAll','all'],['rMid','mid'],['rNear','near']].forEach(([id,v])=>$(id).setAttribute('aria-pressed',r===v));tkJ=-1;renderTakt();}
 $('rAll').addEventListener('click',()=>setRange('all'));$('rMid').addEventListener('click',()=>setRange('mid'));$('rNear').addEventListener('click',()=>setRange('near'));
 function setMetric(m){tkMetric=m;$('mWd').setAttribute('aria-pressed',m==='wk');$('mWe').setAttribute('aria-pressed',m==='we');renderTakt();}
 $('mWd').addEventListener('click',()=>setMetric('wk'));$('mWe').addEventListener('click',()=>setMetric('we'));
 document.addEventListener('click',e=>{
  const ex=e.target.closest('[data-ex]');
- if(ex){const kk=ex.dataset.ex;extras[kk]=!extras[kk];try{localStorage.setItem('wtf-ex',JSON.stringify(extras));}catch(err){}boardKey='';commit({});return;}
+ if(ex){const kk=ex.dataset.ex;if(!own(extras,kk))return;extras[kk]=!extras[kk];try{localStorage.setItem('wtf-ex',JSON.stringify(extras));}catch(err){}boardKey='';commit({});return;}
  if(e.target.closest('[data-clear]')){commit({fid:null,tag:null});return;}
  const p=e.target.closest('[data-pick]');if(!p)return;
+ HV.fid=null;HV.land=null;HV.jahr=null;
  if(p.dataset.pick==='l'){const c=p.dataset.l;setLand(S.land===c?'DE':c);return;}
  if(p.dataset.pick==='h'){const id=p.dataset.h,k=p.dataset.k;
   if(S.fid===id&&(!k||k===S.tag))commit({fid:null,tag:null});
-  else commit(k?{fid:id,tag:k,jahr:+k.slice(0,4)}:{fid:id,tag:null});
-  HV.fid=null;}
+  else commit(k?{fid:id,tag:k,jahr:+k.slice(0,4)}:{fid:id,tag:null});}
 });
 document.addEventListener('keydown',e=>{
  if(e.key!=='Escape')return;
- if(HV.fid||HV.land){HV.fid=null;HV.land=null;}
- if(S.fid)commit({fid:null,tag:null});else if(S.land!=='DE')setLand('DE');else preview();
+ HV.fid=null;HV.land=null;HV.jahr=null;
+ if(S.fid)commit({fid:null,tag:null});else if(S.land!=='DE')setLand('DE');else preview(true);
 });
-window.addEventListener('hashchange',()=>{readHash();normalize();renderAll();});
-let lastW=0;if('ResizeObserver' in window)new ResizeObserver(()=>{const w=Math.floor($('tks').clientWidth);if(w&&w!==lastW){lastW=w;requestAnimationFrame(renderTakt);}}).observe($('tks'));
+window.addEventListener('hashchange',()=>{readHash();normalize();writeHash();renderAll();});
+// Sichtbarkeit der Abschnitte: Vorschau nur dort, wo man hinsieht. Kommt der Fahrplan ins Bild, holt er Overlay,
+// Jahresinfo und (auf schmalen Bildschirmen) die Scrollposition des gewählten Jahres nach.
+if('IntersectionObserver' in window){const io=new IntersectionObserver(es=>{let tk=false;
+ es.forEach(e=>{const id=e.target.id,was=VIS[id]!==false;VIS[id]=e.isIntersecting;if(id==='takt'&&e.isIntersecting&&!was)tk=true;});
+ brush(false);if(tk){renderTov();if(!$('tkInfo').contains(document.activeElement))updateTkInfo();if(TKG&&TKG.W>tksW+2&&!tkInView())keepTkVisible();}
+},{rootMargin:'150px 0px'});Object.keys(SECS).forEach(id=>io.observe($(id)));}
+if('ResizeObserver' in window)new ResizeObserver(es=>{const w=Math.floor(es[es.length-1].contentRect.width);if(w&&w!==tksW){tksW=w;requestAnimationFrame(renderTakt);}}).observe($('tks'));
 document.querySelectorAll('.optsig').forEach(e=>{e.outerHTML=sig(e.dataset.id);});
 $('strip').innerHTML=ORDER.filter(id=>LN[id].cat!=='opt').map(id=>`<i data-h="${id}"></i>`).join('');
 
