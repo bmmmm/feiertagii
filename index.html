@@ -25,6 +25,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="fonts/barlow-condensed-700.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/barlow-500.woff2" as="font" type="font/woff2" crossorigin>
+<script>/* Ruhezug schon vor dem ersten Bild wählen (Hash vor localStorage), sonst blitzt kurz das volle Liniennetz auf */
+try{const z=(/(?:^#|&)zug=(ruhe|netz)(?:&|$)/.exec(location.hash)||[])[1]||localStorage.getItem('wtf-zug');if(z==='ruhe')document.documentElement.dataset.zug='ruhe';}catch(e){}</script>
 <style>
 /* Schriften liegen selbst gehostet unter fonts/ (SIL OFL 1.1, Latin-Subset) – keine Anfrage an Dritte.
    Barlow ist an Beschilderung im öffentlichen Raum angelehnt, Barlow Condensed trägt Schilder und Fallblätter. */
@@ -479,6 +481,160 @@ h2.sign .pk svg{width:20px;height:20px}
 .rk.lx-on{background:var(--hl-soft)}
 .code.lx-on{background:var(--hl);color:#111}
 
+/* Zugwahl im Kopf: zwei gekuppelte Wagen, der gewählte ist erleuchtet */
+.mast-mid{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:0 34px}
+.mast-mid .lede{flex:1 1 420px}
+.zug{flex:none;margin:16px 0 0}
+.zug-k{font:600 12px/1.3 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:#b9c6d8;margin:0 0 8px}
+.zug-r{display:flex;align-items:flex-end}
+.wg{position:relative;display:grid;gap:3px;justify-items:start;align-content:start;text-align:left;min-width:162px;margin-bottom:9px;padding:9px 16px 11px;border:2px solid #8ea2bf;background:transparent;color:#e6ecf5;cursor:pointer;transition:background .25s,color .25s,border-color .25s,transform .25s}
+.wg:first-child{border-radius:30px 10px 6px 6px;padding-left:20px}
+.wg:last-child{border-radius:10px 30px 6px 6px;padding-right:20px}
+.wg-w{display:block;justify-self:stretch;height:8px;margin:0 0 6px;border-radius:2px;background:repeating-linear-gradient(90deg,var(--win,#3d5579) 0 13px,transparent 13px 19px)}
+.wg:first-child .wg-w{margin-left:10px}.wg:last-child .wg-w{margin-right:10px}
+.wg::after{content:"";position:absolute;left:14px;right:14px;bottom:-11px;height:9px;--wh:radial-gradient(circle at 50% 30%,var(--whc,#8ea2bf) 3.4px,transparent 3.9px);background:var(--wh) 0 0/9px 9px no-repeat,var(--wh) 11px 0/9px 9px no-repeat,var(--wh) right 11px top 0/9px 9px no-repeat,var(--wh) right 0 top 0/9px 9px no-repeat}
+.wg-n{display:inline-flex;align-items:center;gap:8px;font:700 23px/1 var(--f-disp);letter-spacing:.01em}
+.wg-n svg{width:21px;height:21px}
+.wg-s{font-size:13.5px;line-height:1.25;opacity:.85}
+.wg:hover{border-color:#fff;color:#fff;transform:translateY(-1px)}
+.wg[aria-pressed="true"]{background:#fff;border-color:#fff;color:#0b2545;--win:#ffd400;--whc:#fff;cursor:default;transform:none}
+.wg-k{flex:none;width:12px;height:4px;margin-bottom:26px;background:#8ea2bf}
+@media (max-width:820px){.zug{order:-1;flex-basis:100%;margin-top:18px}}
+@media (max-width:440px){.zug-r{width:100%}.wg{flex:1 1 0;min-width:0;padding-inline:12px}.wg:first-child{padding-left:14px}.wg:last-child{padding-right:14px}.wg-n{font-size:20px;gap:6px}.wg-n svg{width:18px;height:18px}.wg-s{font-size:12.5px}}
+.only-ruhe,.ruhe{display:none}
+:root[data-zug="ruhe"] .only-ruhe{display:revert}
+:root[data-zug="ruhe"] .ruhe{display:grid}
+:root[data-zug="ruhe"] :is(.bx,.notes,.opts,.strip,#cur,.only-netz){display:none}
+:root[data-zug="ruhe"] .mast{padding-bottom:clamp(18px,3.4vw,32px)}
+/* Umsteigen aus der Leiste, auch tief unten im Liniennetz */
+.ride{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 16px 0 12px;border:1.5px solid var(--sign);border-radius:999px;background:var(--sign-soft);color:var(--ink);font:600 15px var(--f-body);cursor:pointer;flex:none;white-space:nowrap}
+.ride svg{width:22px;height:22px;color:var(--heat)}
+.ride:hover{border-color:var(--ink)}
+:root[data-zug="ruhe"] .ride{margin-left:auto}
+@media (max-width:560px){.ride span{display:none}.ride{width:44px;padding:0}.cur{order:1}}
+
+/* Ruhezug: wenige Wagen, je eine Kernaussage in ganzen Sätzen und ein ruhiges Bild. Eine Farbe für Daten,
+   Gelb für „nächster Halt“, Rot nur für „heute“. Zwischen den Wagen ein Faltenbalg. */
+.ruhe{width:100%;max-width:920px;margin:6px auto 0;gap:32px;font-size:18px;line-height:1.55}
+.ru-car{position:relative;background:var(--panel);border:1px solid var(--rule);border-radius:18px;padding:clamp(18px,4.4vw,42px);min-width:0}
+.ru-car+.ru-car::before{content:"";position:absolute;left:50%;top:-33px;width:60px;height:32px;margin-left:-30px;border-inline:2px solid var(--rule);background:repeating-linear-gradient(var(--rule) 0 2px,transparent 2px 6px)}
+.ru-k{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin:0 0 16px;font:600 13px/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.ru-no{display:inline-grid;place-items:center;width:32px;height:32px;border:2px solid var(--ink);border-radius:5px;background:var(--panel);font:700 20px/1 var(--f-disp);color:var(--ink);letter-spacing:0}
+.ru-h{margin:0;font:600 clamp(24px,3.3vw,33px)/1.22 var(--f-body);letter-spacing:-.005em;text-wrap:balance}
+.ru-h em,.ru-p em{font-style:normal;background:linear-gradient(transparent 56%,var(--hl-soft) 56% 94%,transparent 94%);padding:0 .06em}
+.ru-p{margin:12px 0 0;max-width:60ch;text-wrap:pretty}
+.ru-p b{font-weight:600}
+.ru-fig{margin-top:28px}
+.ru-cap{display:flex;flex-wrap:wrap;align-items:center;gap:6px 20px;margin:14px 0 0;font-size:14.5px;line-height:1.4;color:var(--muted)}
+.ru-cap span{display:inline-flex;align-items:center;gap:8px}
+.sw{display:inline-block;width:14px;height:10px;border-radius:2px;background:var(--heat);flex:none}
+.sw.w{background:none;box-shadow:inset 0 0 0 1.5px var(--sleeper)}
+/* Wagen 1: Fahrgastinformation – letzter Halt, Zug, nächster Halt */
+.ru-hero .ru-h{font-size:clamp(18px,2.2vw,21px);line-height:1.3;color:var(--muted)}
+.ru-big{display:block;margin-top:6px;font:700 clamp(44px,7.6vw,78px)/.98 var(--f-disp);color:var(--ink);letter-spacing:-.005em;text-wrap:balance}
+.ru-when{margin:12px 0 0;font:500 clamp(19px,2.5vw,24px)/1.35 var(--f-body)}
+.ru-when span{color:var(--muted)}
+.ru-run{margin-top:34px}
+.ru-tr{position:relative;height:46px;margin:0 15px;--tw:64px}
+.ru-tr::before{content:"";position:absolute;left:0;right:0;bottom:9px;height:6px;border-radius:3px;background:var(--track)}
+.ru-done{position:absolute;left:0;bottom:9px;height:6px;border-radius:3px;background:var(--heat);width:calc(var(--p) * (100% - var(--tw)) + var(--tw) - 8px);transition:width 1.8s cubic-bezier(.3,.7,.25,1)}
+.ru-train{position:absolute;bottom:14px;left:calc(var(--p) * (100% - var(--tw)));width:var(--tw);height:24px;color:var(--heat);transition:left 1.8s cubic-bezier(.3,.7,.25,1)}
+.ru-train svg{display:block;width:100%;height:100%;overflow:visible}
+.ru-train .b{fill:currentColor}.ru-train .w{fill:var(--panel)}.ru-train .s{stroke:var(--hl);stroke-width:1.8}.ru-train .r{fill:var(--ink)}
+.ru-st{position:absolute;bottom:-3px;width:30px;height:30px;margin-left:-15px;z-index:1}
+.ru-st.a{left:0}.ru-st.b{left:100%}
+.ru-st .sg{width:30px;height:30px;display:block}
+.ru-st.a .sg{opacity:.55}
+.ru-lab{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:8px 16px;margin-top:14px;font-size:15.5px;line-height:1.35}
+.ru-lab small{display:block;margin-bottom:2px;font:600 11.5px/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.ru-lab b{display:block;font-weight:600}
+.ru-lab .m{align-self:center;text-align:center;font:500 14px/1.4 var(--f-mono);color:var(--muted)}
+.ru-lab .m b{display:inline;font-weight:600;color:var(--ink)}
+.ru-lab .r{text-align:right}
+@media (max-width:560px){.ru-lab{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.ru-lab .m{grid-column:1/-1;grid-row:2;text-align:left}}
+.ru-say{display:flex;gap:10px;align-items:flex-start;margin:24px 0 0;padding-top:16px;border-top:1px dashed var(--rule);font-size:15.5px;color:var(--muted);font-style:italic}
+.ru-say svg{flex:none;width:20px;height:20px;margin-top:2px;color:var(--muted)}
+/* Wagen 2: Reiseverlauf des Jahres, eine Station je Feiertag */
+.ru-two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:28px 44px;align-items:start}
+.ru-two>div{position:sticky;top:84px}
+@media (max-width:820px){.ru-two{grid-template-columns:minmax(0,1fr)}.ru-two>div{position:static}}
+.rv{list-style:none;margin:0;padding:0;--node:var(--heat)}
+.rv li{display:grid;grid-template-columns:minmax(0,7.6em) 26px minmax(0,1fr);column-gap:12px;position:relative}
+.rv-d{padding:9px 0;font:500 15px/1.3 var(--f-body);font-variant-numeric:tabular-nums;color:var(--muted);text-align:right;white-space:nowrap}
+.rv-n{position:relative}
+.rv-n::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:4px;margin-left:-2px;background:var(--heat)}
+.rv li:first-child .rv-n::before{top:20px}
+.rv li:last-child .rv-n::before{bottom:auto;height:20px}
+.rv-n i{position:absolute;left:50%;top:12px;width:16px;height:16px;margin-left:-8px;border-radius:50%;background:var(--heat);box-shadow:0 0 0 3px var(--panel)}
+.rv .we .rv-n i{background:var(--panel);border:2.5px solid var(--sleeper);width:14px;height:14px;margin-left:-7px;top:13px}
+.rv .rg .rv-n i{border-radius:2px;transform:rotate(45deg);width:11px;height:11px;margin-left:-5.5px;top:14.5px;background:var(--panel);border:2.5px solid var(--sleeper)}
+.rv-t{padding:8px 0 11px;font-size:17px;line-height:1.3;min-width:0}
+.rv-t b{font-weight:600}
+.rv-t small{display:block;margin-top:2px;font-size:14.5px;color:var(--muted)}
+.rv :is(.we,.rg) .rv-t b{font-weight:500;color:var(--muted)}
+.rv .past{color:var(--muted)}
+.rv li.past .rv-n::before{background:var(--track)}
+.rv .past .rv-n i{background:var(--track)}
+.rv .past.we .rv-n i,.rv .past.rg .rv-n i{background:var(--panel);border-color:var(--track)}
+.rv .past .rv-t b{font-weight:500;color:var(--muted)}
+.rv-now .rv-n::before{background:linear-gradient(var(--track) 0 20px,var(--heat) 20px)!important}
+.rv-now .rv-n i{width:14px;height:14px;margin-left:-7px;top:13px;background:var(--alert)}
+.rv-now .rv-d,.rv-now .rv-t{color:var(--alert-ink);font-weight:600}
+.rv-tag{display:inline-block;margin-left:10px;padding:3px 7px;border-radius:4px;background:var(--hl);color:#111;font:600 11.5px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;vertical-align:3px}
+.rv .nx .rv-n i{width:22px;height:22px;margin-left:-11px;top:9px;background:var(--panel);border:5px solid var(--heat)}
+@media (max-width:560px){.rv li{grid-template-columns:22px minmax(0,1fr);column-gap:12px}.rv-d{grid-column:2;grid-row:1;padding:8px 0 0;text-align:left;font-size:14px}.rv-n{grid-column:1;grid-row:1/span 2}.rv-t{grid-column:2;grid-row:2;padding-top:1px}}
+/* Wagen 3: ein Stapel je Jahr – volle Kästchen Mo–Fr, leere am Wochenende */
+.yrs{display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:4px;align-items:end}
+.yc{all:unset;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:7px;min-width:0;padding:10px 0 8px;border-radius:10px;cursor:pointer}
+.yc:hover{background:var(--paper)}
+.yc:focus-visible,.lr:focus-visible{outline:3px solid var(--hl);outline-offset:0;box-shadow:0 0 0 5px var(--ink)}
+.yc[aria-pressed="true"]{background:var(--hl-soft)}
+.yc-s{display:flex;flex-direction:column-reverse;gap:3px;width:min(20px,74%)}
+.yc-s i{display:block;height:9px;border-radius:2px;background:var(--heat)}
+.yc-s i.w{background:none;box-shadow:inset 0 0 0 1.5px var(--sleeper)}
+.yc b{font:700 19px/1 var(--f-disp);font-variant-numeric:tabular-nums}
+.yc-y{font:500 12px/1 var(--f-mono);color:var(--muted);white-space:nowrap}
+.yc[aria-pressed="true"] .yc-y{color:var(--ink);font-weight:600}
+.yc.now .yc-y::after{content:"";display:block;width:6px;height:6px;margin:5px auto 0;border-radius:50%;background:var(--alert)}
+@media (max-width:640px){.yrs{gap:1px}.yc-y{font-size:11px}.yc:not(.k) .yc-y{visibility:hidden}.yc b{font-size:16px}.yc-s{gap:2px}.yc-s i{height:7px}}
+.ru-why{margin:26px 0 0;padding:18px 20px;border-radius:12px;background:var(--paper);font-size:16.5px;max-width:none}
+.ru-why b{font-weight:600}
+/* Wagen 4: jedes Land ein Zug, jeder Wagen ein Feiertag an einem Werktag */
+.lv{display:grid;gap:2px}
+.lr{all:unset;box-sizing:border-box;display:grid;grid-template-columns:minmax(0,13em) minmax(0,1fr) 2em;align-items:center;gap:14px;padding:6px 10px;border-radius:9px;cursor:pointer}
+.lr:hover{background:var(--paper)}
+.lr[aria-pressed="true"]{background:var(--hl-soft)}
+.lr-n{font-size:16px;line-height:1.25}
+.lr[aria-pressed="true"] .lr-n{font-weight:600}
+.lr-t{display:grid;grid-template-columns:repeat(var(--mx),minmax(0,18px));gap:3px}
+.lr-t i{height:13px;border-radius:2px;background:color-mix(in oklab,var(--heat) 50%,var(--panel))}
+.lr-t i:last-child{border-radius:2px 8px 8px 2px}
+.lv.on .lr:not([aria-pressed="true"]) .lr-t i{background:color-mix(in oklab,var(--heat) 32%,var(--panel))}
+.lr[aria-pressed="true"] .lr-t i{background:var(--heat)}
+.lr-c{font:700 21px/1 var(--f-disp);text-align:right;font-variant-numeric:tabular-nums}
+@media (max-width:560px){.lr{grid-template-columns:minmax(0,8.4em) minmax(0,1fr) 1.5em;gap:8px;padding:6px}.lr-n{font-size:14.5px;overflow-wrap:anywhere}.lr-t{gap:2px}.lr-t i{height:11px}.lr-c{font-size:18px}}
+/* Wagen 5: gut zu wissen */
+.ru-note ul{margin:0;padding-left:22px;display:grid;gap:8px;font-size:17px}
+.ru-ex{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin-top:22px;font-size:16px}
+.ru-ex button{font:500 15.5px var(--f-body);border:1.5px dashed var(--sleeper);background:none;border-radius:999px;padding:7px 15px;cursor:pointer;color:var(--ink)}
+.ru-ex button:hover{border-color:var(--ink)}
+.ru-ex button[aria-pressed="true"]{border-style:solid;border-color:var(--ink);background:var(--sign-soft)}
+.ru-ex button[aria-pressed="true"]::before{content:"✓ ";font-weight:600}
+.ru-back{display:inline-flex;align-items:center;gap:10px;margin-top:26px;border:0;border-radius:10px;background:var(--sign);color:var(--on-sign);font:600 16.5px var(--f-body);padding:12px 18px;cursor:pointer}
+.ru-back svg{width:22px;height:22px}
+.ru-back:hover{background:color-mix(in oklab,var(--sign) 85%,#fff)}
+/* Umsteigen: der alte Zug fährt nach links aus, der neue fährt von rechts ein (zurück: umgekehrt) */
+@media (prefers-reduced-motion:no-preference){
+::view-transition-old(root){animation:zug-ab .42s cubic-bezier(.55,0,.8,.3) both}
+::view-transition-new(root){animation:zug-an .62s cubic-bezier(.2,.75,.25,1) .06s both}
+:root[data-dir="back"]::view-transition-old(root){animation-name:zug-ab-r}
+:root[data-dir="back"]::view-transition-new(root){animation-name:zug-an-r}
+}
+@keyframes zug-ab{to{transform:translateX(-10%);opacity:0;filter:blur(3px)}}
+@keyframes zug-an{from{transform:translateX(10%);opacity:0;filter:blur(3px)}}
+@keyframes zug-ab-r{to{transform:translateX(10%);opacity:0;filter:blur(3px)}}
+@keyframes zug-an-r{from{transform:translateX(-10%);opacity:0;filter:blur(3px)}}
+
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 <style id="linecss"></style>
@@ -489,11 +645,22 @@ h2.sign .pk svg{width:20px;height:20px}
     <div class="mast-top">
       <span class="hst" aria-hidden="true">H</span>
       <div>
-        <p class="eyebrow">Liniennetz der gesetzlichen Feiertage · 16 Länder · 1991–2070</p>
+        <p class="eyebrow"><span class="only-netz">Liniennetz der gesetzlichen Feiertage · 16 Länder · 1991–2070</span><span class="only-ruhe">Ruhezug · das Wichtigste, in Ruhe erklärt</span></p>
         <h1>Werktags-Feiertage</h1>
       </div>
     </div>
-    <p class="lede">Jeder Feiertag ist eine <b>Linie</b> mit eigener Farbe und eigenem Signet, jedes Bundesland ein <b>Gleis</b>, das durchs Jahr läuft. Welche Feiertage halten tatsächlich an einem Arbeitstag, welche fallen aufs Wochenende aus – und wann kommt der nächste Halt?</p>
+    <div class="mast-mid">
+      <p class="lede only-netz">Jeder Feiertag ist eine <b>Linie</b> mit eigener Farbe und eigenem Signet, jedes Bundesland ein <b>Gleis</b>, das durchs Jahr läuft. Welche Feiertage halten tatsächlich an einem Arbeitstag, welche fallen aufs Wochenende aus – und wann kommt der nächste Halt?</p>
+      <p class="lede only-ruhe">Hier fährt der <b>Ruhezug</b>: nur das Wichtigste, in ganzen Sätzen und mit wenigen, ruhigen Bildern. Bundesland und Jahr wählen Sie in der Leiste darunter. Jede Linie, jedes Jahr, jedes Detail zeigt das <b>Liniennetz</b>.</p>
+      <div class="zug" role="group" aria-label="Ansicht wählen">
+        <p class="zug-k" aria-hidden="true">Zug wählen</p>
+        <div class="zug-r">
+          <button class="wg" data-ride="netz" aria-pressed="true"><span class="wg-w" aria-hidden="true"></span><span class="wg-n">Liniennetz</span><span class="wg-s">alle Ansichten, jedes Detail</span></button>
+          <i class="wg-k" aria-hidden="true"></i>
+          <button class="wg" data-ride="ruhe" aria-pressed="false"><span class="wg-w" aria-hidden="true"></span><span class="wg-n">Ruhezug<span class="ruhei" aria-hidden="true"></span></span><span class="wg-s">nur das Wichtigste, in Ruhe</span></button>
+        </div>
+      </div>
+    </div>
     <div class="opts" role="group" aria-label="Zusätzlich als frei werten">
       <span class="label">Zusätzlich als frei werten</span>
       <button class="opt" data-ex="rm" aria-pressed="false"><span class="optsig" data-id="rosenmontag"></span>Rosenmontag</button>
@@ -505,15 +672,39 @@ h2.sign .pk svg{width:20px;height:20px}
 
   <nav class="bar" aria-label="Auswahl">
     <div class="bar-in">
-      <label class="gl"><span>Gleis</span><select id="state" aria-label="Bundesland"></select></label>
+      <label class="gl"><span><span class="only-netz">Gleis</span><span class="only-ruhe">Land</span></span><select id="state" aria-label="Bundesland"></select></label>
       <div class="yr" role="group" aria-label="Jahr">
         <button id="yprev" aria-label="Vorheriges Jahr">‹</button>
         <output id="yv" aria-live="polite"></output>
         <button id="ynext" aria-label="Nächstes Jahr">›</button>
       </div>
       <div class="cur" id="cur"></div>
+      <button class="ride" id="rideBar" data-ride="toggle"></button>
     </div>
   </nav>
+
+  <section class="ruhe" id="ruhe" aria-label="Ruhezug: das Wichtigste">
+    <article class="ru-car ru-hero" id="ru1" aria-labelledby="ru1h"></article>
+    <article class="ru-car" id="ru2" aria-labelledby="ru2h"></article>
+    <article class="ru-car" id="ru3" aria-labelledby="ru3h"></article>
+    <article class="ru-car" id="ru4" aria-labelledby="ru4h"></article>
+    <aside class="ru-car ru-note" id="ru5" aria-labelledby="ru5h">
+      <p class="ru-k"><span class="ru-no">5</span>Gut zu wissen</p>
+      <h2 class="ru-h" id="ru5h">Drei Dinge, die man wissen sollte.</h2>
+      <ul class="ru-p">
+        <li>Es zählt das Bundesland, in dem Sie arbeiten – nicht das, in dem Sie wohnen.</li>
+        <li>Feiertage, die nur in einzelnen Orten gelten, sind nicht mitgezählt – etwa Fronleichnam in Teilen Sachsens und Thüringens.</li>
+        <li>Alle Termine sind aus den Feiertagsgesetzen berechnet. Künftige Jahre gelten nach heutiger Rechtslage.</li>
+      </ul>
+      <div class="ru-ex" role="group" aria-label="Zusätzlich als frei werten">
+        <span>Bei Ihnen auch frei?</span>
+        <button data-ex="rm" aria-pressed="false">Rosenmontag</button>
+        <button data-ex="ha" aria-pressed="false">Heiligabend</button>
+        <button data-ex="sv" aria-pressed="false">Silvester</button>
+      </div>
+      <button class="ru-back" data-ride="netz"><span class="netzi" aria-hidden="true"></span>Alle Details im Liniennetz</button>
+    </aside>
+  </section>
 
   <section class="board bx" id="board" aria-labelledby="bdTitle">
     <div id="bdMain" aria-live="polite"></div>
@@ -692,6 +883,9 @@ const YMIN=1991,YMAX=2070;const clampY=y=>Math.min(YMAX,Math.max(YMIN,Math.round
 const plural=(n,a,b)=>n===1?a:b;
 const $=id=>document.getElementById(id);
 const stName=c=>c==='DE'?'Ganz Deutschland':BY[c].n;
+// „im Saarland“, sonst „in Bayern“ – für Sätze; DE heißt dort „bundesweit“
+const inLand=c=>c==='DE'?'bundesweit':c==='SL'?'im Saarland':'in '+BY[c].n;
+const InLand=c=>inLand(c).replace(/^./,ch=>ch.toUpperCase());
 const daysTo=d=>Math.round((d-TODAY)/864e5);
 const relDays=n=>n===0?'heute':n===1?'morgen':n===-1?'gestern':n>0?`in ${n} Tagen`:`vor ${-n} Tagen`;
 const inDays=d=>relDays(daysTo(d));
@@ -767,6 +961,9 @@ const HV={fid:null,land:null,jahr:null};           // flüchtige Vorschau (Hover
 try{const s=localStorage.getItem('wtf-sel');if(isLand(s))S.land=s;}catch(e){}
 let extras={rm:false,ha:false,sv:false};try{const x=JSON.parse(localStorage.getItem('wtf-ex')||'{}');if(x&&typeof x==='object')for(const kk of Object.keys(extras))if(own(x,kk)&&typeof x[kk]==='boolean')extras[kk]=x[kk];}catch(e){}
 const exKey=()=>(extras.rm?'r':'')+(extras.ha?'h':'')+(extras.sv?'s':'');
+// Welcher Zug fährt: 'netz' (alle Ansichten) oder 'ruhe' (Ruhezug). Hash zug=… schlägt localStorage wtf-zug.
+const zugPref=()=>{try{return localStorage.getItem('wtf-zug')==='ruhe'?'ruhe':'netz';}catch(e){return 'netz';}};
+let ZUG=zugPref();
 const cache={};
 const hol=y=>{const ck=y+'|'+exKey();return cache[ck]||(cache[ck]=F.holidays(y,extras));};
 const findH=(y,id)=>hol(y).find(h=>h.id===id);
@@ -782,9 +979,12 @@ function readHash(){
  const f=p.get('linie');S.fid=isLine(f)?f:null;
  const t=p.get('tag');S.tag=t&&/^\d{4}-\d\d-\d\d$/.test(t)&&+t.slice(0,4)>=YMIN&&+t.slice(0,4)<=YMAX?t:null;
  if(S.tag)S.jahr=clampY(S.tag.slice(0,4));
+ const z=p.get('zug');if(z==='ruhe'||z==='netz')ZUG=z;
 }
 function writeHash(){
  const p=new URLSearchParams();p.set('jahr',S.jahr);p.set('land',S.land);if(S.fid)p.set('linie',S.fid);if(S.tag)p.set('tag',S.tag);
+ // zug steht in der Adresse, wenn der Ruhezug fährt oder die Adresse von der gespeicherten Wahl abweicht (Link mit zug=netz)
+ if(ZUG==='ruhe'||zugPref()==='ruhe')p.set('zug',ZUG);
  const h='#'+p.toString();if(location.hash!==h)history.replaceState(null,'',h);
 }
 function normalize(){
@@ -807,7 +1007,7 @@ function renderBoard(){
  // Daten gibt es nur für 1991–2070: nichts aus 2071 anzeigen
  const hs=[ty,ty+1].filter(y=>y>=YMIN&&y<=YMAX).flatMap(hol).filter(h=>h.d>=t);
  const nx=hs.find(h=>applies(h,L)&&isWd(h.d));
- if(!nx){$('bdMain').innerHTML=head+`<div class="bd-main"><div><p class="bd-k">Fahrplanende</p><p style="margin:0">${flaps('KEIN HALT','xl')}<span class="sr">Kein Halt mehr</span></p><p class="bd-sub">${ty>YMAX||ty<YMIN?'Die Seite rechnet für die Jahre 1991 bis 2070; für heute liegen keine Daten vor.':`Bis Ende 2070 kommt ${L==='DE'?'kein bundesweiter Feiertag':'in '+BY[L].n+' kein Feiertag'} mehr auf einen Werktag. Für die Zeit nach 2070 liegen keine Daten vor.`}</p></div></div>`;$('bdFoot').innerHTML='';return;}
+ if(!nx){$('bdMain').innerHTML=head+`<div class="bd-main"><div><p class="bd-k">Fahrplanende</p><p style="margin:0">${flaps('KEIN HALT','xl')}<span class="sr">Kein Halt mehr</span></p><p class="bd-sub">${ty>YMAX||ty<YMIN?'Die Seite rechnet für die Jahre 1991 bis 2070; für heute liegen keine Daten vor.':`Bis Ende 2070 kommt ${L==='DE'?'kein bundesweiter Feiertag':inLand(L)+' kein Feiertag'} mehr auf einen Werktag. Für die Zeit nach 2070 liegen keine Daten vor.`}</p></div></div>`;$('bdFoot').innerHTML='';return;}
  const inR=ty>=YMIN&&ty<=YMAX;
  const isToday=nx.k===TK,nxSame=hs.filter(h=>h.k===nx.k&&h!==nx);
  const wdc=wdBetween(t,nx.d);
@@ -827,7 +1027,7 @@ function renderBoard(){
   case 'halt':return `${scope(h)} · ${inDays(h.d)}`;
   case 'aus':return `fällt auf ${WDL[h.d.getDay()]}${L==='DE'?' · '+scope(h):''}`;
   case 'frueh':return 'nur '+NETZ.filter(c=>h.full.includes(c)).map(c=>BY[c].n).join(', ');
-  case 'durch':return 'hält nicht in '+BY[L].n;
+  case 'durch':return 'hält nicht '+inLand(L);
   case 'reg':return h.note||'nur in Teilen des Landes';}};
  const alsoOf=h=>hs.filter(x=>x.k===h.k&&x!==h).map(x=>x.n);
  const list=rows.map(r=>{const h=r.h,[sc,st]=ST[r.kind],also=alsoOf(h);
@@ -838,7 +1038,7 @@ function renderBoard(){
  const kick=isToday?'Heute ist':wdc?'Normale Arbeitstage bis':'Kein Arbeitstag mehr bis';
  const bigTxt=isToday?'HEUTE FREI':wdc?WD[last.getDay()].toUpperCase()+' '+dm(last):WD[nx.d.getDay()].toUpperCase()+' '+dm(nx.d);
  const bigSr=isToday?'heute frei':wdc?WDL[last.getDay()]+', '+dm(last):'(kein Arbeitstag vor dem Halt)';
- const sub=isToday?`${nx.n}${L==='DE'?' – bundesweit.':' in '+BY[L].n+'.'}`:wdc?`<b>${wdc} ${plural(wdc,'Arbeitstag','Arbeitstage')}</b> am Stück (ab heute), dann ist ${fmt(nx.d)}${nxY} frei${L==='DE'?' – in allen 16 Ländern':''}.`:`Kein Arbeitstag bis dahin: Der nächste Werktag, ${fmt(nx.d)}${nxY}, ist schon frei${L==='DE'?' – in allen 16 Ländern':''}.`;
+ const sub=isToday?`${nx.n}${L==='DE'?' – bundesweit.':' '+inLand(L)+'.'}`:wdc?`<b>${wdc} ${plural(wdc,'Arbeitstag','Arbeitstage')}</b> am Stück (ab heute), dann ist ${fmt(nx.d)}${nxY} frei${L==='DE'?' – in allen 16 Ländern':''}.`:`Kein Arbeitstag bis dahin: Der nächste Werktag, ${fmt(nx.d)}${nxY}, ist schon frei${L==='DE'?' – in allen 16 Ländern':''}.`;
  $('bdMain').innerHTML=`${head}
  <div class="bd-main"><div><p class="bd-k">${kick}</p><p style="margin:0">${flaps(bigTxt,'xl')}<span class="sr">${bigSr}</span></p><p class="bd-sub">${sub}</p></div>
  <div data-h="${nx.id}"><p class="bd-k">Nächster Halt · ${stName(L)}</p><div class="bd-dest">${sig(nx.id)}<span>${flaps(nx.n.toUpperCase(),'lg',10)}<span class="sr">${nx.n}</span></span></div>${nxSame.map(x=>`<div class="bd-dest bd-also" data-h="${x.id}">${sig(x.id)}<span>zugleich <b>${x.n}</b></span></div>`).join('')}<p class="bd-when">${WDL[nx.d.getDay()]}, ${dm(nx.d)}${nx.d.getFullYear()} <span>· ${scope(nx)} · ${inDays(nx.d)}</span></p></div></div>
@@ -863,7 +1063,7 @@ function renderBoardLine(){
  const f=HV.fid||S.fid,key=(f||'')+'|'+S.land+'|'+exKey();if(key===lineKey)return;lineKey=key;
  const el=$('bdLine');
  if(!f){el.innerHTML=`<div class="bd-line off">Linie wählen (Signet, Station oder Eintrag im Linienverzeichnis antippen), dann zeigt die Tafel ihren nächsten Halt${S.land==='DE'?'':' auf Gleis '+S.land}.</div>`;return;}
- const L=LN[f],o=nextOcc(f,S.land),where=S.land==='DE'?'':' in '+BY[S.land].n;
+ const L=LN[f],o=nextOcc(f,S.land),where=S.land==='DE'?'':' '+inLand(S.land);
  let t;
  if(o.stop&&o.first.h===o.stop)t=`nächster Halt${where}: <b>${WDL[o.stop.d.getDay()]}, ${dm(o.stop.d)}${o.stop.d.getFullYear()}</b> · ${inDays(o.stop.d)}${S.land==='DE'?' · '+gleise(o.stop):''}`;
  else if(o.stop)t=`nächstes Mal${where} ${fmt(o.first.h.d)}${o.first.h.d.getFullYear()} – ${o.first.r==='r'?'nur in Teilen des Landes':isWd(o.first.h.d)?'':'fällt aufs Wochenende'}; nächster freier Werktag: <b>${fmt(o.stop.d)}${o.stop.d.getFullYear()}</b>`;
@@ -930,7 +1130,7 @@ function renderLdet(){
  let when='',status='',chips='',same='';
  if(h){const dd=daysTo(h.d);when=`<b>${WDL[h.d.getDay()]}, ${dm(h.d)}${y}</b> · ${isWd(h.d)?'Mo–Fr':'Wochenende'} · ${relDays(dd)}`;
   if(S.land==='DE')status=h.full.length===16?(isWd(h.d)?'Bundesweit frei.':'Bundesweit, fällt aber aufs Wochenende.'):h.full.length?`Feiertag in ${h.full.length} ${plural(h.full.length,'Land','Ländern')}${isWd(h.d)?'':', fällt aufs Wochenende'}.`:'Nur regional.';
-  else{const s=BY[S.land].n;status=h.full.includes(S.land)?(isWd(h.d)?`In ${s} frei.`:`In ${s} Feiertag, fällt aber aufs Wochenende.`):h.reg.includes(S.land)?`In ${s} nur regional.`:`In ${s} kein Feiertag.`;}
+  else{const s=InLand(S.land);status=h.full.includes(S.land)?(isWd(h.d)?`${s} frei.`:`${s} Feiertag, fällt aber aufs Wochenende.`):h.reg.includes(S.land)?`${s} nur regional.`:`${s} kein Feiertag.`;}
   if(h.note)status+=' '+h.note;
   const sm=hol(y).filter(x=>x.k===h.k&&x.id!==f);
   if(sm.length)same=`<div class="same"><span>Am selben Tag:</span>${sm.map(x=>`<button class="chip" data-pick="h" data-h="${x.id}" data-k="${x.k}">${sig(x.id)}${x.n} – umschalten</button>`).join('')}</div>`;
@@ -955,7 +1155,7 @@ function renderStrecke(){
    const Ls=byK[key];
    if(Ls){const srt=[...Ls].sort((a,b)=>rank(b)-rank(a)),relOf=h=>L==='DE'?(h.full.length?'f':'r'):(h.full.includes(L)?'f':h.reg.includes(L)?'r':'o');
     if(wd&&srt.some(h=>applies(h,L)))mc++;
-    const btn=(h,cls)=>{const rel=relOf(h),lab=`${fmt(d)}${y}: ${h.n}${Ls.length>1?' (zugleich '+Ls.filter(x=>x!==h).map(x=>x.n).join(', ')+')':''}${rel==='o'?' – nicht in '+BY[L].n:rel==='r'?' – nur regional':''}${wd?'':' – Wochenende'}`;
+    const btn=(h,cls)=>{const rel=relOf(h),lab=`${fmt(d)}${y}: ${h.n}${Ls.length>1?' (zugleich '+Ls.filter(x=>x!==h).map(x=>x.n).join(', ')+')':''}${rel==='o'?' – nicht '+inLand(L):rel==='r'?' – nur regional':''}${wd?'':' – Wochenende'}`;
      return `<button class="${cls} ${rel}" data-pick="h" data-h="${h.id}" data-k="${key}" title="${lab}" aria-label="${lab}">${sig(h.id,wd?'':'we')}</button>`;};
     if(srt.length===1)row+=btn(srt[0],`d h ${wd?'wd':'we'}${past}${today}`);
     else row+=`<span class="d h2 ${wd?'wd':'we'}${past}${today}">${srt.map(h=>btn(h,'dh')).join('')}</span>`;}
@@ -1163,6 +1363,141 @@ function renderLaender(){
   return `<button class="rk" data-pick="l" data-l="${r.s.c}" ${LA[r.s.c]} aria-pressed="${S.land===r.s.c}" aria-label="${r.s.n}: ${r.wk.length} Feiertage Mo–Fr"><span class="gp">${r.s.c}</span><span class="rk-n">${r.s.n}</span><span class="rk-s">${sg}</span><span class="rk-c">${r.wk.length}${r.rg.length?`<small>+${r.rg.length} reg.</small>`:''}</span></button>`;}).join('');
 }
 
+/* ---- Ruhezug: je Wagen eine Kernaussage in ganzen Sätzen und ein ruhiges Bild ----
+   Liest dieselbe Auswahl S wie das Liniennetz, kennt aber keine Vorschau und kein Brushing. */
+const dMid=d=>`${WD[d.getDay()]}, ${d.getDate()}. ${MON[d.getMonth()]}`;
+const dLong=d=>`${WDL[d.getDay()]}, ${d.getDate()}. ${MON[d.getMonth()]} ${d.getFullYear()}`;
+const und=a=>a.length<2?a.join(''):a.slice(0,-1).join(', ')+' und '+a[a.length-1];
+const de1=v=>v.toFixed(1).replace('.',',');
+const nAT=n=>`${n} ${plural(n,'Arbeitstag','Arbeitstage')}`;
+const ICON={
+ ruhe:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7.4 10.2q1.6 1.5 3.2 0M13.4 10.2q1.6 1.5 3.2 0M8.6 14.6q3.4 2.6 6.8 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+ netz:'<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2 6h16M2 14h16" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M7 2v16M13 6v12" stroke="currentColor" stroke-width="2.8"/><circle cx="7" cy="6" r="2.4" style="fill:var(--panel)" stroke="currentColor" stroke-width="1.7"/><circle cx="13" cy="14" r="2.4" style="fill:var(--panel)" stroke="currentColor" stroke-width="1.7"/></svg>',
+ say:'<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 7.5h3l4.5-3.6v12.2L6 12.5H3Z" fill="currentColor"/><path d="M13.4 7a4 4 0 0 1 0 6M15.6 4.8a7 7 0 0 1 0 10.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+ train:'<svg viewBox="0 0 64 24" aria-hidden="true"><path class="b" d="M3 3h40c9 0 16.5 6 18.5 14.5L62 20H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path class="w" d="M7 7h6v5H7zM16 7h6v5h-6zM25 7h6v5h-6zM34 7h6v5h-6zM44 7h1.5c5 0 9 2.6 10.8 6H44Z"/><path class="s" d="M3 15.4h57"/><circle class="r" cx="11" cy="21.4" r="2.3"/><circle class="r" cx="18" cy="21.4" r="2.3"/><circle class="r" cx="45" cy="21.4" r="2.3"/><circle class="r" cx="52" cy="21.4" r="2.3"/></svg>'
+};
+// Feiertage, die hier landesweit gelten (bei DE: bundesweit): wk = davon auf Mo–Fr, we = am Wochenende
+const cnt=(y,c)=>{const H=hol(y).filter(h=>applies(h,c)),wk=H.filter(h=>isWd(h.d)).length;return{wk,we:H.length-wk};};
+const avgC={};
+const avgOf=c=>{const k=c+'|'+exKey();if(avgC[k]==null){let s=0;YEARS.forEach(y=>{s+=cnt(y,c).wk;});avgC[k]=s/YEARS.length;}return avgC[k];};
+const kick=(n,t)=>`<p class="ru-k"><span class="ru-no" aria-hidden="true">${n}</span><span><span class="sr">Wagen ${n}: </span>${t}</span></p>`;
+let ru1Key='',ru2Key='',ru3Key='',ru4Key='',ru3A=null;
+// Wagen 1: nächster freier Werktag ab heute, mit Strecke vom letzten Halt dorthin
+function renderRu1(){
+ const L=S.land,k=[L,exKey(),TK].join('|');if(k===ru1Key)return;ru1Key=k;
+ const el=$('ru1'),where=inLand(L),head=kick(1,'Nächster Halt · '+stName(L));
+ const all=[TY-1,TY,TY+1].filter(y=>y>=YMIN&&y<=YMAX).flatMap(hol),ok=h=>applies(h,L)&&isWd(h.d);
+ const nx=all.find(h=>h.d>=TODAY&&ok(h));
+ if(!nx){el.innerHTML=head+`<h2 class="ru-h" id="ru1h">${TY>YMAX||TY<YMIN?'Für heute liegen keine Daten vor.':`Bis Ende 2070 fällt ${where} kein Feiertag mehr auf einen Werktag.`}</h2><p class="ru-p">Die Seite rechnet für die Jahre 1991 bis 2070.</p>`;return;}
+ const pv=[...all].reverse().find(h=>h.d<TODAY&&ok(h)),isT=nx.k===TK;
+ const same=all.filter(h=>h.k===nx.k&&h!==nx&&applies(h,L)),n2=all.find(h=>h.d>nx.d&&ok(h));
+ const wdc=wdBetween(TODAY,nx.d),done=pv?wdBetween(addD(pv.d,1),TODAY):0,p=done+wdc?done/(done+wdc):1;
+ const yr=d=>d.getFullYear()!==TY?' '+d.getFullYear():'';
+ let sub=isT?`Heute ist ${where} frei.`:wdc?`Bis dahin noch <b>${nAT(wdc)}</b>.`:'Bis dahin kein Arbeitstag mehr – das Wochenende geht direkt in den Feiertag über.';
+ if(same.length)sub+=` Am selben Tag: ${und(same.map(h=>h.n))}.`;
+ if(n2)sub+=` Danach: ${n2.n}, ${dMid(n2.d)}${yr(n2.d)}.`;
+ const say=isT?`Heute frei: ${nx.n}. Wir wünschen einen ruhigen Tag.`:wdc===0?`Nächster Halt: ${nx.n}. Kein Arbeitstag mehr dazwischen – gute Fahrt.`:wdc===1?`Nächster Halt: ${nx.n}. Noch ein Arbeitstag – bitte zum Ausstieg bereithalten.`:`Nächster Halt: ${nx.n}. Bitte noch ${nAT(wdc)} sitzen bleiben.`;
+ const mid=isT?(done?`<b>${done}</b> geschafft · heute frei`:'heute frei'):done+wdc?`<b>${done}</b> geschafft · noch <b>${wdc}</b>`:'kein Arbeitstag dazwischen';
+ const aria=`Strecke${pv?' seit '+pv.n+', '+dMid(pv.d)+yr(pv.d)+',':''} bis ${nx.n}: ${nAT(done)} geschafft, noch ${nAT(wdc)}.`;
+ el.innerHTML=head+`<h2 class="ru-h" id="ru1h">${isT?'Heute frei:':'Nächster freier Werktag:'}<span class="ru-big">${nx.n}</span></h2>
+ <p class="ru-when">${dLong(nx.d)} <span>· ${isT?'heute':inDays(nx.d)}</span></p><p class="ru-p">${sub}</p>
+ <div class="ru-run" role="img" aria-label="${aria}"><div class="ru-tr" style="--p:0" data-p="${p.toFixed(4)}"><i class="ru-done"></i>${pv?`<span class="ru-st a">${sig(pv.id)}</span>`:''}<span class="ru-st b">${sig(nx.id)}</span><span class="ru-train">${ICON.train}</span></div>
+ <div class="ru-lab"><span>${pv?`<small>Letzter freier Werktag</small><b>${pv.n}</b>${dMid(pv.d)}${yr(pv.d)}`:'<small>Heute</small>'}</span><span class="m">${mid}</span><span class="r"><small>Nächster</small><b>${nx.n}</b>${dMid(nx.d)}${yr(nx.d)}</span></div></div>
+ <p class="ru-say">${ICON.say}<span>„${say}“</span></p>`;
+ // Der Zug rollt vom letzten Halt bis heute (bei reduzierter Bewegung steht er sofort dort)
+ const tr=el.querySelector('.ru-tr');requestAnimationFrame(()=>requestAnimationFrame(()=>tr.style.setProperty('--p',tr.dataset.p)));
+}
+// Wagen 2: das gewählte Jahr als Reiseverlauf, eine Station je Feiertag
+function renderRu2(){
+ const L=S.land,y=S.jahr,k=[L,y,exKey(),TK].join('|');if(k===ru2Key)return;ru2Key=k;
+ const cur=y===TY,past=y<TY,fa=h=>h.d<TODAY?'fiel':'fällt';
+ const mine=hol(y).filter(h=>L==='DE'?h.full.length===16:h.full.includes(L)||h.reg.includes(L));
+ const isF=h=>applies(h,L),wk=mine.filter(h=>isF(h)&&isWd(h.d)),we=mine.filter(h=>isF(h)&&!isWd(h.d)),rg=mine.filter(h=>!isF(h));
+ const vb=(n,a,b,c,d)=>past?(n===1?c:d):(n===1?a:b);
+ const h2=L==='DE'?`${y} ${past?'fielen':'fallen'} <em>${wk.length} der ${wk.length+we.length}</em> bundesweiten Feiertage auf Montag bis Freitag.`
+  :`${y} ${vb(wk.length,'fällt','fallen','fiel','fielen')} ${inLand(L)} <em>${wk.length} ${plural(wk.length,'Feiertag','Feiertage')}</em> auf Montag bis Freitag.`;
+ const ps=[];
+ if(L==='DE')ps.push(we.length?`Die übrigen ${we.length} ${vb(we.length,'fällt','fallen','fiel','fielen')} aufs Wochenende.`:`Keiner ${past?'fiel':'fällt'} aufs Wochenende.`);
+ else ps.push(we.length?`${we.length===1?'Ein weiterer':we.length+' weitere'} ${vb(we.length,'fällt','fallen','fiel','fielen')} aufs Wochenende und ${vb(we.length,'bringt','bringen','brachte','brachten')} keinen zusätzlichen freien Tag.`:`Keiner ${past?'fiel':'fällt'} aufs Wochenende.`);
+ if(cur&&wk.length){const p=wk.filter(h=>h.d<TODAY).length,f=wk.length-p;ps.push(f===0?'Alle sind schon vorbei.':p===0?'Alle kommen noch.':`${p} davon ${plural(p,'ist','sind')} schon vorbei, ${f} ${plural(f,'kommt','kommen')} noch.`);}
+ if(rg.length)ps.push(`Nur in Teilen des Landes ${vb(rg.length,'gilt','gelten','galt','galten')} außerdem: ${und(rg.map(h=>h.n))}. ${rg.length===1?'Dieser Tag zählt':'Diese Tage zählen'} hier nicht mit.`);
+ if(L==='DE')ps.push('Dazu kommen je nach Bundesland eigene Feiertage – oben das Land wählen, in dem Sie arbeiten.');
+ const xs=mine.filter(h=>h.x).map(h=>h.n);if(xs.length)ps.push(`Mitgezählt ${plural(xs.length,'ist','sind')} auch ${und(xs)} – kein gesetzlicher Feiertag, unten in Wagen 5 zugeschaltet.`);
+ const nxt=cur?mine.find(h=>isF(h)&&isWd(h.d)&&h.d>=TODAY):null;
+ const nowRow=`<li class="rv-now"><span class="rv-d">${dMid(TODAY)}</span><span class="rv-n"><i></i></span><span class="rv-t">heute</span></li>`;
+ let li='',nowSet=!cur;
+ mine.forEach(h=>{
+  if(!nowSet&&h.d>=TODAY){nowSet=true;if(h.k!==TK)li+=nowRow;}
+  const f=isF(h),wd=isWd(h.d),cls=[f?(wd?'wd':'we'):'rg',cur&&h.d<TODAY?'past':'',h===nxt?'nx':''].filter(Boolean).join(' ');
+  const note=!f?'nur in Teilen des Landes':LN[h.id].cat==='so'?'fällt immer auf einen Sonntag':!wd?fa(h)+' aufs Wochenende':h.x?'kein gesetzlicher Feiertag, mitgezählt':'';
+  const tag=h.k===TK?'heute':h===nxt?'nächster Halt':'';
+  li+=`<li class="${cls}"><span class="rv-d">${dMid(h.d)}</span><span class="rv-n"><i></i></span><span class="rv-t"><b>${h.n}</b>${tag?`<span class="rv-tag">${tag}</span>`:''}${note?`<small>${note}</small>`:''}</span></li>`;});
+ if(!nowSet)li+=nowRow;
+ $('ru2').innerHTML=kick(2,`Das Jahr ${y} · ${stName(L)}`)+`<div class="ru-two"><div><h2 class="ru-h" id="ru2h">${h2}</h2>${ps.map(p=>`<p class="ru-p">${p}</p>`).join('')}</div><ol class="rv" aria-label="Feiertage ${y}${L==='DE'?', bundesweit':' '+inLand(L)}">${li}</ol></div>`;
+}
+// Wagen 3: gute und magere Jahre – 16 Jahre um das gewählte, ein Stapel je Jahr
+function renderRu3(){
+ const L=S.land,y=S.jahr,k=[L,y,exKey()].join('|');if(k===ru3Key)return;ru3Key=k;
+ // Ausschnitt bleibt stehen, solange das gewählte Jahr darin liegt – ein Klick verschiebt nichts unter dem Finger
+ if(ru3A===null||y<ru3A||y>ru3A+15)ru3A=y-5;ru3A=Math.max(YMIN,Math.min(YMAX-15,ru3A));
+ const a=ru3A,b=a+15,R=[];for(let yr=a;yr<=b;yr++)R.push(Object.assign({yr},cnt(yr,L)));
+ const me=R.find(r=>r.yr===y),avg=avgOf(L),d=me.wk-avg,q=d>=.5?'gutes':d<=-.5?'mageres':'durchschnittliches';
+ const mx=Math.max(...R.map(r=>r.wk)),mn=Math.min(...R.map(r=>r.wk));
+ const yl=v=>{const ys=R.filter(r=>r.wk===v).map(r=>String(r.yr));return ys.length>4?ys.length+' Jahre':und(ys);};
+ const h2=`${y} ${y<TY?'war':y===TY?'ist':'wird'} ein <em>${q} Jahr</em>: ${me.wk} ${L==='DE'?'bundesweite ':''}Feiertage auf Werktagen.`;
+ const sub=`Im Schnitt der Jahre 1991–2070 sind es ${de1(avg)}. Zwischen ${a} und ${b} am meisten: ${mx} (${yl(mx)}), am wenigsten: ${mn} (${yl(mn)}).`;
+ const fl=L!=='DE'&&YEARS.some(yy=>{const h=findH(yy,'fronleichnam');return h&&h.full.includes(L);});
+ const eas=['Karfreitag','Ostermontag','Christi Himmelfahrt','Pfingstmontag'].concat(fl?['Fronleichnam']:[]);
+ const hit=(yy,id)=>{const h=findH(yy,id);return !!h&&applies(h,L);};
+ // Ein Fahrplanwechsel betrifft das Land, wenn der Tag dort neu gilt oder entfällt – verglichen mit dem Jahr davor,
+ // bzw. mit dem davor, wenn das Vorjahr selbst nur eine einmalige Ausnahme war (2017 → 2018)
+ const ev=Object.keys(EVENTS).map(Number).filter(yr=>yr>=a&&yr<=b&&EVH[yr].some(id=>hit(yr,id)!==hit((EVH[yr-1]||[]).includes(id)?yr-2:yr-1,id)));
+ const why=`<b>Warum schwankt das?</b> Feste Termine wie Neujahr, der 1. Mai oder der 3. Oktober rücken jedes Jahr einen Wochentag weiter, in Schaltjahren zwei – mal treffen sie einen Werktag, mal das Wochenende. ${und(eas)} hängen an Ostern und liegen immer auf einem Werktag.${ev.length?` Und manchmal ändert sich das Gesetz: ${ev.map(yr=>yr+' – '+EVENTS[yr]).join('; ')}.`:''}`;
+ // Schmale Bildschirme beschriften nur das gewählte Jahr und volle Fünfer (sonst laufen die Zahlen ineinander)
+ const cols=R.map(r=>`<button class="yc${r.yr===TY?' now':''}${r.yr===y||(r.yr%5===0&&Math.abs(r.yr-y)>1)?' k':''}" data-jahr="${r.yr}" aria-pressed="${r.yr===y}" aria-label="${r.yr}: ${r.wk} Feiertage auf Mo–Fr, ${r.we} am Wochenende${r.yr===TY?', laufendes Jahr':''}"><span class="yc-s" aria-hidden="true">${'<i></i>'.repeat(r.wk)}${'<i class="w"></i>'.repeat(r.we)}</span><b aria-hidden="true">${r.wk}</b><span class="yc-y" aria-hidden="true">${r.yr}</span></button>`).join('');
+ $('ru3').innerHTML=kick(3,'Gute und magere Jahre · '+stName(L))+`<h2 class="ru-h" id="ru3h">${h2}</h2><p class="ru-p">${sub}</p>
+ <div class="ru-fig yrs" role="group" aria-label="Feiertage auf Werktagen je Jahr, ${a} bis ${b}">${cols}</div>
+ <p class="ru-cap"><span><i class="sw"></i>Feiertag an einem Werktag</span><span><i class="sw w"></i>Feiertag am Wochenende</span>${b>TY?`<span>ab ${Math.max(a,TY+1)} nach heutiger Rechtslage</span>`:''}<span>Jahr antippen wählt es</span></p>
+ <p class="ru-p ru-why">${why}</p>`;
+}
+// Wagen 4: die Länder im Vergleich – jedes Land ein Zug, jeder Wagen ein Feiertag an einem Werktag
+function renderRu4(){
+ const L=S.land,y=S.jahr,k=[L,y,exKey()].join('|');if(k===ru4Key)return;ru4Key=k;
+ const R=STATES.map(s=>({s,n:stats(y,s.c).wk.length})).sort((p,q)=>q.n-p.n||p.s.n.localeCompare(q.s.n,'de'));
+ const mx=R[0].n,mn=R[R.length-1].n,names=v=>R.filter(r=>r.n===v&&r.s.c!==L).map(r=>r.s.n);
+ // „Am meisten: Bayern, Saarland (11).“ – ab fünf Ländern nur die Zahl, welche es sind, zeigt das Bild
+ const tail=(lb,v)=>{const a=names(v);return a.length>4?`${lb}: ${v}, in ${a.length} Ländern.`:`${lb}: ${a.join(', ')} (${v}).`;};
+ const also=(lb,v)=>{const a=names(v);return a.length?(a.length>4?`${lb} haben ${a.length} weitere Länder.`:`${lb}: ${a.join(', ')}.`):'';};
+ let h2,sub;
+ if(L==='DE'){h2=`${y}: zwischen <em>${mn} und ${mx}</em> Feiertage auf Werktagen – je nach Bundesland.`;sub=tail('Am meisten',mx)+' '+tail('Am wenigsten',mn);}
+ else{const me=R.find(r=>r.s.c===L),nm=L==='SL'?'Das Saarland':BY[L].n;
+  const pos=me.n===mx?'vorn':me.n===mn?'hinten':'im Mittelfeld';
+  h2=`${nm} ${y<TY?'lag':'liegt'} ${y} <em>${pos}</em>: ${me.n} Feiertage auf Werktagen.`;
+  if(me.n===mx)sub=(also('Ebenso viele',mx)||'Kein anderes Land hat so viele.')+' '+tail('Am wenigsten',mn);
+  else if(me.n===mn)sub=(also('Ebenso wenige',mn)+' '+tail('Am meisten',mx)).trim();
+  else sub=tail('Am meisten',mx)+' '+tail('Am wenigsten',mn);}
+ const rows=R.map(r=>`<button class="lr" data-pick="l" data-l="${r.s.c}" aria-pressed="${L===r.s.c}" aria-label="${r.s.n}: ${r.n} Feiertage auf Werktagen"><span class="lr-n" aria-hidden="true">${r.s.n}</span><span class="lr-t" aria-hidden="true">${'<i></i>'.repeat(r.n)}</span><b class="lr-c" aria-hidden="true">${r.n}</b></button>`).join('');
+ $('ru4').innerHTML=kick(4,'Die Länder im Vergleich · '+y)+`<h2 class="ru-h" id="ru4h">${h2}</h2><p class="ru-p">${sub}</p>
+ <div class="ru-fig lv${L!=='DE'?' on':''}" style="--mx:${mx}" role="group" aria-label="Bundesländer ${y}, nach Feiertagen auf Werktagen sortiert">${rows}</div>
+ <p class="ru-cap"><span>Jeder Wagen ein Feiertag an einem Werktag</span><span>Land antippen wählt es, noch einmal antippen löst es</span></p>`;
+}
+function renderRuhe(){renderRu1();renderRu2();renderRu3();renderRu4();}
+// Umsteigen: Zustand setzen, Schalter nachziehen, neu zeichnen – mit Ein- und Ausfahrt, wo der Browser das kann
+function applyZug(){
+ const r=ZUG==='ruhe',rb=$('rideBar');document.documentElement.dataset.zug=ZUG;
+ document.querySelectorAll('.wg[data-ride]').forEach(b=>setP(b,b.dataset.ride===ZUG));
+ rb.innerHTML=(r?ICON.netz:ICON.ruhe)+`<span>${r?'Liniennetz':'Ruhezug'}</span>`;
+ const t=r?'Zurück ins Liniennetz: alle Ansichten, jedes Detail':'In den Ruhezug umsteigen: nur das Wichtigste, in Ruhe';rb.setAttribute('aria-label',t);rb.title=t;
+}
+function setZug(z){
+ if(z!=='ruhe')z='netz';if(z===ZUG)return;
+ try{localStorage.setItem('wtf-zug',z);}catch(e){}
+ HV.fid=null;HV.land=null;HV.jahr=null;
+ const go=()=>{ZUG=z;applyZug();writeHash();renderAll();if(scrollY>0)scrollTo(0,0);};
+ document.documentElement.dataset.dir=z==='ruhe'?'fwd':'back';
+ if(document.startViewTransition&&!RM.matches)document.startViewTransition(go);else go();
+}
+
 /* ---- Leiste + Vorschau (brushing & linking) ---- */
 let barKey='';
 function renderBar(){
@@ -1222,7 +1557,7 @@ function preview(force){rafP=0;brush(force);
  if(force||VIS.takt!==false){renderTov();if(ok('tkInfo'))updateTkInfo();}}
 function setHover(f,l,y){f=f||null;l=l||null;y=f&&y||null;if(f===HV.fid&&l===HV.land&&y===HV.jahr)return;HV.fid=f;HV.land=l;HV.jahr=y;if(!rafP)rafP=requestAnimationFrame(()=>preview(false));}
 function hoverFrom(t){
- if(!t||!t.closest||t.closest('#tksvg'))return;
+ if(ZUG==='ruhe'||!t||!t.closest||t.closest('#tksvg'))return;
  const box=t.closest('.bx,.bar,.mast');if(!box){setHover(null,null);return;}
  const he=t.closest('[data-h]'),le=t.closest('[data-l]'),h=he&&he.dataset.h,l=le&&le.dataset.l;
  setHover(isLine(h)?h:null,isLand(l)&&l!=='DE'?l:null);
@@ -1237,7 +1572,7 @@ document.addEventListener('focusout',e=>{if(!e.relatedTarget)setHover(null,null)
 // Fokus über das Neuzeichnen retten: gleiches Element (gleicher Bereich, gleiche data-Attribute) wieder fokussieren
 function focusKey(){const e=document.activeElement;if(!e||e===document.body)return null;const c=e.closest('[id]');if(!c)return null;
  if(e.id)return '#'+e.id;
- const at=['data-pick','data-h','data-l','data-k','data-ex'].filter(a=>e.hasAttribute(a)).map(a=>`[${a}="${e.getAttribute(a)}"]`).join('');
+ const at=['data-pick','data-h','data-l','data-k','data-ex','data-jahr'].filter(a=>e.hasAttribute(a)).map(a=>`[${a}="${e.getAttribute(a)}"]`).join('');
  return at?`#${c.id} ${e.tagName.toLowerCase()}${at}`:null;}
 function renderAll(){
  const fk=focusKey();
@@ -1252,6 +1587,8 @@ function renderAll2(){
  yp.disabled=dp;yn.disabled=dn;
  document.querySelectorAll('.y').forEach(e=>e.textContent=S.jahr);document.querySelectorAll('.sn').forEach(e=>e.textContent=stName(S.land));
  document.querySelectorAll('[data-ex]').forEach(b=>b.setAttribute('aria-pressed',extras[b.dataset.ex]));
+ // Im Ruhezug bleibt das Liniennetz verborgen und ungezeichnet; beim Umsteigen holen es die Schlüssel der Ansichten nach
+ if(ZUG==='ruhe'){renderRuhe();return;}
  renderBoard();renderNetz();renderStrecke();renderVerz();renderTakt();renderLaender();
  lineKey='';ldetKey='';barKey='';if(rafP){cancelAnimationFrame(rafP);rafP=0;}preview(true);
 }
@@ -1271,6 +1608,8 @@ document.addEventListener('click',e=>{
  const ex=e.target.closest('[data-ex]');
  if(ex){const kk=ex.dataset.ex;if(!own(extras,kk))return;extras[kk]=!extras[kk];try{localStorage.setItem('wtf-ex',JSON.stringify(extras));}catch(err){}boardKey='';commit({});return;}
  if(e.target.closest('[data-clear]')){commit({fid:null,tag:null});return;}
+ const rd=e.target.closest('[data-ride]');if(rd){setZug(rd.dataset.ride==='toggle'?(ZUG==='ruhe'?'netz':'ruhe'):rd.dataset.ride);return;}
+ const yj=e.target.closest('[data-jahr]');if(yj){commit({jahr:clampY(yj.dataset.jahr)});return;}
  const p=e.target.closest('[data-pick]');if(!p)return;
  HV.fid=null;HV.land=null;HV.jahr=null;
  if(p.dataset.pick==='l'){const c=p.dataset.l;setLand(S.land===c?'DE':c);return;}
@@ -1279,11 +1618,11 @@ document.addEventListener('click',e=>{
   else commit(k?{fid:id,tag:k,jahr:+k.slice(0,4)}:{fid:id,tag:null});}
 });
 document.addEventListener('keydown',e=>{
- if(e.key!=='Escape')return;
+ if(e.key!=='Escape'||ZUG==='ruhe')return;
  HV.fid=null;HV.land=null;HV.jahr=null;
  if(S.fid)commit({fid:null,tag:null});else if(S.land!=='DE')setLand('DE');else preview(true);
 });
-window.addEventListener('hashchange',()=>{readHash();normalize();writeHash();renderAll();});
+window.addEventListener('hashchange',()=>{readHash();normalize();applyZug();writeHash();renderAll();});
 // Sichtbarkeit der Abschnitte: Vorschau nur dort, wo man hinsieht. Kommt der Fahrplan ins Bild, holt er Overlay,
 // Jahresinfo und (auf schmalen Bildschirmen) die Scrollposition des gewählten Jahres nach.
 if('IntersectionObserver' in window){const io=new IntersectionObserver(es=>{let tk=false;
@@ -1292,9 +1631,10 @@ if('IntersectionObserver' in window){const io=new IntersectionObserver(es=>{let 
 },{rootMargin:'150px 0px'});Object.keys(SECS).forEach(id=>io.observe($(id)));}
 if('ResizeObserver' in window)new ResizeObserver(es=>{const w=Math.floor(es[es.length-1].contentRect.width);if(w&&w!==tksW){tksW=w;requestAnimationFrame(renderTakt);}}).observe($('tks'));
 document.querySelectorAll('.optsig').forEach(e=>{e.outerHTML=sig(e.dataset.id);});
+document.querySelectorAll('.ruhei').forEach(e=>{e.outerHTML=ICON.ruhe;});document.querySelectorAll('.netzi').forEach(e=>{e.outerHTML=ICON.netz;});
 $('strip').innerHTML=ORDER.filter(id=>LN[id].cat!=='opt').map(id=>`<i data-h="${id}"></i>`).join('');
 
-readHash();normalize();writeHash();renderAll();
+readHash();normalize();applyZug();writeHash();renderAll();
 })();
 </script>
 
