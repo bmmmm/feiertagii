@@ -26,8 +26,15 @@ Abhängigkeiten, Oberfläche auf Deutsch. Live: https://bmmmm.github.io/feiertag
   flüchtige Vorschau `HV` (Hover/Fokus). Jede Ansicht liest beide, jede kann sie setzen;
   Änderungen laufen über `commit()`, das neu zeichnet und den URL-Hash schreibt
   (`#jahr=…&land=…&linie=…&tag=…`, eingelesen von `readHash()` nur über Whitelists).
-  Die Vorschau zeichnet nichts neu: `brush()` setzt `data-fx`/`data-lx` an `<html>`, und
-  vorab erzeugte CSS-Regeln heben die Linie bzw. das Gleis überall hervor.
+  Die Vorschau zeichnet nichts neu: `brush()` setzt je Abschnitt (`SECS`) Klassen an die
+  vorab gefundenen Treffer und dimmt den Rest über eine Klasse am Abschnitt — keine
+  `:not()`-Regeln am Wurzelelement, die kosteten je Hover ~20 ms Style-Neuberechnung.
+  Abschnitte außerhalb des Bildes holen die Vorschau nach, sobald sie sichtbar werden.
+  `preview()` ersetzt keinen Bereich, in dem gerade der Tastaturfokus steht — sonst fällt
+  der Fokus auf `<body>` und Tab kommt nicht weiter (Review 2026-10-28).
+- **Fremdeingaben** (Hash, `localStorage`, `dataset`) nur über `Object.hasOwn(…)` gegen
+  `BY`/`LN` nachschlagen, nie `obj[fremd]` direkt: `#land=constructor` hat sonst die
+  ganze Seite lahmgelegt, über `localStorage` sogar dauerhaft.
   `extras` (Rosenmontag, Heiligabend, Silvester) und das Land liegen in `localStorage`
   unter `wtf-ex` und `wtf-sel` — die Schlüssel nicht umbenennen, sonst verlieren Besucher
   ihre Auswahl.
