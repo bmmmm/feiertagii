@@ -10,7 +10,36 @@ als Liniennetz: jeder Feiertag eine Linie, jedes Land ein Gleis.</p>
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/screenshot-dark.png">
-  <img src="docs/screenshot-light.png" alt="Kopf der Seite mit Haltestellen-Schild und dem Titel Werktags-Feiertage, darunter die Auswahlleiste (Gleis Bayern, Jahr 2026) und die Abfahrtstafel: Normale Arbeitstage bis Do 24.12. als Fallblattanzeige, nächster Halt 1. Weihnachtstag, darunter weitere Abfahrten mit Hinweisen wie „fällt aus“ und „Durchfahrt“.">
+  <img src="docs/screenshot-light.png" alt="Kopf der Seite mit Haltestellen-Schild, dem Titel Werktags-Feiertage und der Zugwahl (Liniennetz oder Ruhezug), darunter die Auswahlleiste (Gleis Bayern, Jahr 2026) und die Abfahrtstafel: Normale Arbeitstage bis Do 24.12. als Fallblattanzeige, nächster Halt 1. Weihnachtstag, darunter weitere Abfahrten mit Hinweisen wie „fällt aus“ und „Durchfahrt“.">
+</picture>
+
+## Zwei Züge: Liniennetz und Ruhezug
+
+Oben im Kopf steht die **Zugwahl**, zwei gekuppelte Wagen. Das **Liniennetz** zeigt alles:
+jede Linie, jedes Land, jedes Jahr, mit Vorschau quer durch alle Ansichten. Wem das zu viel
+auf einmal ist, steigt in den **Ruhezug** um – auch mitten auf der Seite über den Knopf in der
+Auswahlleiste. Er zeigt nur das Wichtigste: je Wagen eine Kernaussage in einem ganzen Satz und
+ein ruhiges Bild, eine Farbe für Daten, Gelb für den nächsten Halt, Rot nur für „heute“.
+
+1. **Nächster Halt** – der nächste freie Werktag, groß, mit Datum und Countdown. Darunter fährt
+   ein Zug vom letzten freien Werktag bis heute: so viele Arbeitstage geschafft, so viele noch.
+2. **Das Jahr** – wie viele Feiertage auf Mo–Fr fallen, wie viele aufs Wochenende, was schon
+   vorbei ist; daneben der Reiseverlauf des Jahres mit einer Station je Feiertag.
+3. **Gute und magere Jahre** – 16 Jahre als Stapel (volle Kästchen Mo–Fr, leere am Wochenende),
+   der Vergleich mit dem Schnitt 1991–2070 und in zwei Sätzen, warum die Zahl schwankt.
+4. **Die Länder im Vergleich** – jedes Land ein Zug, jeder Wagen ein Feiertag an einem Werktag.
+5. **Gut zu wissen** – Arbeitsort zählt, regionale Tage zählen nicht; dazu die optionalen Tage.
+
+Ein Link mit `#…&zug=ruhe` öffnet direkt den Ruhezug.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/ruhe-dark.png">
+  <img src="docs/ruhe-light.png" alt="Der Ruhezug: Kopf mit der Zugwahl, der Wagen Ruhezug ist erleuchtet. Darunter Wagen 1, Nächster Halt Bayern: Nächster freier Werktag 1. Weihnachtstag, Freitag, 25. Dezember 2026, in 58 Tagen, bis dahin noch 42 Arbeitstage. Eine Strecke vom letzten freien Werktag Fronleichnam bis zum 1. Weihnachtstag, der Zug steht bei 103 geschafften Arbeitstagen, noch 42.">
+</picture>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/ruhe-jahre-dark.png">
+  <img src="docs/ruhe-jahre-light.png" alt="Wagen 3, Gute und magere Jahre in Bayern: 2026 ist ein mageres Jahr, 9 Feiertage auf Werktagen, im Schnitt 10,1. Darunter 16 Stapel für 2021 bis 2036, volle Kästchen für Feiertage an Werktagen, leere für Feiertage am Wochenende, und ein Kasten: Warum schwankt das?">
 </picture>
 
 ## Linien, Gleise, Halte
@@ -61,8 +90,8 @@ also genau diese Ansicht.
 </picture>
 
 Alles wird im Browser berechnet: keine Cookies, kein Tracking, keine Anfragen an fremde
-Server, die Schriften liegen im Repo. Gewähltes Land und optionale Tage bleiben im
-`localStorage` des Browsers. Bedienbar per Tastatur (Pfeiltasten im Fahrplan),
+Server, die Schriften liegen im Repo. Gewähltes Land, optionale Tage und der gewählte Zug
+bleiben im `localStorage` des Browsers. Bedienbar per Tastatur (Pfeiltasten im Fahrplan),
 hell und dunkel, ab 360 px Breite.
 
 ## So wird gerechnet

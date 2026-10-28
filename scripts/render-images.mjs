@@ -61,7 +61,7 @@ writeFileSync(join(ROOT, 'favicon.ico'), Buffer.concat([head, ...pngs]));
 await shot('apple-touch-icon.png', { html: icon(180, true), width: 180, height: 180 });
 await shot('og.png', { page: 'scripts/og.html', width: 1200, height: 630 });
 
-// README: Kopf mit Abfahrtstafel, Netzplan und Fahrplan, je in beiden Farbschemata.
+// README: Kopf mit Abfahrtstafel, Netzplan, Fahrplan und Ruhezug, je in beiden Farbschemata.
 // Die Auswahl kommt über den URL-Hash, die klebende Auswahlleiste bleibt in Ausschnitten weg.
 mkdirSync(join(ROOT, 'docs'), { recursive: true });
 const noBar = '.bar{display:none!important}';
@@ -69,7 +69,9 @@ for (const scheme of ['light', 'dark']) {
   await shot(`docs/screenshot-${scheme}.png`, { page: 'index.html', hash: '#jahr=2026&land=BY', width: 1200, height: 900, scheme, el: { sel: '#board', fromTop: true }, pad: 24 });
   await shot(`docs/netz-${scheme}.png`, { page: 'index.html', hash: '#jahr=2026&land=BY&linie=fronleichnam', width: 1200, height: 900, scheme, css: noBar, el: { sel: '#netz', fromTop: false }, pad: 12 });
   await shot(`docs/fahrplan-${scheme}.png`, { page: 'index.html', hash: '#jahr=2026&linie=einheit', width: 1200, height: 900, scheme, css: noBar, el: { sel: '#takt', fromTop: false }, pad: 12 });
+  await shot(`docs/ruhe-${scheme}.png`, { page: 'index.html', hash: '#jahr=2026&land=BY&zug=ruhe', width: 1200, height: 900, scheme, el: { sel: '#ru1', fromTop: true }, pad: 24 });
+  await shot(`docs/ruhe-jahre-${scheme}.png`, { page: 'index.html', hash: '#jahr=2026&land=BY&zug=ruhe', width: 1200, height: 900, scheme, css: noBar, el: { sel: '#ru3', fromTop: false }, pad: 12 });
 }
 
 await browser.close();
-console.log('ok: favicon.ico, apple-touch-icon.png, og.png, docs/{screenshot,netz,fahrplan}-{light,dark}.png');
+console.log('ok: favicon.ico, apple-touch-icon.png, og.png, docs/{screenshot,netz,fahrplan,ruhe,ruhe-jahre}-{light,dark}.png');
