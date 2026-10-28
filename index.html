@@ -595,7 +595,9 @@ h2.sign .pk svg{width:20px;height:20px}
 .yc b{font:700 19px/1 var(--f-disp);font-variant-numeric:tabular-nums}
 .yc-y{font:500 12px/1 var(--f-mono);color:var(--muted);white-space:nowrap}
 .yc[aria-pressed="true"] .yc-y{color:var(--ink);font-weight:600}
-.yc.now .yc-y::after{content:"";display:block;width:6px;height:6px;margin:5px auto 0;border-radius:50%;background:var(--alert)}
+/* Jede Spalte hält Platz für den Heute-Punkt frei, sonst steht das laufende Jahr höher als die anderen */
+.yc-y::after{content:"";display:block;width:6px;height:6px;margin:5px auto 0;border-radius:50%}
+.yc.now .yc-y::after{background:var(--alert)}
 @media (max-width:640px){.yrs{gap:1px}.yc-y{font-size:11px}.yc:not(.k) .yc-y{visibility:hidden}.yc b{font-size:16px}.yc-s{gap:2px}.yc-s i{height:7px}}
 .ru-why{margin:26px 0 0;padding:18px 20px;border-radius:12px;background:var(--paper);font-size:16.5px;max-width:none}
 .ru-why b{font-weight:600}
