@@ -1,14 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- Eine Arbeitswoche als Strichreihe wie auf der Seite: Mo–Fr, der Donnerstag ist ein Feiertag.
-       Alle Kanten auf geraden Werten, damit auch die 16-px-Fassung scharf bleibt. -->
-  <style>
-    .bg{fill:#f2f4f7}.wd{fill:#14171c}.hd{fill:#c8102e}
-    @media (prefers-color-scheme:dark){.bg{fill:#191c21}.wd{fill:#e8ebef}.hd{fill:#ef4a5d}}
-  </style>
-  <rect class="bg" width="32" height="32" rx="7"/>
-  <rect class="wd" x="2" y="12" width="4" height="14" rx="1"/>
-  <rect class="wd" x="8" y="12" width="4" height="14" rx="1"/>
-  <rect class="wd" x="14" y="12" width="4" height="14" rx="1"/>
-  <rect class="hd" x="20" y="4" width="4" height="22" rx="1"/>
-  <rect class="wd" x="26" y="12" width="4" height="14" rx="1"/>
+  <!-- Haltestellen-H wie im Seitenkopf: jeder Feiertag ist ein Halt im Liniennetz.
+       Kanten des H auf geraden Werten, damit auch die 16-px-Fassung scharf bleibt. -->
+  <rect width="32" height="32" rx="7" fill="#ffd400"/>
+  <circle cx="16" cy="16" r="13" fill="none" stroke="#ffffff" stroke-width="2"/>
+  <path d="M10 8h4v6h4V8h4v16h-4v-6h-4v6h-4z" fill="#00733a"/>
 </svg>

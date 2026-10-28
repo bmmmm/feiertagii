@@ -17,12 +17,15 @@ const url = p => pathToFileURL(join(ROOT, p)).href;
 
 const browser = await chromium.launch();
 
-async function shot(file, { page: target, html, width, height, scheme = 'light', scale = 1, clip, el, pad = 0, transparent = false }) {
+// page: Datei im Repo, hash: Auswahl per URL (#jahr=…&land=…&linie=…), css: nur für das Bild
+async function shot(file, { page: target, hash = '', html, width, height, scheme = 'light', scale = 1, clip, el, pad = 0, transparent = false, css }) {
   const ctx = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: scale, colorScheme: scheme, locale: 'de-DE' });
   const page = await ctx.newPage();
-  if (target) await page.goto(url(target));
+  if (target) await page.goto(url(target) + hash);
   else await page.setContent(html);
+  if (css) await page.addStyleTag({ content: css });
   await page.evaluate(() => document.fonts.ready);
+  await page.waitForTimeout(300);
   // el: Ausschnitt von oben bis zur Unterkante dieses Elements (plus pad), bzw. nur das Element
   if (el) clip = await page.evaluate(([sel, pad, top]) => {
     const r = document.querySelector(sel).getBoundingClientRect();
@@ -36,9 +39,9 @@ async function shot(file, { page: target, html, width, height, scheme = 'light',
   return buf;
 }
 
-// Favicon aus favicon.svg; fürs Apple-Icon flächig auf Papierfarbe, iOS rundet die Ecken selbst
+// Favicon aus favicon.svg; fürs Apple-Icon flächig auf Schildgelb, iOS rundet die Ecken selbst
 const svg = readFileSync(join(ROOT, 'favicon.svg'), 'utf8');
-const icon = (size, bleed) => `<body style="margin:0;background:${bleed ? '#f2f4f7' : 'transparent'}">` +
+const icon = (size, bleed) => `<body style="margin:0;background:${bleed ? '#ffd400' : 'transparent'}">` +
   `<div style="width:${size}px;height:${size}px">${svg.replace('<svg ', `<svg width="${size}" height="${size}" `)}</div></body>`;
 
 const sizes = [16, 32, 48];
@@ -58,12 +61,15 @@ writeFileSync(join(ROOT, 'favicon.ico'), Buffer.concat([head, ...pngs]));
 await shot('apple-touch-icon.png', { html: icon(180, true), width: 180, height: 180 });
 await shot('og.png', { page: 'scripts/og.html', width: 1200, height: 630 });
 
-// README: Kopf mit Diagramm und die Antwortkarte, je in beiden Farbschemata
+// README: Kopf mit Abfahrtstafel, Netzplan und Fahrplan, je in beiden Farbschemata.
+// Die Auswahl kommt über den URL-Hash, die klebende Auswahlleiste bleibt in Ausschnitten weg.
 mkdirSync(join(ROOT, 'docs'), { recursive: true });
+const noBar = '.bar{display:none!important}';
 for (const scheme of ['light', 'dark']) {
-  await shot(`docs/screenshot-${scheme}.png`, { page: 'index.html', width: 1200, height: 900, scheme, el: { sel: '.card', fromTop: true }, pad: 28 });
-  await shot(`docs/answer-${scheme}.png`, { page: 'index.html', width: 1200, height: 900, scheme, el: { sel: '#answer', fromTop: false }, pad: 16 });
+  await shot(`docs/screenshot-${scheme}.png`, { page: 'index.html', hash: '#jahr=2026&land=BY', width: 1200, height: 900, scheme, el: { sel: '#board', fromTop: true }, pad: 24 });
+  await shot(`docs/netz-${scheme}.png`, { page: 'index.html', hash: '#jahr=2026&land=BY&linie=fronleichnam', width: 1200, height: 900, scheme, css: noBar, el: { sel: '#netz', fromTop: false }, pad: 12 });
+  await shot(`docs/fahrplan-${scheme}.png`, { page: 'index.html', hash: '#jahr=2026&linie=einheit', width: 1200, height: 900, scheme, css: noBar, el: { sel: '#takt', fromTop: false }, pad: 12 });
 }
 
 await browser.close();
-console.log('ok: favicon.ico, apple-touch-icon.png, og.png, docs/{screenshot,answer}-{light,dark}.png');
+console.log('ok: favicon.ico, apple-touch-icon.png, og.png, docs/{screenshot,netz,fahrplan}-{light,dark}.png');

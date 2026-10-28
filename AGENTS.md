@@ -6,26 +6,60 @@ Abhängigkeiten, Oberfläche auf Deutsch. Live: https://bmmmm.github.io/feiertag
 
 ## Architecture
 
-- `index.html` enthält alles: CSS im `<style>`, die Logik als eine IIFE im `<script>`.
-- **Daten:** `holidays(y)` ist die einzige Quelle der Rechtslage. Je Feiertag ein
-  `add(name, datum, full, reg, note)`: `full` = Länder, in denen er landesweit gilt,
-  `reg` = Länder, in denen er nur regional gilt (zählt nicht in Summen). Jahresgrenzen
-  von Gesetzesänderungen stehen als Bedingungen direkt dort (`y>=2019` …).
+- `index.html` enthält alles: CSS im `<style>`, die Rechtslage in einem eigenen
+  `<script>`, die Oberfläche als eine IIFE im zweiten `<script>`.
+- **Daten:** `<script id="feiertage-daten">` ist die einzige Quelle der Rechtslage,
+  rein rechnerisch und ohne DOM; er setzt `FEIERTAGE.holidays(y, extras)`. Je Feiertag
+  ein `add(id, name, datum, full, reg, note)`: `id` ist fest (`fronleichnam`,
+  `weihnachten-1` …) und verbindet denselben Feiertag über alle Jahre, `full` = Länder,
+  in denen er landesweit gilt, `reg` = nur regional (zählt nicht in Summen).
+  Jahresgrenzen von Gesetzesänderungen stehen als Bedingungen direkt dort (`y>=2019` …).
   `easter(y)` ist die Osterformel (Meeus/Jones/Butcher), alle beweglichen Feste hängen daran.
-- **Zustand:** `year`, `sel` (`'DE'` oder Länderkürzel), `extras` (Rosenmontag,
-  Heiligabend, Silvester). `sel` und `extras` liegen in `localStorage` unter `wtf-sel`
-  und `wtf-ex` — die Schlüssel nicht umbenennen, sonst verlieren Besucher ihre Auswahl.
-- **Darstellung:** `render()` ruft `renderTrend`, `renderAnswer`, `renderMap`,
-  `renderRank`, `renderCal`, `renderDetail`, `renderMatrix`. Alles wird per
-  Template-String als `innerHTML` neu geschrieben.
-- `TODAY` ist das lokale Datum des Browsers; `YMIN`/`YMAX` begrenzen den Zeitraum.
+- **Gestaltung:** ein Liniennetz. Jeder Feiertag ist eine *Linie*, jedes Land ein *Gleis*.
+  `LN[id]` hält die Identität je Feiertag (Kürzel `c`, Kategorie `cat`, Linienfarbe `bg`,
+  Schrift `fg`, Kanten `ed`/`dk` für hell/dunkel); `CATS` und `SH` ordnen jeder Kategorie
+  eine Signet-Form zu (Kreis bundesweit, Quadrat einige Länder, Raute regional, Sechseck
+  einmalig, Ring immer Sonntag, gestrichelte Kapsel optional). `sig(id)`/`sigAt(…)`
+  zeichnen das Signet — überall dasselbe, nie Farbe allein. Ein neuer Feiertag im
+  Datenblock braucht einen Eintrag in `LN` und `ORDER`.
+- **Zustand:** *eine* Auswahl `S = {land, jahr, fid, tag}` (fid = Feiertags-id) und die
+  flüchtige Vorschau `HV` (Hover/Fokus). Jede Ansicht liest beide, jede kann sie setzen;
+  Änderungen laufen über `commit()`, das neu zeichnet und den URL-Hash schreibt
+  (`#jahr=…&land=…&linie=…&tag=…`, eingelesen von `readHash()` nur über Whitelists).
+  Die Vorschau zeichnet nichts neu: `brush()` setzt je Abschnitt (`SECS`) Klassen an die
+  vorab gefundenen Treffer und dimmt den Rest über eine Klasse am Abschnitt — keine
+  `:not()`-Regeln am Wurzelelement, die kosteten je Hover ~20 ms Style-Neuberechnung.
+  Abschnitte außerhalb des Bildes holen die Vorschau nach, sobald sie sichtbar werden.
+  `preview()` ersetzt keinen Bereich, in dem gerade der Tastaturfokus steht — sonst fällt
+  der Fokus auf `<body>` und Tab kommt nicht weiter (Review 2026-10-28).
+- **Fremdeingaben** (Hash, `localStorage`, `dataset`) nur über `Object.hasOwn(…)` gegen
+  `BY`/`LN` nachschlagen, nie `obj[fremd]` direkt: `#land=constructor` hat sonst die
+  ganze Seite lahmgelegt, über `localStorage` sogar dauerhaft.
+  `extras` (Rosenmontag, Heiligabend, Silvester) und das Land liegen in `localStorage`
+  unter `wtf-ex` und `wtf-sel` — die Schlüssel nicht umbenennen, sonst verlieren Besucher
+  ihre Auswahl.
+- **Ansichten** (je eine `render…`-Funktion, gesammelt in `renderAll()`): Abfahrtstafel
+  „ab heute“ (`renderBoard`), Liniennetz des Jahres (`renderNetz`, Steckbrief
+  `renderLdet`), Jahresstrecke (`renderStrecke`), Linienverzeichnis (`renderVerz`),
+  Taktfahrplan + Fahrplan je Linie 1991–2070 (`renderTakt`, Spuren in `buildTakt`, nur
+  bei Wechsel von Zeitraum, Zusatztagen, Land oder Breite neu), Länder (`renderLaender`),
+  Auswahlleiste (`renderBar`). Alles per Template-String als `innerHTML`.
+- `TODAY`/`TY` kommen aus der lokalen Uhr des Browsers; `YMIN`/`YMAX` begrenzen
+  den Zeitraum. Zwei Feiertage am selben Tag gibt es (2008: Tag der Arbeit = Christi
+  Himmelfahrt; 2038 mit Rosenmontag: = Frauentag) — Tag-Auswahl und Steckbrief nennen
+  dann beide.
 
 ## Build & test
 
 ```bash
+node tests/holidays.test.mjs                                 # Rechtslage gegen tests/golden-holidays.txt
 scripts/build-site.sh _site && scripts/check-site.sh _site   # Gate vor jedem Commit
 shellcheck -S style scripts/*.sh
 ```
+
+`holidays.test.mjs` führt nur den Datenblock aus und vergleicht jeden Feiertag 1991–2070
+(ohne und mit optionalen Tagen) mit der Golden-Datei. Eine bewusste Gesetzesänderung:
+Daten ändern, `node tests/holidays.test.mjs --update`, den Diff im Commit begründen.
 
 `build-site.sh` kopiert nur die Dateien aus seiner `FILES`-Liste nach `_site` und setzt
 das `lastmod` der sitemap. `check-site.sh` prüft das Ergebnis: nichts von fremden
@@ -34,12 +68,14 @@ Dateien, jede Schrift wird benutzt. Dieselben zwei Skripte laufen in
 `.forgejo/workflows/ci.yml` (PRs) und in `.github/workflows/pages.yml` vor dem Deploy.
 
 Eine Änderung an der Logik im Browser gegenprüfen: `index.html` öffnen, ein Jahr mit
-bekannter Lage ansehen (z. B. 2026: bundesweit 7 der 9 Feiertage auf Mo–Fr).
+bekannter Lage ansehen (z. B. 2026: bundesweit 7 der 9 Feiertage auf Mo–Fr). Eine
+Ansicht mit fester Auswahl lädt direkt über den Hash, z. B.
+`index.html#jahr=2008&land=BY&linie=himmelfahrt` (Doppel-Feiertag).
 
 ## Conventions
 
-- **Eine Gesetzesänderung betrifft vier Stellen:** die Bedingung in `holidays()`, den
-  Marker in `EVENTS` (Diagramm), die Liste „Hinweise“ im HTML und die Tabelle in der
+- **Eine Gesetzesänderung betrifft fünf Stellen:** die Bedingung in `holidays()`, die Golden-Datei, den
+  Fahrplanwechsel in `EVENTS` + `EVH` (Text und betroffene ids), die Liste „Hinweise“ im HTML und die Tabelle in der
   README. Dazu „Stand <Monat Jahr>“ in den Hinweisen und in der README nachziehen.
 - **Verweise relativ halten** (`fonts/x.woff2`, nie `/fonts/x.woff2`): Pages liefert
   unter `/feiertagii/` aus. Einzige Ausnahme ist `404.html` — die wird unter jedem

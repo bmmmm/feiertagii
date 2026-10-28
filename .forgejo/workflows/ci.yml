@@ -19,6 +19,8 @@ jobs:
       # Auf einen Commit gepinnt wie in den .github-Workflows. Dependabot sieht .forgejo/
       # nicht – neuere Tags von Hand prüfen: https://data.forgejo.org/actions/checkout
       - uses: https://data.forgejo.org/actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Rechtslage gegen Golden-Datei
+        run: node tests/holidays.test.mjs
       - name: Seite zusammenstellen
         run: scripts/build-site.sh _site
       - name: Seite prüfen

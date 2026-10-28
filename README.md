@@ -3,39 +3,67 @@
 <h1 align="center">feiertagii</h1>
 
 <p align="center"><b>Werktags-Feiertage</b> – welche gesetzlichen Feiertage fallen auf Montag bis Freitag,<br>
-und wie lange ist es noch bis zum nächsten freien Werktag?<br>
-Alle 16 Bundesländer, 1991 bis 2070, eine einzige statische Seite.</p>
+und wann kommt der nächste freie Werktag? Alle 16 Bundesländer, 1991 bis 2070,<br>
+als Liniennetz: jeder Feiertag eine Linie, jedes Land ein Gleis.</p>
 
 <p align="center"><a href="https://bmmmm.github.io/feiertagii/"><b>→ bmmmm.github.io/feiertagii</b></a></p>
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/screenshot-dark.png">
-  <img src="docs/screenshot-light.png" alt="Kopf der Seite mit Länderauswahl und Jahr, darunter das Liniendiagramm: Feiertage Montag bis Freitag pro Jahr für alle 16 Länder von 1991 bis 2070, ab 2027 als Prognose hinterlegt.">
+  <img src="docs/screenshot-light.png" alt="Kopf der Seite mit Haltestellen-Schild und dem Titel Werktags-Feiertage, darunter die Auswahlleiste (Gleis Bayern, Jahr 2026) und die Abfahrtstafel: Normale Arbeitstage bis Do 24.12. als Fallblattanzeige, nächster Halt 1. Weihnachtstag, darunter weitere Abfahrten mit Hinweisen wie „fällt aus“ und „Durchfahrt“.">
 </picture>
 
-## Was die Seite zeigt
+## Linien, Gleise, Halte
 
-- **Feiertage Mo–Fr pro Jahr** – ein Liniendiagramm über alle Länder von 1991 bis 2070.
-  Länder mit identischem Verlauf teilen sich eine Linie, Gesetzesänderungen sind als rote
-  Punkte markiert, ab dem laufenden Jahr ist die Fläche als Prognose hinterlegt. Umschaltbar
-  auf „aufs Wochenende gefallen“ und auf die Zeiträume 2000–2040 oder ±10 Jahre.
-- **Ab heute** – bis wann nur normale Arbeitstage anstehen, der nächste freie Werktag als
-  Abreißblatt und jeder Arbeitstag bis dahin als Strich. Für ganz Deutschland zusätzlich:
-  welche Länder schon früher frei haben und was bis dahin aufs Wochenende fällt.
-- **Länder im Vergleich** – Kachelkarte und Rangliste für das gewählte Jahr.
-- **Jahresblatt** – zwölf Zeilen à 31 Tage, jeder Feiertag antippbar mit Details.
-- **Alle Feiertage** – Matrix Feiertag × Land, wahlweise nur Mo–Fr.
-- **Optional frei** – Rosenmontag, Heiligabend und Silvester sind keine gesetzlichen
-  Feiertage, lassen sich aber für alle Länder als frei werten; alle Zahlen rechnen mit.
+Jeder Feiertag hat ein eigenes **Signet**, das auf der ganzen Seite gleich aussieht:
+die **Form** sagt, welche Art Feiertag es ist, **Farbe und Kürzel** sagen, welcher.
+
+| Form | Art | Beispiele |
+|---|---|---|
+| Kreis | bundesweit | Neujahr `NJ`, Karfreitag `KF`, Tag der Deutschen Einheit `TE` |
+| Quadrat | nur in einigen Ländern | Fronleichnam `FL`, Reformationstag `RT`, Frauentag `FT` |
+| Raute | nur in Teilen eines Landes | Augsburger Friedensfest `AF` |
+| Sechseck | einmalig | Tag der Befreiung `BF` (Berlin 2020 und 2025) |
+| Ring | fällt immer auf einen Sonntag | Oster- und Pfingstsonntag in Brandenburg |
+| gestrichelte Kapsel | optional, kein gesetzlicher Feiertag | Rosenmontag `RM`, Heiligabend `HA`, Silvester `SV` |
+
+**Alles hängt zusammen.** Land, Jahr, Feiertag und Tag sind *eine* Auswahl, und jede
+Ansicht folgt ihr: Mit dem Zeiger über ein Signet, eine Station oder eine Spur fahren
+zeigt die Linie überall als Vorschau, ein Klick hält sie fest, `Esc` löst sie. Die
+Auswahl steht in der Adresse (`#jahr=2026&land=BY&linie=fronleichnam`), ein Link teilt
+also genau diese Ansicht.
+
+- **Abfahrt ab heute** – eine Fallblatt-Tafel: bis wann nur normale Arbeitstage anstehen,
+  der nächste Halt, jede Schwelle bis dahin ein Arbeitstag. Darunter die weiteren
+  Abfahrten mit Hinweis: *Halt*, *fällt aus* (aufs Wochenende), *Durchfahrt* (gilt hier
+  nicht), *Teilhalt* (nur regional), *früher frei* (anderswo eher).
+- **Liniennetz** des Jahres – die 16 Länder als Gleise, die Feiertage als Linien, die dort
+  halten, wo sie gelten. Man sieht sofort, welche Länder sich welchen Feiertag teilen; am
+  gewählten Gleis stehen die Arbeitstage bis zum nächsten Halt. Der Steckbrief der
+  gewählten Linie zeigt, auf welche Wochentage sie 1991–2070 fällt.
+- **Jahresstrecke** – zwölf Monatsgleise, jede Schwelle ein Arbeitstag, Signets an den Halten.
+- **Linienverzeichnis** – jeder Feiertag einzeln, mit Regel, Termin im gewählten Jahr und
+  Gleisen; hier lassen sich auch die optionalen Tage zuschalten.
+- **Fahrplan 1991–2070** – oben der Taktfahrplan (Land × Jahr, Zahl der Feiertage auf Mo–Fr
+  oder aufs Wochenende), darunter eine Spur je Linie: die Höhe der Marke ist der
+  Wochentag. Feste Termine wandern Jahr für Jahr eine Spur weiter, Ostertermine bleiben
+  auf ihrer, Betriebspausen und Fahrplanwechsel zeigen die Gesetzesänderungen.
+- **Gleise im Vergleich** – Kachelkarte und Rangliste der Länder für das gewählte Jahr.
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/answer-dark.png">
-  <img src="docs/answer-light.png" alt="Antwortkarte: Normale Arbeitstage bis Donnerstag, 24.12. – 43 Arbeitstage am Stück, dann ist Freitag, der 25. Dezember, frei. Daneben ein rotes Abreißblatt, darunter eine Strichreihe der Arbeitstage.">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/netz-dark.png">
+  <img src="docs/netz-light.png" alt="Liniennetz 2026 mit gewählter Linie Fronleichnam: Die Gleise Baden-Württemberg bis Hessen halten durchgehend, Sachsen und Thüringen nur regional (Raute). Darunter der Steckbrief: Donnerstag, 04.06.2026, 1991–2070 immer donnerstags.">
+</picture>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/fahrplan-dark.png">
+  <img src="docs/fahrplan-light.png" alt="Fahrplan 1991–2070 mit gewählter Linie Tag der Deutschen Einheit: oben der Taktfahrplan mit einer Zahl je Land und Jahr, darunter eine Spur je Feiertag. Die Einheit wandert als Treppe durch die Wochentage, die Osterfeste liegen flach, Frauentag und Weltkindertag setzen nach 28 Jahren Pause ein.">
 </picture>
 
 Alles wird im Browser berechnet: keine Cookies, kein Tracking, keine Anfragen an fremde
 Server, die Schriften liegen im Repo. Gewähltes Land und optionale Tage bleiben im
-`localStorage` des Browsers.
+`localStorage` des Browsers. Bedienbar per Tastatur (Pfeiltasten im Fahrplan),
+hell und dunkel, ab 360 px Breite.
 
 ## So wird gerechnet
 
@@ -73,21 +101,22 @@ Gesetzblatt) aufmachen.
 `index.html` im Browser öffnen – kein Build, keine Abhängigkeiten.
 
 ```bash
+node tests/holidays.test.mjs   # Rechtslage gegen die Golden-Datei
 scripts/build-site.sh _site    # stellt die veröffentlichte Seite zusammen
 scripts/check-site.sh _site    # keine fremden Ressourcen, keine toten Verweise
 ```
 
-Beides läuft auch in der CI, bevor GitHub Pages ausliefert.
+Alle drei laufen auch in der CI, bevor GitHub Pages ausliefert.
 
 | Datei | Inhalt |
 |---|---|
-| `index.html` | die ganze Seite: Styles, Feiertagsberechnung, Darstellung |
-| `fonts/` | Barlow Condensed und IBM Plex (Latin-Subset, woff2) |
+| `index.html` | die ganze Seite: Styles, Rechtslage (`<script id="feiertage-daten">`), Darstellung |
+| `fonts/` | Barlow, Barlow Condensed und IBM Plex Mono (Latin-Subset, woff2) |
 | `favicon.svg`, `og.png`, … | Icons und Vorschaubild; neu erzeugen mit `scripts/render-images.mjs` |
-| `scripts/` | Build, Prüfung, Bildgenerator |
+| `scripts/`, `tests/` | Build, Prüfung, Bildgenerator, Golden-Test der Rechtslage |
 
 ## Lizenz
 
-[GPL-3.0-or-later](LICENSE). Die Schriften Barlow Condensed und IBM Plex stehen unter der
+[GPL-3.0-or-later](LICENSE). Die Schriften Barlow, Barlow Condensed und IBM Plex Mono stehen unter der
 SIL Open Font License 1.1 ([`fonts/OFL-Barlow.txt`](fonts/OFL-Barlow.txt),
 [`fonts/OFL-IBM-Plex.txt`](fonts/OFL-IBM-Plex.txt)).

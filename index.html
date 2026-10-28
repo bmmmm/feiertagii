@@ -10,8 +10,8 @@
 <link rel="icon" href="favicon.ico" sizes="32x32">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="theme-color" content="#f2f4f7" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#101216" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#0b2545" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b1b33" media="(prefers-color-scheme: dark)">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="de_DE">
 <meta property="og:site_name" content="feiertagii">
@@ -24,298 +24,578 @@
 <meta property="og:image:alt" content="Schriftzug „Werktags-Feiertage“ neben einem roten Abreißkalenderblatt und einer Strichreihe aus Arbeitstagen.">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="fonts/barlow-condensed-700.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/ibm-plex-sans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/barlow-500.woff2" as="font" type="font/woff2" crossorigin>
 <style>
-/* Schriften liegen selbst gehostet unter fonts/ (SIL OFL 1.1, Latin-Subset) – keine Anfrage an Dritte */
+/* Schriften liegen selbst gehostet unter fonts/ (SIL OFL 1.1, Latin-Subset) – keine Anfrage an Dritte.
+   Barlow ist an Beschilderung im öffentlichen Raum angelehnt, Barlow Condensed trägt Schilder und Fallblätter. */
+@font-face{font-family:"Barlow";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/barlow-400.woff2) format("woff2")}
+@font-face{font-family:"Barlow";font-style:normal;font-weight:500;font-display:swap;src:url(fonts/barlow-500.woff2) format("woff2")}
+@font-face{font-family:"Barlow";font-style:normal;font-weight:600;font-display:swap;src:url(fonts/barlow-600.woff2) format("woff2")}
 @font-face{font-family:"Barlow Condensed";font-style:normal;font-weight:500;font-display:swap;src:url(fonts/barlow-condensed-500.woff2) format("woff2")}
 @font-face{font-family:"Barlow Condensed";font-style:normal;font-weight:600;font-display:swap;src:url(fonts/barlow-condensed-600.woff2) format("woff2")}
 @font-face{font-family:"Barlow Condensed";font-style:normal;font-weight:700;font-display:swap;src:url(fonts/barlow-condensed-700.woff2) format("woff2")}
-@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/ibm-plex-mono-400.woff2) format("woff2")}
 @font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:500;font-display:swap;src:url(fonts/ibm-plex-mono-500.woff2) format("woff2")}
 @font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:600;font-display:swap;src:url(fonts/ibm-plex-mono-600.woff2) format("woff2")}
-@font-face{font-family:"IBM Plex Sans";font-style:normal;font-weight:400 600;font-display:swap;src:url(fonts/ibm-plex-sans-var.woff2) format("woff2")}
-/* Layout: Wandkalender-Logik – rote Tage sind Feiertage. Antwort mit Abreißblatt oben, dann Länderkarte + Rangliste, Jahresblatt, Matrix */
+/* Liniennetz: jedes Land ein Gleis, jeder Feiertag eine Linie mit Farbe, Signet und Kürzel.
+   Ruhiger Grund, Leitsystem-Blau für Schilder, Gelb für „Ihr Gleis“, Rot nur für „Sie sind hier“. */
 :root{
-  --paper:#f2f4f7;--panel:#ffffff;--ink:#14171c;--muted:#5b6471;--rule:#dbe0e6;--wk:#98a1ad;
-  --red:#c8102e;--on-red:#ffffff;--red-ink:#a30c25;
-  --f-display:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
-  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --paper:#f3f2ee;--panel:#ffffff;--ink:#15181d;--muted:#576070;--rule:#dcdcd5;--track:#b3b7be;--sleeper:#7f8792;
+  --sign:#0b2545;--on-sign:#ffffff;--sign-soft:#e3e9f2;--heat:#0b2545;--on-heat:#ffffff;
+  --hl:#ffd400;--hl-soft:rgba(255,212,0,.34);
+  --alert:#d7261e;--alert-ink:#b3141b;
+  --board:#0c0d10;--flap-ink:#f4f3ee;--flap-y:#ffd400;--flap-dim:#9ba1aa;
+  --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-disp:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  color-scheme:light;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --paper:#101216;--panel:#191c21;--ink:#e8ebef;--muted:#97a0ac;--rule:#2a2f37;--wk:#68717d;
-  --red:#ef4a5d;--on-red:#17080b;--red-ink:#ff7d8b;color-scheme:dark}}
+  --paper:#0e1013;--panel:#171a1f;--ink:#eceef1;--muted:#9da4af;--rule:#2b2f36;--track:#4c525c;--sleeper:#79818c;
+  --sign:#12305a;--on-sign:#ffffff;--sign-soft:#1b2433;--heat:#9dbdf0;--on-heat:#0e1013;--hl-soft:rgba(255,212,0,.17);--alert:#ff5a4e;--alert-ink:#ff8a80;color-scheme:dark}}
 :root[data-theme="dark"]{
-  --paper:#101216;--panel:#191c21;--ink:#e8ebef;--muted:#97a0ac;--rule:#2a2f37;--wk:#68717d;
-  --red:#ef4a5d;--on-red:#17080b;--red-ink:#ff7d8b;color-scheme:dark}
+  --paper:#0e1013;--panel:#171a1f;--ink:#eceef1;--muted:#9da4af;--rule:#2b2f36;--track:#4c525c;--sleeper:#79818c;
+  --sign:#12305a;--on-sign:#ffffff;--sign-soft:#1b2433;--heat:#9dbdf0;--on-heat:#0e1013;--hl-soft:rgba(255,212,0,.17);--alert:#ff5a4e;--alert-ink:#ff8a80;color-scheme:dark}
 
-body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 var(--f-body)}
-.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 72px;display:flex;flex-direction:column;gap:24px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 var(--f-body);-webkit-text-size-adjust:100%}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px));padding-block:18px 64px;display:flex;flex-direction:column;gap:22px}
 button{font:inherit;color:inherit}
-button:focus-visible,select:focus-visible{outline:2px solid var(--red-ink);outline-offset:2px}
+:focus-visible{outline:3px solid var(--hl);outline-offset:2px;box-shadow:0 0 0 5px var(--ink)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.mono{font-family:var(--f-mono)}
 
-/* Kopf */
-.mast{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 24px;border-bottom:2px solid var(--ink);padding-bottom:18px}
-.eyebrow{font:500 12px/1 var(--f-mono);letter-spacing:.09em;text-transform:uppercase;color:var(--red-ink);margin:0}
-h1{font:700 clamp(42px,7.5vw,76px)/.9 var(--f-display);margin:10px 0 0;text-transform:uppercase;letter-spacing:-.005em;text-wrap:balance}
-.lede{margin:12px 0 0;color:var(--muted);max-width:58ch}
-.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch}
-.yr{display:flex;align-items:center;border:1px solid var(--rule);background:var(--panel);border-radius:8px}
-.yr button{border:0;background:none;width:40px;height:44px;cursor:pointer;font-size:18px;color:var(--muted)}
+/* Signets: Form = Kategorie, Farbe + Kürzel = der einzelne Feiertag */
+.sg{width:24px;height:24px;flex:none;display:inline-block;vertical-align:middle;overflow:visible}
+.sg .bg{fill:var(--sbg);stroke:var(--edge,transparent);stroke-width:1.4}
+.sg text{fill:var(--sfg);font:700 15.5px var(--f-disp);text-anchor:middle;dominant-baseline:central;letter-spacing:.01em}
+.sg-reg text,.sg-opt text{font-size:13px}
+.sg .dash{fill:none;stroke:var(--sfg);stroke-width:1.3;stroke-dasharray:2.4 2;opacity:.85}
+.sg .ring{fill:var(--panel);stroke:var(--ls);stroke-width:3.6}
+.sg-so text{fill:var(--ink)}
+.sg.we{opacity:.4}
+.shape{width:18px;height:18px;display:inline-block;vertical-align:middle;flex:none}
+.shape .bg{fill:var(--ink)}.shape .ring{fill:none;stroke:var(--ink);stroke-width:3.6}.shape .dash{fill:none;stroke:var(--panel);stroke-width:1.6;stroke-dasharray:2.4 2}
+
+/* Kopf: Stationsschild */
+.mast{background:var(--sign);color:var(--on-sign);border-radius:12px;padding:clamp(18px,3.4vw,34px) clamp(16px,3.4vw,34px) 0;overflow:hidden;position:relative}
+.mast-top{display:flex;gap:18px;align-items:flex-start}
+.hst{flex:none;width:clamp(48px,7vw,66px);height:clamp(48px,7vw,66px);border-radius:50%;background:#ffd400;display:grid;place-items:center;font:700 clamp(32px,5vw,46px)/1 var(--f-disp);color:#00733a;box-shadow:0 0 0 3px #fff inset}
+.eyebrow{font:600 13px/1.2 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:#ffd400;margin:4px 0 0}
+h1{font:700 clamp(44px,8.4vw,92px)/.88 var(--f-disp);margin:8px 0 0;letter-spacing:-.01em;text-wrap:balance}
+.lede{margin:16px 0 0;max-width:62ch;color:#d6deea;font-size:17px;text-wrap:pretty}
+.lede b{color:#fff;font-weight:600}
+.opts{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:18px 0 0;padding-bottom:20px}
+.opts .label{font:600 12px/1.3 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:#b9c6d8;margin-right:4px}
+.opt{display:inline-flex;align-items:center;gap:8px;border:1.5px dashed #8ea2bf;background:transparent;color:#e6ecf5;padding:5px 12px 5px 6px;border-radius:999px;font-size:14.5px;font-weight:500;cursor:pointer}
+.opt:hover{border-color:#fff;color:#fff}
+.opt[aria-pressed="true"]{border-style:solid;border-color:#ffd400;background:rgba(255,212,0,.14);color:#fff}
+.opt[aria-pressed="true"]::after{content:"✓";color:#ffd400;font-weight:600}
+.opt .sg{width:26px;height:26px}
+.strip{display:flex;height:10px;margin:0 calc(-1 * clamp(16px,3.4vw,34px))}
+.strip i{flex:1;background:var(--sbg)}
+
+/* Leiste: Ihre Auswahl, immer sichtbar */
+.bar{position:sticky;top:0;z-index:30;margin:0 calc(-1 * max(14px,env(safe-area-inset-left,0px)));padding:8px max(14px,env(safe-area-inset-left,0px));background:color-mix(in oklab,var(--paper) 96%,transparent);border-bottom:1px solid var(--rule)}
+.bar-in{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center}
+.gl{display:flex;align-items:center;background:var(--sign);color:var(--on-sign);border-radius:8px;padding-left:10px;position:relative}
+.gl>span:first-child{font:600 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:#ffd400}
+select{font:600 16px var(--f-body);padding:0 34px 0 8px;height:44px;border:0;background:transparent;color:inherit;appearance:none;-webkit-appearance:none;cursor:pointer;max-width:58vw}
+select option{color:#111;background:#fff}
+.gl::after{content:"▾";position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none}
+.yr{display:flex;align-items:center;background:var(--sign);color:var(--on-sign);border-radius:8px}
+.yr button{border:0;background:none;width:38px;height:44px;cursor:pointer;font-size:22px;color:#cfd8e6;border-radius:8px}
+.yr button:hover{color:#fff}
 .yr button:disabled{opacity:.3;cursor:default}
-.yr output{font:700 28px/1 var(--f-display);min-width:2.6em;text-align:center;font-variant-numeric:tabular-nums}
-.sel-wrap{position:relative;display:flex}
-select{font:500 15px var(--f-body);padding:0 36px 0 12px;height:46px;border-radius:8px;border:1px solid var(--rule);background:var(--panel);color:var(--ink);appearance:none;-webkit-appearance:none;cursor:pointer;max-width:100%}
-.sel-wrap::after{content:"▾";position:absolute;right:13px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--muted)}
+.yr output{font:700 27px/1 var(--f-disp);min-width:2.4em;text-align:center;font-variant-numeric:tabular-nums}
+.cur{flex:1 1 280px;min-width:0;display:flex;align-items:center;gap:10px;min-height:44px;padding:4px 6px 4px 10px;border-radius:8px;background:var(--panel);border:1px solid var(--rule)}
+.cur .sg{width:30px;height:30px}
+.cur-k{font:600 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.cur-n{font:700 20px/1.05 var(--f-disp);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.cur-d{font:500 13px/1.2 var(--f-mono);color:var(--muted);white-space:nowrap}
+.cur-hint{color:var(--muted);font-size:14px;line-height:1.25}
+.cur-x{margin-left:auto;border:0;background:var(--ink);color:var(--panel);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;line-height:1;flex:none}
+.cur.pv{border-style:dashed}
+.cur-sw{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--rule);background:var(--paper);border-radius:999px;padding:2px 9px 2px 6px;font:500 13px var(--f-body);cursor:pointer;white-space:nowrap}
+.cur-sw .sg{width:20px;height:20px}
+.cur-sw:hover{border-color:var(--ink)}
+.same{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:14px;color:var(--muted)}
+.same .chip{padding:3px 10px 3px 4px}.same .chip .sg{width:20px;height:20px}
+@media (max-width:560px){.cur-sw span{display:none}}
+.gl{flex:0 1 auto;min-width:0}
+@media (max-width:560px){.cur-d{display:none}.cur{flex-basis:100%;min-height:40px}.cur.empty{display:none}.gl{flex:1 1 0}.gl select{width:100%;max-width:none}.bar{padding-block:6px}.yr output{font-size:24px}}
 
-.card{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:clamp(16px,3vw,28px);min-width:0}
-
-/* Antwort */
-.ans-grid{display:flex;flex-wrap:wrap;gap:20px 36px;align-items:flex-start;justify-content:space-between}
-.ans-text{flex:1 1 300px;min-width:0}
-.label{font:500 12px/1.3 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:0}
-.ans-kicker{font:600 clamp(21px,3vw,28px)/1.1 var(--f-display);margin:16px 0 0;text-transform:uppercase;letter-spacing:.02em}
-.ans-date{font:700 clamp(88px,17vw,172px)/.84 var(--f-display);margin:6px 0 0;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-.ans-sub{font-size:17px;max-width:46ch;margin:16px 0 0;text-wrap:pretty}
-.ans-sub b{font-weight:600}
-.sheet{flex:0 0 auto;width:168px;background:var(--red);color:var(--on-red);border-radius:5px 5px 10px 10px;text-align:center;padding:28px 14px 16px;position:relative;box-shadow:0 14px 28px -18px var(--red)}
-.sheet::before{content:"";position:absolute;left:12px;right:12px;top:10px;height:7px;background:radial-gradient(circle,var(--panel) 2.6px,transparent 3.1px) 0 0/14px 7px repeat-x}
-.sh-wd{font:600 13px var(--f-mono);text-transform:uppercase;letter-spacing:.16em}
-.sh-day{font:700 100px/.9 var(--f-display);font-variant-numeric:tabular-nums}
-.sh-mon{font:600 21px/1 var(--f-display);text-transform:uppercase;letter-spacing:.07em}
-.sh-name{font:500 13px/1.3 var(--f-body);margin-top:12px;padding-top:9px;border-top:1px solid color-mix(in oklab,var(--on-red) 35%,transparent);text-wrap:balance}
-.ticks-wrap{margin-top:24px}
-.ticks{display:flex;flex-wrap:wrap;gap:3px;align-items:flex-end;min-height:26px}
-.t{display:block;width:6px;height:20px;border-radius:2px;background:var(--ink);opacity:.8}
-.t.we{width:4px;background:none}
-.t.now{height:26px;background:var(--muted);opacity:1}
-.t.h{width:11px;height:26px;background:var(--red);opacity:1}
-.ticks-cap{font:500 12px var(--f-mono);color:var(--muted);margin-top:8px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.facts{list-style:none;margin:22px 0 0;padding:0}
-.facts li{padding:11px 0;border-top:1px solid var(--rule);display:grid;grid-template-columns:10em minmax(0,1fr);gap:14px}
-.facts .fk{font:500 12px/1.6 var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
-@media (max-width:560px){.facts li{grid-template-columns:minmax(0,1fr);gap:2px}.sheet{width:132px;padding-top:24px}.sh-day{font-size:76px}}
-
-/* Abschnitte */
-.sh{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px 18px;margin-bottom:18px}
-h2{font:700 30px/1 var(--f-display);text-transform:uppercase;margin:0;letter-spacing:.01em;text-wrap:balance}
-.hint{color:var(--muted);font-size:13.5px;margin:6px 0 0}
-.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--muted)}
-.legend span{display:inline-flex;align-items:center;gap:7px}
-
-.dot{display:inline-block;width:11px;height:11px;border-radius:50%;flex:none}
-.dot.f{background:var(--red)}
-.dot.o{box-shadow:inset 0 0 0 1.6px var(--red)}
-.dot.r{background:repeating-linear-gradient(135deg,var(--red) 0 1.6px,transparent 1.6px 3.6px);box-shadow:inset 0 0 0 1.4px var(--red)}
-.dot.n{width:8px;height:2px;border-radius:1px;background:var(--rule)}
-.dot.past{opacity:.35}
-
-/* Karte + Rangliste */
-.duo{display:grid;grid-template-columns:minmax(0,330px) minmax(0,1fr);gap:28px 36px}
-@media (max-width:820px){.duo{grid-template-columns:minmax(0,1fr)}}
-.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;max-width:330px}
-.tile{aspect-ratio:1;border:0;border-radius:8px;padding:7px 8px;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;cursor:pointer;transition:transform .15s ease}
-.tile.span{aspect-ratio:auto}
-.tile .tc{font:700 19px/1 var(--f-display);letter-spacing:.03em}
-.tile .tn{font:700 32px/1 var(--f-display);align-self:flex-end;font-variant-numeric:tabular-nums}
-.tile:hover{transform:translateY(-2px)}
-.tile[aria-pressed="true"]{outline:3px solid var(--ink);outline-offset:2px}
-.scale{display:flex;align-items:center;gap:8px;margin-top:14px;font:500 12px var(--f-mono);color:var(--muted);max-width:330px}
-.scale i{flex:1;height:8px;border-radius:4px;background:linear-gradient(90deg,color-mix(in oklab,var(--red) 18%,var(--panel)),var(--red))}
-.rank{display:grid;gap:1px}
-.rk{display:grid;grid-template-columns:minmax(0,10.5em) minmax(0,1fr) 3.4em;gap:12px;align-items:center;padding:6px 8px;border:0;background:none;text-align:left;border-radius:6px;cursor:pointer}
-.rk:hover{background:var(--paper)}
-.rk[aria-pressed="true"]{background:color-mix(in oklab,var(--red) 11%,var(--panel))}
-.rk-n{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px}
-.rk-d{display:flex;flex-wrap:wrap;gap:4px}
-.rk-c{font:700 23px/1 var(--f-display);text-align:right;font-variant-numeric:tabular-nums}
-.rk-c small{display:block;font:500 10.5px/1.4 var(--f-mono);color:var(--muted)}
-@media (max-width:480px){.rk{grid-template-columns:minmax(0,7.4em) minmax(0,1fr) 2.8em;gap:8px}}
-
-/* Jahresblatt: 12 Zeilen × 31 Tage */
-.yb{display:grid;grid-template-columns:2.6em repeat(31,minmax(0,1fr)) 2.2em;gap:4px 2px;align-items:center}
-.yb-m{font:500 11px var(--f-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
-.yb-h{font:500 9.5px var(--f-mono);color:var(--wk);text-align:center;white-space:nowrap}
-.yb-n{font:600 11px var(--f-mono);color:var(--red-ink);text-align:right}
-.c{display:block;height:18px;border-radius:3px;background:color-mix(in oklab,var(--rule) 45%,var(--panel));border:0;padding:0;min-width:0;position:relative}
-.c.we{background:var(--rule)}
-.c.x{background:none}
-button.c{cursor:pointer}
-.c.hw{background:var(--red)}
-.c.hp{background:color-mix(in oklab,var(--red) var(--mix,40%),var(--panel))}
-.c.he{box-shadow:inset 0 0 0 1.6px var(--red)}
-.c.rg{background:repeating-linear-gradient(135deg,color-mix(in oklab,var(--red) 45%,transparent) 0 2px,transparent 2px 5px);box-shadow:inset 0 0 0 1.4px color-mix(in oklab,var(--red) 75%,transparent)}
-.c.oth::after{content:"";position:absolute;top:50%;left:50%;width:3px;height:3px;margin:-1.5px 0 0 -1.5px;border-radius:50%;background:var(--muted)}
-.c.past{opacity:.42}
-.c.cur{outline:2px solid var(--red-ink);outline-offset:1px;opacity:1;z-index:1}
-.c.today{outline:2px solid var(--ink);outline-offset:1px;opacity:1;z-index:1}
-@media (max-width:560px){.yb{grid-template-columns:2.3em repeat(31,minmax(0,1fr)) 1.7em;gap:4px 1px}.c{height:16px;border-radius:2px}.yb-h{font-size:8px}}
-.detail{margin-top:24px;padding:14px 18px;border-left:4px solid var(--red);background:var(--paper);border-radius:0 8px 8px 0;display:grid;gap:8px}
-.detail h4{font:700 28px/1 var(--f-display);margin:0;text-transform:uppercase;letter-spacing:.01em}
-.detail p{margin:0}
-.chips{display:flex;flex-wrap:wrap;gap:6px}
-.chip{display:inline-flex;align-items:center;gap:6px;font:500 12px var(--f-mono);padding:4px 9px;border-radius:999px;border:1px solid var(--rule);background:var(--panel);cursor:pointer}
-.chip:hover{border-color:var(--red)}
-
-/* Matrix */
+/* Abschnittsschilder */
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:clamp(14px,2.6vw,26px);min-width:0}
+.sh{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 18px;margin-bottom:10px}
+h2.sign{display:inline-flex;align-items:center;gap:10px;max-width:100%;font:700 clamp(22px,3vw,28px)/1 var(--f-disp);margin:0;background:var(--sign);color:var(--on-sign);padding:6px 14px 6px 6px;border-radius:7px;letter-spacing:.005em}
+h2.sign .tx{min-width:0;overflow-wrap:anywhere}
+h2.sign .pk{flex:none;display:inline-grid;place-items:center;width:30px;height:30px;border-radius:5px;background:var(--on-sign);color:var(--sign)}
+h2.sign .pk svg{width:20px;height:20px}
+.hint{color:var(--muted);font-size:14.5px;margin:4px 0 0;max-width:80ch;text-wrap:pretty}
 .seg{display:inline-flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden;background:var(--panel)}
-.seg button{border:0;background:none;padding:8px 13px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer}
-.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
-.mx-wrap{overflow-x:auto;border:1px solid var(--rule);border-radius:10px;margin-top:14px}
-table{border-collapse:collapse;width:100%;font-size:13.5px;font-variant-numeric:tabular-nums}
-th,td{padding:8px 5px;border-bottom:1px solid var(--rule);text-align:center;white-space:nowrap}
-thead th{position:sticky;top:0;background:var(--panel);z-index:2}
-th.c1{position:sticky;left:0;background:var(--panel);z-index:1;text-align:left;min-width:9.8em;max-width:13em;white-space:normal;font-weight:400;padding-left:12px}
-thead th.c1{z-index:3;font:500 11px var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
-th.st button{font:600 11px var(--f-mono);background:none;border:0;color:var(--muted);cursor:pointer;padding:4px 3px;border-radius:4px;letter-spacing:.03em}
-th.st button:hover{color:var(--ink)}
-.on{background:color-mix(in oklab,var(--red) 9%,var(--panel))}
-th.st.on button{color:var(--red-ink)}
-.c-date{display:block;font:500 12px var(--f-mono);color:var(--muted)}
-.c-name{display:block;font-weight:500}
-tbody tr[data-k]{cursor:pointer}
-tbody tr[data-k]:hover th.c1{color:var(--red-ink)}
-tr.past th,tr.past td{opacity:.48}
-tr.wkend .c-name::after{content:" · Wochenende";font-weight:400;font-size:12px;color:var(--muted)}
-tr.trow td{padding:0;border-bottom:0}
-.tline{display:flex;align-items:center;gap:10px;font:600 11px var(--f-mono);color:var(--red-ink);text-transform:uppercase;letter-spacing:.06em;padding:6px 12px}
-.tline::after{content:"";flex:1;height:2px;background:var(--red)}
-tfoot th,tfoot td{border-bottom:0;border-top:2px solid var(--ink)}
-tfoot tr+tr th,tfoot tr+tr td{border-top:1px solid var(--rule)}
-tfoot td{font:700 19px/1 var(--f-display)}
-tfoot th.c1{font:500 11px var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
-
-/* Liniendiagramm */
-.chart{position:relative;min-height:250px;touch-action:pan-y}
-.chart svg{display:block;max-width:100%;overflow:visible}
-.grid line{stroke:var(--rule)}
-.ax{font:500 11px var(--f-mono);fill:var(--muted)}
-.ax.cury{fill:var(--red-ink);font-weight:600}
-.band{fill:color-mix(in oklab,var(--red) 9%,transparent)}
-.ln{fill:none;stroke:var(--wk);stroke-width:1.8;opacity:.7;stroke-linejoin:round;stroke-linecap:round;transition:opacity .15s,stroke .15s,stroke-width .15s}
-.ln.hot{stroke:var(--ink);stroke-width:2.8;opacity:1}
-.ln.sel{stroke:var(--red);stroke-width:3.2;opacity:1}
-.chart.dim .ln:not(.hot):not(.sel){opacity:.2}
-.avg{fill:none;stroke:var(--ink);stroke-width:1.4;stroke-dasharray:5 4;opacity:.7}
-.guide{stroke:var(--ink);stroke-width:1;opacity:.45}
-.pt{fill:var(--panel);stroke:var(--wk);stroke-width:1.6}
-.pt.sel{fill:var(--red);stroke:var(--red)}
-.pt.hot{stroke:var(--ink);stroke-width:2.2}
-.lb{font:500 11px var(--f-mono);fill:var(--muted)}
-.lb.sel{fill:var(--red-ink);font-weight:600}
-.lb.hot{fill:var(--ink);font-weight:600}
-.lb.av{font-style:italic}
-.tip{margin-top:14px;border-top:1px solid var(--rule);padding-top:12px;display:grid;gap:7px}
-.tip-h{font:500 12px var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
-.tip-h b{font:700 26px/1 var(--f-display);color:var(--ink);letter-spacing:0}
-.tv{display:grid;grid-template-columns:2.2em minmax(0,1fr);gap:12px;align-items:center}
-.tv>b{font:700 24px/1 var(--f-display);text-align:right;font-variant-numeric:tabular-nums}
-.codes{display:flex;flex-wrap:wrap;gap:4px}
-.code{font:600 11.5px var(--f-mono);padding:4px 7px;border-radius:5px;border:1px solid var(--rule);background:var(--panel);cursor:pointer;letter-spacing:.03em;transition:border-color .12s}
-.code.hot{border-color:var(--ink)}
-.code.sel{background:var(--red);color:var(--on-red);border-color:var(--red)}
-
-.opts{display:flex;flex-wrap:wrap;align-items:center;gap:8px 8px}
-.opts .label{margin-right:4px}
-.opt{border:1px dashed var(--muted);background:var(--panel);padding:7px 13px;border-radius:999px;font-size:13.5px;font-weight:500;cursor:pointer;color:var(--muted)}
-.opt:hover{color:var(--ink)}
-.opt[aria-pressed="true"]{border-style:solid;border-color:var(--red);background:color-mix(in oklab,var(--red) 12%,var(--panel));color:var(--red-ink)}
-.opt[aria-pressed="true"]::before{content:"✓ "}
-.xtag{font:500 10.5px var(--f-mono);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);border:1px dashed var(--muted);border-radius:4px;padding:0 4px;margin-left:4px;vertical-align:1px}
+.seg button{border:0;background:none;padding:8px 12px;font-size:14px;font-weight:500;color:var(--muted);cursor:pointer;min-height:38px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--panel)}
 .ctl{display:flex;flex-wrap:wrap;gap:8px}
-.fut{fill:color-mix(in oklab,var(--ink) 4%,transparent)}
-.era{font:500 10.5px var(--f-mono);fill:var(--muted);letter-spacing:.05em;text-transform:uppercase}
-.nowl{stroke:var(--red);stroke-width:1.5;stroke-dasharray:2 3}
-.evl{stroke:var(--muted);stroke-width:1;stroke-dasharray:1 3;opacity:.55}
-.evd{fill:var(--red-ink)}
-.tip-h .ev{color:var(--red-ink);text-transform:none;letter-spacing:0;font-size:12.5px}
-.notes{font-size:13.5px;color:var(--muted);max-width:78ch}
-.notes h2{font-size:22px;color:var(--ink);margin-bottom:8px}
-.notes ul{margin:0;padding-left:18px;display:grid;gap:4px}
-.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;border-top:2px solid var(--ink);padding-top:14px;font:500 12px/1.5 var(--f-mono);color:var(--muted)}
+.key{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13.5px;color:var(--muted);margin:10px 0 0}
+.key span{display:inline-flex;align-items:center;gap:7px}
+.km{display:inline-block;width:26px;height:16px;position:relative;flex:none;background:linear-gradient(var(--track),var(--track)) 0 50%/100% 3px no-repeat}
+.km::before{content:"";position:absolute;left:50%;top:0;bottom:0;margin-left:-2.5px;width:5px;background:var(--ink)}
+.km::after{content:"";position:absolute;left:50%;top:50%;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:var(--panel);border:3.2px solid var(--ink)}
+.km.w::before{width:0;margin-left:-1px;background:none;border-left:2px dashed var(--ink)}
+.km.w::after{width:9px;height:9px;margin:-4.5px 0 0 -4.5px;border-width:2px}
+.km.r::before{width:0;margin-left:-1.5px;background:none;border-left:3px dotted var(--ink)}
+.km.r::after{width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:1px;transform:rotate(45deg);border-width:2px}
+.km.x::before{width:7px;margin-left:-3.5px;background:linear-gradient(90deg,var(--ink) 0 2.5px,transparent 2.5px 4.5px,var(--ink) 4.5px)}
+.km.now{background:linear-gradient(var(--track),var(--track)) 0 50%/100% 3px no-repeat}
+.km.now::before{width:0;margin-left:-1px;background:none;border-left:2px dashed var(--alert)}
+.km.now::after{width:10px;height:10px;margin:-5px 0 0 -5px;border:0;background:var(--alert);box-shadow:0 0 0 2px var(--panel)}
+
+/* Abfahrtstafel */
+.board{background:var(--board);color:var(--flap-ink);border-radius:14px;padding:clamp(14px,2.6vw,26px);border:1px solid #23262c;box-shadow:0 18px 40px -26px rgba(0,0,0,.6)}
+.bd-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 18px;padding-bottom:12px;border-bottom:1px solid #2a2e35}
+.bd-title{display:inline-flex;align-items:center;gap:10px;font:700 24px/1 var(--f-disp);letter-spacing:.02em}
+.bd-title .pk{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:5px;background:var(--flap-y);color:#111}
+.bd-title .pk svg{width:20px;height:20px}
+.bd-clock{font:600 14px var(--f-mono);color:var(--flap-y);letter-spacing:.04em}
+.bd-gl{display:inline-flex;align-items:center;gap:8px;font:600 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--flap-dim)}
+.bd-gl b{display:inline-grid;place-items:center;min-width:46px;height:36px;padding:0 8px;border-radius:6px;background:#fff;color:#111;font:700 24px/1 var(--f-disp);letter-spacing:.03em}
+.bd-main{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px 34px;padding:18px 0 6px;align-items:start}
+@media (max-width:820px){.bd-main{grid-template-columns:minmax(0,1fr)}}
+.bd-k{font:600 12px/1.2 var(--f-mono);letter-spacing:.09em;text-transform:uppercase;color:var(--flap-dim);margin:0 0 10px}
+.bd-sub{font-size:17px;margin:14px 0 0;color:#d9dce1;max-width:48ch;text-wrap:pretty}
+.bd-sub b{color:var(--flap-y);font-weight:600}
+.flaps{display:inline-flex;flex-wrap:wrap;gap:.12em .3em;perspective:500px;vertical-align:middle}
+.flaps .w{display:inline-flex;gap:.07em;white-space:nowrap}
+.flaps b{display:inline-grid;place-items:center;min-width:.64em;height:1.2em;padding:0 .05em;border-radius:.07em;font:600 1em/1 var(--f-disp);color:var(--flap-ink);background:linear-gradient(#2a2d33 0 49%,#060708 49% 51%,#1d2025 51%);box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 1px 0 #000;animation:flip .42s cubic-bezier(.3,.7,.35,1.25) both;animation-delay:calc(var(--i) * 32ms);transform-origin:50% 50%}
+.flaps.y b{color:var(--flap-y)}
+.flaps.xl{font-size:clamp(38px,7.2vw,86px);flex-wrap:nowrap}
+.flaps.lg{font-size:clamp(22px,3vw,32px)}
+.flaps.md{font-size:22px}
+.flaps.sm{font-size:17px}
+@keyframes flip{0%{transform:rotateX(88deg);filter:brightness(2)}100%{transform:none}}
+.bd-dest{display:flex;align-items:flex-start;gap:12px}
+.bd-dest .sg{width:52px;height:52px;margin-top:2px}
+.bd-also{margin-top:10px;align-items:center;color:var(--flap-dim);font-size:16px}.bd-also b{color:#fff;font-weight:600}
+.bd-also .sg{width:34px;height:34px;margin:0 9px}
+.bd-when{font:600 15px var(--f-mono);color:var(--flap-y);margin:10px 0 0;letter-spacing:.02em}
+.bd-when span{color:var(--flap-dim);font-weight:500}
+.trk-wrap{margin:16px 0 4px}
+.trk{display:flex;flex-wrap:wrap;align-items:center;row-gap:8px;min-height:26px}
+.trk i{display:block;width:10px;height:22px;position:relative;background:linear-gradient(#5b616b,#5b616b) 0 6px/100% 2px no-repeat,linear-gradient(#5b616b,#5b616b) 0 14px/100% 2px no-repeat}
+.trk i.sl::before{content:"";position:absolute;left:3px;width:4px;top:2px;bottom:2px;background:#e8e9ec;border-radius:1px}
+.trk i.now{width:18px}
+.trk i.now::before{content:"";position:absolute;left:1px;top:1px;width:14px;height:20px;border-radius:4px 7px 7px 4px;background:var(--flap-y)}
+.trk .end{margin-left:4px;display:inline-flex}
+.trk .end .sg{width:28px;height:28px}
+.trk-cap{font:500 12.5px var(--f-mono);color:var(--flap-dim);margin-top:8px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.bd-list{width:100%;border-collapse:collapse;margin-top:14px;font-size:15px}
+.bd-list caption{text-align:left;font:600 12px var(--f-mono);letter-spacing:.09em;text-transform:uppercase;color:var(--flap-dim);padding:6px 0 8px}
+.bd-list th{font:600 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--flap-dim);text-align:left;padding:6px 8px;border-bottom:1px solid #2a2e35}
+.bd-list td{padding:8px;border-bottom:1px solid #1f2228;vertical-align:middle}
+.bd-list tbody tr{cursor:pointer}
+.bd-list tbody tr:hover{background:#16191e}
+.bd-list .c-t{font:600 15px var(--f-mono);color:var(--flap-y);white-space:nowrap}
+.bd-list .c-t small{display:block;font-size:11.5px;color:var(--flap-dim);font-weight:500}
+.bd-list .c-l{width:40px}
+.bd-list .c-l button{all:unset;cursor:pointer;display:inline-flex;border-radius:50%}
+.bd-list .c-l button:focus-visible{outline:3px solid var(--hl);outline-offset:2px;box-shadow:0 0 0 5px #0c0d10}
+.bd-list .c-l .sg{width:30px;height:30px}
+.bd-list .zn{display:block;font-weight:600;font-size:16.5px;color:#fff}
+.bd-list .zv{display:block;font-size:13px;color:var(--flap-dim);line-height:1.3}
+.bd-list td.c-g{font:600 12.5px var(--f-mono);color:#d9dce1;letter-spacing:.03em;max-width:13em}
+.bd-list .c-s{text-align:right;white-space:nowrap}
+.stat{display:inline-block;font:600 11.5px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;padding:5px 7px;border-radius:4px;border:1px solid #3a3f47;color:#d9dce1}
+.stat-nx{background:var(--flap-y);color:#111;border-color:var(--flap-y)}
+.stat-aus{color:#ff8a80;border-color:#5a2a2a}
+.stat-halt{color:#9be7a8;border-color:#245233}
+.bk-aus .zn{text-decoration:line-through;text-decoration-color:#ff8a80;text-decoration-thickness:2px;color:#c9ccd2}
+.bk-durch .zn,.bk-durch .c-t{opacity:.75}
+.bk-nx{background:rgba(255,212,0,.08)}
+.bd-list .zs{display:none}
+@media (max-width:640px){.bd-list .c-g,.bd-list .c-s{display:none}.bd-list td,.bd-list th{padding:7px 4px}.bd-list .zn{font-size:15px}.bd-list .zs{display:block;margin-top:4px}.bd-list .c-t{font-size:13.5px}.bd-list .c-l{width:34px}.bd-list .c-l .sg{width:26px;height:26px}}
+.bd-line{margin-top:14px;padding:12px 14px;border-radius:10px;border:1px dashed #3a3f47;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;min-height:62px}
+.bd-line.on{border:1px solid var(--lc);background:color-mix(in oklab,var(--lc) 14%,#0c0d10)}
+.bd-line .sg{width:36px;height:36px}
+.bd-line .bl-n{font:700 22px/1.05 var(--f-disp)}
+.bd-line .bl-t{color:#d9dce1;font-size:15px;flex:1 1 260px}
+.bd-line .bl-t b{color:var(--flap-y);font-weight:600}
+.bd-line.off{color:var(--flap-dim);font-size:14.5px}
+.bd-foot{margin-top:14px;padding-top:12px;border-top:1px solid #2a2e35;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:15px;color:#d9dce1}
+.bd-foot .k{font:600 12px var(--f-mono);letter-spacing:.09em;text-transform:uppercase;color:var(--flap-dim)}
+.bd-foot b{color:var(--flap-y);font-weight:600}
+
+/* Liniennetzplan: Länder = Gleise (Zeilen), Feiertage = Linien (Spalten) */
+.np-wrap{overflow-x:auto;margin-top:6px;overscroll-behavior-x:contain;scrollbar-width:thin}
+.np{--lbw:182px;--cw:34px;border-collapse:collapse;table-layout:fixed;width:100%;min-width:calc(var(--lbw) + var(--n,20) * var(--cw) + 96px)}
+.np col.c-now{width:18px}.np col.c-tot{width:78px}.np col.c-lb{width:var(--lbw)}
+.np thead th{vertical-align:bottom;padding:0;height:196px;position:relative;font-weight:400}
+.np th.lbh{text-align:left;font:600 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:0 0 10px 4px;position:sticky;left:0;z-index:3;background:var(--panel)}
+.np th.tot{font:600 11px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:right;padding:0 6px 10px 0}
+.stb{all:unset;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;padding:6px 0 8px;cursor:pointer;position:relative;border-radius:6px 6px 0 0}
+.stb:focus-visible{outline:3px solid var(--hl);outline-offset:-3px;box-shadow:none}
+.stb .sg{width:27px;height:27px;transition:transform .15s}
+.stb .nm{position:absolute;left:50%;bottom:100%;transform-origin:0 50%;transform:rotate(-60deg) translate(6px,-2px);white-space:nowrap;font:500 13.5px/1 var(--f-body);color:var(--ink);pointer-events:none}
+.stb .dt{font:600 12.5px/1.1 var(--f-disp);color:var(--muted);text-align:center;letter-spacing:.01em}
+.np th.we .stb .dt{color:var(--alert-ink)}
+.np th.past .stb .nm,.np th.past .stb .dt{opacity:.6}
+.np th.nowc{vertical-align:bottom}
+.nowpin{position:absolute;left:50%;bottom:22px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:var(--alert);box-shadow:0 0 0 3px var(--panel)}
+.nowlab{position:absolute;left:50%;bottom:74px;transform-origin:0 50%;transform:rotate(-60deg) translate(6px,-2px);white-space:nowrap;font:600 13px/1 var(--f-disp);color:var(--alert-ink);letter-spacing:.02em}
+.np tbody td{height:28px;padding:0;position:relative;background:linear-gradient(var(--track),var(--track)) 0 50%/100% 3px no-repeat}
+.np tbody tr:first-child td{border-top:0}
+.np td.nowc{background:linear-gradient(var(--track),var(--track)) 0 50%/100% 3px no-repeat,repeating-linear-gradient(var(--alert) 0 4px,transparent 4px 8px) 50% 0/2px 100% no-repeat}
+.np th.lb{position:sticky;left:0;z-index:2;background:var(--panel);padding:0;text-align:left}
+.lbb{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:8px;width:100%;height:28px;padding:0 6px 0 2px;cursor:pointer}
+.lbb:focus-visible{outline:3px solid var(--hl);outline-offset:-3px;box-shadow:none}
+.lbb .ln{font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lbb[aria-pressed="true"] .ln{font-weight:600}
+.gp{display:inline-grid;place-items:center;min-width:31px;height:22px;padding:0 4px;border-radius:4px;background:var(--sign);color:var(--on-sign);font:700 14.5px/1 var(--f-disp);letter-spacing:.04em;flex:none}
+.np td.tot{background:none;text-align:right;padding:0 6px 0 4px;white-space:nowrap;line-height:1}
+.np td.tot b{font:700 19px/1 var(--f-disp);font-variant-numeric:tabular-nums}
+.np td.tot em{font:600 11px/1 var(--f-disp);font-style:normal;color:var(--muted);margin-left:3px}
+.np td.tot small{display:block;font:500 10px/1.2 var(--f-mono);color:var(--muted)}
+.np i{position:absolute;left:50%;pointer-events:none}
+.np i.v{top:50%;bottom:50%;width:6px;margin-left:-3px;background:var(--lc);box-shadow:0 0 0 1px var(--edge)}
+.np i.v.u{top:-1px}.np i.v.d{bottom:-1px}
+.np td.w i.v{width:0;margin-left:-1px;background:none;box-shadow:none;border-left:2px dashed var(--ls)}
+.np td.r i.v{width:0;margin-left:-1.5px;background:none;box-shadow:none;border-left:3px dotted var(--ls)}
+.np td.x.f i.v{width:8px;margin-left:-4px;box-shadow:none;background:linear-gradient(90deg,var(--ls) 0 3px,transparent 3px 5px,var(--ls) 5px)}
+.np i.m{top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:var(--panel);border:3.5px solid var(--ls)}
+.np td.w i.m{width:10px;height:10px;margin:-5px 0 0 -5px;border-width:2px}
+.np td.r i.m{width:11px;height:11px;margin:-5.5px 0 0 -5.5px;border-radius:1px;transform:rotate(45deg);border-width:2.4px}
+.np td.past i{opacity:.62}
+.np .fz{position:absolute;left:calc(50% + 9px);top:2px;font:600 11px/1 var(--f-disp);color:var(--ink);pointer-events:none;white-space:nowrap}
+.np .fz.fzl{left:auto;right:calc(50% + 9px)}
+.key .fzk{font:600 12px/1 var(--f-disp);color:var(--ink);background:var(--hl-soft);padding:2px 5px;border-radius:3px}
+.np tbody tr:hover th.lb .ln{text-decoration:underline}
+@media (max-width:700px){.np{--lbw:52px;--cw:32px}.lbb .ln{display:none}.np col.c-tot{width:50px}.np td.tot small{display:none}.np thead th{height:160px}.stb .nm{font-size:12.5px}}
+.ldet{margin-top:16px;border-top:2px solid var(--ink);padding-top:14px;display:grid;gap:8px}
+.ld-h{display:flex;gap:16px;align-items:flex-start}
+.ld-h .sg{width:58px;height:58px}
+.ldet>:not(.ld-h){margin-left:74px}
+.ldet h3{font:700 30px/1 var(--f-disp);margin:0;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
+.ldet h3 small{font:600 12px var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.ldet p{margin:0}
+.ldet .meta{font:500 14px var(--f-mono);color:var(--muted);margin-top:6px}
+.ldet .meta b{color:var(--ink)}
+@media (max-width:560px){.ldet>:not(.ld-h){margin-left:0}.ld-h .sg{width:44px;height:44px}.ldet h3{font-size:26px}}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;font:500 13.5px var(--f-body);padding:3px 10px 3px 3px;border-radius:999px;border:1px solid var(--rule);background:var(--panel);cursor:pointer}
+.chip:hover{border-color:var(--ink)}
+.chip .gp{height:20px;min-width:28px;font-size:13px}
+.chip.rg .gp{background:repeating-linear-gradient(135deg,var(--sign) 0 3px,color-mix(in oklab,var(--sign) 55%,var(--panel)) 3px 6px)}
+.wdh{display:flex;gap:4px;align-items:flex-end;height:46px;margin-top:4px}
+.wdh span{display:flex;flex-direction:column;align-items:center;gap:2px;font:500 10.5px var(--f-mono);color:var(--muted);width:28px}
+.wdh i{display:block;width:16px;background:var(--lc);border-radius:2px 2px 0 0;min-height:1px}
+.wdh .we i{background:none;border:1.5px dashed var(--ls);border-bottom:0}
+.ldet.empty{display:block;color:var(--muted);font-size:14.5px}
+/* Feste Mindesthöhen, damit eine Vorschau per Maus nichts darunter verschiebt (sonst müsste der Browser alles Folgende neu zeichnen) */
+@media (hover:hover) and (min-width:561px){.ldet{min-height:272px}.tk-info{min-height:248px;align-content:start}}
+
+/* Jahresstrecke: zwölf Monatsstrecken, jede Schwelle ein Arbeitstag */
+.js{display:grid;grid-template-columns:2.7em repeat(31,minmax(0,1fr)) 2.4em;align-items:center;row-gap:5px;margin-top:8px}
+.js-h{font:500 10px var(--f-mono);color:var(--muted);text-align:center;white-space:nowrap}
+.js-m{font:600 12px var(--f-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.js-n{font:600 12px var(--f-mono);color:var(--ink);text-align:right}
+.js .d{display:grid;place-items:center;height:28px;position:relative;border:0;padding:0;min-width:0;background:linear-gradient(var(--track),var(--track)) 0 50%/100% 2px no-repeat}
+.js .d.wd::before{content:"";position:absolute;left:50%;top:50%;width:3px;height:12px;margin:-6px 0 0 -1.5px;background:var(--sleeper);border-radius:1px}
+.js .d.x{background:none}
+.js .d.h::before,.js .d.h2::before{display:none}
+.js span.d.past{opacity:.55}.js button.d.past .sg{opacity:.75}.js button.d.past .sg.we{opacity:.3}
+.js .d.today::after{content:"";position:absolute;left:50%;top:-3px;width:11px;height:11px;margin-left:-5.5px;border-radius:50%;background:var(--alert);box-shadow:0 0 0 2px var(--panel);z-index:2}
+.js button.d{cursor:pointer;z-index:1}
+.js button.d .sg{width:min(24px,100%);height:auto;aspect-ratio:1}
+.js button.d.o .sg{transform:scale(.62);opacity:.45}
+.js button.d.r .sg{outline:2px dotted var(--ls);outline-offset:1px;border-radius:3px}
+.js .d.h2{display:flex;align-items:center;justify-content:center;gap:1px;z-index:1}
+.js .dh{all:unset;cursor:pointer;display:grid;place-items:center;flex:1 1 0;min-width:0}
+.js .dh .sg{width:min(15px,100%);height:auto;aspect-ratio:1}
+.js .dh.o .sg{opacity:.45;transform:scale(.8)}
+.js .dh:focus-visible{outline:3px solid var(--hl);outline-offset:1px;z-index:3}
+.js .d.h2.past .sg{opacity:.75}
+.js button.d:focus-visible{outline:3px solid var(--hl);outline-offset:1px;box-shadow:none;z-index:3}
+@media (max-width:560px){.js{grid-template-columns:2.2em repeat(31,minmax(0,1fr)) 1.6em;row-gap:3px}.js .d{height:20px}.js .d.wd::before{height:8px;margin-top:-4px;width:2px;margin-left:-1px}.js-h{font-size:8px}.js-m{font-size:10px}}
+
+/* Linienverzeichnis */
+.vz-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px 26px;margin-top:8px}
+.vz-cat h3{display:flex;align-items:center;gap:8px;font:700 18px/1.1 var(--f-disp);margin:0 0 6px;padding-bottom:6px;border-bottom:2px solid var(--ink)}
+.vz-cat h3 small{font:500 12px var(--f-body);color:var(--muted);margin-left:auto;text-align:right}
+.vz-cat ul{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.vz{all:unset;box-sizing:border-box;display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:2px 10px;align-items:center;width:100%;padding:6px 8px 6px 4px;border-radius:8px;cursor:pointer;transition:opacity .15s,background .15s}
+.vz:hover{background:var(--paper)}
+.vz:focus-visible{outline:3px solid var(--hl);outline-offset:0;box-shadow:none}
+.vz[aria-pressed="true"]{background:color-mix(in oklab,var(--lc) 14%,var(--panel))}
+.vz .sg{width:32px;height:32px;grid-row:span 2}
+.vz-n{font-weight:600;font-size:15.5px;line-height:1.2}
+.vz-r{grid-column:2;font-size:13px;color:var(--muted);line-height:1.25}
+.vz-y{grid-row:1;grid-column:3;font:600 12.5px var(--f-mono);text-align:right;white-space:nowrap}
+.vz-y.we{color:var(--alert-ink)}
+.vz-y.na{color:var(--muted);font-weight:500}
+.vz-g{grid-column:3;font:500 11px var(--f-mono);color:var(--muted);text-align:right;max-width:12em;line-height:1.25}
+.vz.na .vz-n{font-weight:500;color:var(--muted)}.vz.na .sg{opacity:.4}
+.vz-g b{color:var(--ink);background:var(--hl-soft);padding:0 2px;border-radius:2px}
+.vz-x{display:flex;justify-content:flex-end;padding:2px 8px 6px}
+.vz-x button{font:500 12.5px var(--f-body);border:1.5px dashed var(--muted);background:none;border-radius:999px;padding:3px 10px;cursor:pointer;color:var(--muted)}
+.vz-x button[aria-pressed="true"]{border-style:solid;border-color:var(--ink);color:var(--ink)}
+.vz-x button[aria-pressed="true"]::before{content:"✓ "}
+
+/* Taktfahrplan 1991–2070 */
+.tkw{display:grid;grid-template-columns:var(--tlw) minmax(0,1fr);--tlw:200px;position:relative;margin-top:12px}
+.tkl{position:relative;border-right:1px solid var(--rule);background:var(--panel);z-index:2}
+.tks{overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;scrollbar-width:thin;position:relative}
+.tks:focus-visible{outline:3px solid var(--hl);outline-offset:-3px;box-shadow:none}
+#tksvg{display:block;max-width:none;overflow:visible;cursor:crosshair}
+.tkh{position:absolute;left:4px;right:8px;font:600 10.5px/1 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.tkh.fpt{font:700 17px/1 var(--f-disp);letter-spacing:.01em;text-transform:none;color:var(--ink)}
+.tkr{all:unset;box-sizing:border-box;position:absolute;left:0;right:0;display:flex;align-items:center;gap:7px;padding:0 6px 0 4px;cursor:pointer;font-size:13px;line-height:1}
+.tkr .gp{height:13px;min-width:24px;font-size:11.5px;border-radius:3px;padding:0 3px}
+.tkr .ln{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted)}
+.tkr[aria-pressed="true"] .ln{color:var(--ink);font-weight:600}
+.tkr:focus-visible,.fph:focus-visible{outline:3px solid var(--hl);outline-offset:-3px;box-shadow:none}
+.fpc{position:absolute;left:4px;right:6px;display:flex;align-items:center;gap:7px;font:700 14px/1 var(--f-disp);border-bottom:1.5px solid var(--ink);padding-bottom:2px}
+.fpc .shape{width:12px;height:12px}
+.fph{all:unset;box-sizing:border-box;position:absolute;left:0;right:0;display:flex;align-items:center;gap:7px;padding:0 8px 0 4px;cursor:pointer;border-radius:6px 0 0 6px}
+.fph .sg{width:22px;height:22px}
+.fph .fpn{flex:1;min-width:0;font-size:13.5px;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fph .fps{font:600 11px var(--f-mono);color:var(--ink);white-space:nowrap}
+.fph .fps.we{color:var(--alert-ink)}.fph .fps small{font-size:inherit}
+@media (max-width:700px){.fph .fps small{display:none}}.fph .fps.na{color:var(--muted);font-weight:500}
+.fph:hover{background:var(--paper)}
+.fph[aria-pressed="true"]{background:color-mix(in oklab,var(--lc) 16%,var(--panel))}
+.fph[aria-pressed="true"] .fpn{font-weight:600}
+@media (max-width:700px){.tkw{--tlw:66px}.tkr .ln,.fph .fpn,.fpc span{display:none}.fph{gap:4px;padding:0 3px}.fph .fps{font-size:10px}.tkh{font-size:9px;letter-spacing:.03em}.tkh.fpt{font-size:13px}}
+.tk .fpw{fill:none;stroke:var(--rule);stroke-width:.9}
+.tk .fpd{fill:none;stroke:var(--rule);stroke-width:.9;stroke-dasharray:2 3}
+.tk .fpdec{fill:none;stroke:var(--rule);stroke-width:1}
+.tk .fpg{fill:none;stroke:var(--ink);stroke-width:1.5}
+.tk .band{fill:transparent}
+.tk .m{fill:var(--lc);stroke:var(--edge);stroke-width:.8}
+.tk .m.r{stroke:var(--ls);stroke-width:1}
+.tk .m.we{fill:var(--panel);stroke:var(--ls);stroke-width:1.4}
+.tk .m.we.r{stroke-dasharray:1.6 1.2}
+.tk .m.o{opacity:.2}
+.tk .phb{fill:var(--panel)}.tk .phl{stroke:var(--lc);stroke-width:1.4}
+.tk .pz{fill:none;stroke:var(--muted);stroke-width:1;stroke-dasharray:3 2}
+.tk .pzt{font:600 10px var(--f-disp);fill:var(--muted);text-anchor:middle}
+.tk .evf{fill:var(--sign);stroke:var(--sign);stroke-width:1}
+:root[data-theme="dark"] .tk .evf{fill:var(--hl);stroke:var(--hl)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tk .evf,:root:not([data-theme="light"]) .fpkey .ke{fill:var(--hl);stroke:var(--hl)}}
+.tk .nowt{font:600 10.5px var(--f-mono);fill:var(--alert-ink)}
+.tk .ax.hid{opacity:0}
+.tk .ax.cur{paint-order:stroke;stroke:var(--panel);stroke-width:4px}
+.fpkey .kk{width:22px;height:14px;flex:none;color:var(--ink)}
+.fpkey .kw{fill:none;stroke:var(--muted);stroke-width:.9}.fpkey .kd{fill:none;stroke:var(--muted);stroke-width:.9;stroke-dasharray:2 2}
+.fpkey .kf{fill:var(--ink)}.fpkey .kh{fill:var(--panel);stroke:var(--ink);stroke-width:1.4}
+.fpkey .kp{fill:none;stroke:var(--muted);stroke-width:1.2;stroke-dasharray:3 2}.fpkey .ke{fill:var(--sign);stroke:var(--sign);stroke-width:1.2}
+.tk .ax{font:500 10.5px var(--f-mono);fill:var(--muted)}
+.tk .ax.cur{fill:var(--ink);font-weight:600}
+.tk .bl{font:600 10.5px var(--f-mono);fill:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.tk .q0{fill:color-mix(in oklab,var(--heat) 6%,var(--panel))}.tk .q1{fill:color-mix(in oklab,var(--heat) 14%,var(--panel))}.tk .q2{fill:color-mix(in oklab,var(--heat) 23%,var(--panel))}
+.tk .q3{fill:color-mix(in oklab,var(--heat) 33%,var(--panel))}.tk .q4{fill:color-mix(in oklab,var(--heat) 43%,var(--panel))}.tk .q5{fill:color-mix(in oklab,var(--heat) 52%,var(--panel))}
+.tk .q6{fill:color-mix(in oklab,var(--heat) 66%,var(--panel))}.tk .q7{fill:color-mix(in oklab,var(--heat) 80%,var(--panel))}.tk .q8{fill:var(--heat)}
+.tk .cv{font:600 10px var(--f-disp);text-anchor:middle;fill:var(--ink);pointer-events:none}
+.tk .cv.inv{fill:var(--on-heat)}
+.tk .rowhl{fill:var(--hl);opacity:0}
+.tk .fut{fill:url(#tkh)}
+.tk .nowl{stroke:var(--alert);stroke-width:1.6;stroke-dasharray:3 3}
+.tk .sely{fill:none;stroke:var(--ink);stroke-width:1.6}
+.tk .evl{stroke:var(--muted);stroke-width:1;stroke-dasharray:1 3;opacity:.7}
+.tk .evd{fill:var(--ink)}
+.tov .f{fill:var(--lc)}.tov .w{fill:none;stroke:var(--ls);stroke-width:1.2}.tov .r{fill:var(--ls);opacity:.7}
+.tk .xcol{fill:var(--ink);opacity:.09;pointer-events:none}
+.tk .hit{fill:transparent;cursor:pointer}
+.tk-info{margin-top:12px;border-top:1px solid var(--rule);padding-top:12px;display:grid;gap:8px;min-height:120px}
+.ti-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;font:500 12.5px var(--f-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.ti-h b{font:700 28px/1 var(--f-disp);color:var(--ink);letter-spacing:0}
+.ti-h .ev{text-transform:none;letter-spacing:0;color:var(--ink);font-family:var(--f-body);font-size:14px;display:inline-flex;gap:6px;align-items:center}
+.ti-h .ev .sg{width:18px;height:18px}
+.tv{display:grid;grid-template-columns:2.2em minmax(0,1fr);gap:12px;align-items:center}
+.tv>b{font:700 24px/1 var(--f-disp);text-align:right;font-variant-numeric:tabular-nums}
+.codes{display:flex;flex-wrap:wrap;gap:4px}
+.code{font:700 14px/1 var(--f-disp);padding:5px 7px;border-radius:4px;border:0;background:var(--sign);color:var(--on-sign);cursor:pointer;letter-spacing:.04em}
+.ti-l{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-size:14.5px}
+.ti-l .sg{width:24px;height:24px}
+
+/* Gleise im Vergleich */
+.duo{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:24px 34px;margin-top:8px}
+@media (max-width:860px){.duo{grid-template-columns:minmax(0,1fr)}}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;max-width:320px}
+.tile{aspect-ratio:1;border:0;border-radius:8px;padding:6px 7px;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;cursor:pointer;transition:opacity .15s,transform .15s;position:relative}
+.tile.span{aspect-ratio:auto}
+.tile .tc{font:700 18px/1 var(--f-disp);letter-spacing:.04em}
+.tile .tn{font:700 30px/1 var(--f-disp);align-self:flex-end;font-variant-numeric:tabular-nums}
+.tile:hover{transform:translateY(-2px)}
+.tile[aria-pressed="true"]{box-shadow:0 0 0 3px var(--hl) inset}
+.scale{display:flex;align-items:center;gap:8px;margin-top:12px;font:500 12px var(--f-mono);color:var(--muted);max-width:320px}
+.scale i{flex:1;height:8px;border-radius:4px;background:linear-gradient(90deg,color-mix(in oklab,var(--heat) 12%,var(--panel)),var(--heat))}
+.rank{display:grid;gap:2px}
+.rk{all:unset;box-sizing:border-box;display:grid;grid-template-columns:34px minmax(0,10em) minmax(0,1fr) 3.6em;gap:10px;align-items:center;padding:5px 8px 5px 4px;border-radius:8px;cursor:pointer;transition:opacity .15s,background .15s}
+.rk:hover{background:var(--paper)}
+.rk:focus-visible{outline:3px solid var(--hl);outline-offset:0;box-shadow:none}
+.rk[aria-pressed="true"]{background:var(--hl-soft)}
+.rk-n{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:15px}
+.rk-s{display:flex;flex-wrap:wrap;gap:3px}
+.rk-s .sg{width:19px;height:19px;border-radius:50%}
+.rk-c{font:700 24px/1 var(--f-disp);text-align:right;font-variant-numeric:tabular-nums}
+.rk-c small{display:block;font:500 10.5px/1.4 var(--f-mono);color:var(--muted)}
+@media (max-width:520px){.rk{grid-template-columns:34px minmax(0,1fr) 2.8em}.rk-n{grid-column:2;grid-row:1}.rk-s{grid-column:2;grid-row:2}.rk-c{grid-row:span 2;grid-column:3}.rk .gp{grid-row:span 2}}
+
+.notes{font-size:15px;color:var(--muted);max-width:80ch}
+.notes h2{margin-bottom:12px}
+.notes ul{margin:0;padding-left:18px;display:grid;gap:5px}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;border-top:3px solid var(--sign);padding-top:14px;font:500 12.5px/1.5 var(--f-mono);color:var(--muted)}
 .foot nav{display:flex;flex-wrap:wrap;gap:4px 18px}
 .foot a{color:inherit;text-decoration:underline;text-decoration-color:var(--rule);text-underline-offset:3px}
-.foot a:hover{color:var(--red-ink);text-decoration-color:currentColor}
-.foot a:focus-visible{outline:2px solid var(--red-ink);outline-offset:2px}
+.foot a:hover{color:var(--ink);text-decoration-color:currentColor}
 
-@keyframes rise{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
-.anim{animation:rise .32s ease both}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* Brushing (siehe brush()): Abschnitt .has-f, Treffer .fx-on, Zeilen .fx-hf/.fx-hw/.fx-hr/.fx-no, Land .lx-on */
+.has-f .dm:not(.fx-on){opacity:.16}
+#np.has-f td:not(.fx-on)>i{opacity:.12}
+#np.has-f th.st:not(.fx-on) .stb{opacity:.3}
+#np.has-f td.fx-on,#np.has-f th.fx-on{background-color:color-mix(in oklab,var(--lc) 15%,transparent)}
+#np.has-f th.fx-on .stb .sg{transform:scale(1.2)}
+#np.has-f tr.fx-no .gp{opacity:.3}
+#np.has-f tr.fx-hf .gp,#rank.has-f .rk.fx-hf .gp{background:var(--xb);color:var(--xf)}
+#tiles.has-f .tile.fx-no{opacity:.25}
+#tiles.has-f .tile.fx-hf{background:var(--xb)!important;color:var(--xf)!important}
+#tiles.has-f .tile.fx-hw{background:var(--panel)!important;color:var(--ink)!important;box-shadow:inset 0 0 0 3px var(--xe)}
+#tiles.has-f .tile.fx-hr{background:repeating-linear-gradient(135deg,var(--xb) 0 3px,transparent 3px 7px),var(--panel)!important;color:var(--ink)!important}
+#rank.has-f .rk.fx-no{opacity:.35}
+#rank.has-f .rk-s .sg.fx-on{transform:scale(1.32);outline:2px solid var(--ink);outline-offset:1px}
+#tksvg.has-f .fpl:not(.fx-on){opacity:.22}
+#tksvg.has-f .fpl.fx-on .band{fill:color-mix(in oklab,var(--lc) 13%,transparent)}
+#tkl.has-f .fph:not(.fx-on){opacity:.5}
+#tkl.has-f .fph.fx-on{background:color-mix(in oklab,var(--lc) 16%,var(--panel))}
+#js.has-f button[data-h]:not(.fx-on) .sg{opacity:.14}
+#js.has-f button.fx-on .sg{transform:scale(1.25);opacity:1}
+#bdMain.has-f .bd-list tr.fx-on{background:color-mix(in oklab,var(--lc) 22%,#0c0d10)}
+#np tr.lx-on>td{background-color:var(--hl-soft)}
+#np tr.lx-on>td.s,#np tr.lx-on>td[data-h]{--track:var(--ink);background-size:100% 5px}
+#np tr.lx-on>td.nowc{--track:var(--ink);background-size:100% 5px,2px 100%}
+#np tr.lx-on .lb{background:linear-gradient(var(--hl-soft),var(--hl-soft)),var(--panel)}
+.tk .rowhl.lx-on{opacity:.55}
+.tkr.lx-on{background:var(--hl-soft)}
+.tile.lx-on{outline:3px solid var(--ink);outline-offset:2px}
+.rk.lx-on{background:var(--hl-soft)}
+.code.lx-on{background:var(--hl);color:#111}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
+<style id="linecss"></style>
 </head>
 <body>
 <div class="wrap">
   <header class="mast">
-    <div>
-      <p class="eyebrow">Gesetzliche Feiertage · Montag bis Freitag</p>
-      <h1>Werktags-Feiertage</h1>
-      <p class="lede">Welche Feiertage fallen tatsächlich auf einen Arbeitstag, welche sind schon vorbei und ab wann gilt wieder der normale Wochenrhythmus? Für alle 16 Bundesländer, 1991 bis 2070.</p>
-    </div>
-    <div class="controls">
-      <div class="sel-wrap"><select id="state" aria-label="Bundesland"></select></div>
-      <div class="yr" role="group" aria-label="Jahr">
-        <button id="yprev" aria-label="Vorheriges Jahr">‹</button>
-        <output id="yv"></output>
-        <button id="ynext" aria-label="Nächstes Jahr">›</button>
+    <div class="mast-top">
+      <span class="hst" aria-hidden="true">H</span>
+      <div>
+        <p class="eyebrow">Liniennetz der gesetzlichen Feiertage · 16 Länder · 1991–2070</p>
+        <h1>Werktags-Feiertage</h1>
       </div>
     </div>
+    <p class="lede">Jeder Feiertag ist eine <b>Linie</b> mit eigener Farbe und eigenem Signet, jedes Bundesland ein <b>Gleis</b>, das durchs Jahr läuft. Welche Feiertage halten tatsächlich an einem Arbeitstag, welche fallen aufs Wochenende aus – und wann kommt der nächste Halt?</p>
+    <div class="opts" role="group" aria-label="Zusätzlich als frei werten">
+      <span class="label">Zusätzlich als frei werten</span>
+      <button class="opt" data-ex="rm" aria-pressed="false"><span class="optsig" data-id="rosenmontag"></span>Rosenmontag</button>
+      <button class="opt" data-ex="ha" aria-pressed="false"><span class="optsig" data-id="heiligabend"></span>Heiligabend</button>
+      <button class="opt" data-ex="sv" aria-pressed="false"><span class="optsig" data-id="silvester"></span>Silvester</button>
+    </div>
+    <div class="strip" id="strip" aria-hidden="true"></div>
   </header>
 
-  <div class="opts" role="group" aria-label="Zusätzlich als frei werten">
-    <span class="label">Zusätzlich als frei werten</span>
-    <button class="opt" data-ex="rm" aria-pressed="false">Rosenmontag</button>
-    <button class="opt" data-ex="ha" aria-pressed="false">Heiligabend</button>
-    <button class="opt" data-ex="sv" aria-pressed="false">Silvester</button>
-  </div>
-
-  <section class="card">
-    <div class="sh">
-      <div><h2 id="trendTitle">Feiertage Mo–Fr pro Jahr</h2><p class="hint">Alle 16 Länder, 1991–2070; ab 2027 nach heutiger Rechtslage berechnet. Rote Punkte markieren Gesetzesänderungen. Länder mit identischem Verlauf teilen sich eine Linie; Linien leicht versetzt, damit gleiche Werte sichtbar bleiben. Jahr antippen springt dorthin, Kürzel wählt das Land.</p></div>
-      <div class="ctl"><div class="seg" role="group" aria-label="Zeitraum"><button id="rAll" aria-pressed="true">1991–2070</button><button id="rMid" aria-pressed="false">2000–2040</button><button id="rNear" aria-pressed="false">±10 J.</button></div><div class="seg" role="group" aria-label="Kennzahl">
-        <button id="mWd" aria-pressed="true">Mo–Fr</button>
-        <button id="mWe" aria-pressed="false">Aufs Wochenende</button>
-      </div></div>
+  <nav class="bar" aria-label="Auswahl">
+    <div class="bar-in">
+      <label class="gl"><span>Gleis</span><select id="state" aria-label="Bundesland"></select></label>
+      <div class="yr" role="group" aria-label="Jahr">
+        <button id="yprev" aria-label="Vorheriges Jahr">‹</button>
+        <output id="yv" aria-live="polite"></output>
+        <button id="ynext" aria-label="Nächstes Jahr">›</button>
+      </div>
+      <div class="cur" id="cur"></div>
     </div>
-    <div class="chart" id="chart"></div>
-    <div class="tip" id="tip"></div>
+  </nav>
+
+  <section class="board bx" id="board" aria-labelledby="bdTitle">
+    <div id="bdMain" aria-live="polite"></div>
+    <div id="bdLine"></div>
+    <div id="bdFoot"></div>
   </section>
 
-  <section class="card" id="answer" aria-live="polite"></section>
-
-  <section class="card">
+  <section class="card bx" id="netz" aria-labelledby="npTitle">
     <div class="sh">
-      <div><h2>Länder im Vergleich <span class="y"></span></h2><p class="hint">Zahl = Feiertage, die auf Mo–Fr fallen. Antippen wählt ein Land.</p></div>
-      <div class="legend"><span><i class="dot f"></i>Mo–Fr</span><span><i class="dot o"></i>Wochenende</span><span><i class="dot r"></i>nur regional</span><span><i class="dot f past"></i>vorbei</span></div>
+      <h2 class="sign" id="npTitle"><span class="pk" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M2 6h16M2 14h16" stroke="currentColor" stroke-width="2.4"/><path d="M7 2v16M13 6v12" stroke="currentColor" stroke-width="3"/><circle cx="7" cy="6" r="2.2" fill="#fff" stroke="currentColor" stroke-width="1.6"/><circle cx="13" cy="14" r="2.2" fill="#fff" stroke="currentColor" stroke-width="1.6"/></svg></span><span class="tx">Liniennetz <span class="y"></span></span></h2>
+      <div class="seg" role="group" aria-label="Filter">
+        <button id="fAll" aria-pressed="true">Alle Halte</button>
+        <button id="fWd" aria-pressed="false">Nur Mo–Fr</button>
+      </div>
     </div>
+    <p class="hint">Jedes Land ist ein Gleis, jeder Feiertag eine Linie, die dort hält, wo er gilt. Durchgezogene Verbindungen zeigen, welche Länder sich einen Feiertag teilen; die Gleise sind so sortiert, dass gemeinsame Halte nebeneinander liegen. Station oder Gleis antippen wählt Linie oder Land, Esc löst. Auf schmalen Bildschirmen lässt sich der Plan seitlich verschieben.</p>
+    <div class="key" aria-label="Zeichenerklärung Liniennetz">
+      <span><i class="km"></i>Halt Mo–Fr – frei</span>
+      <span><i class="km w"></i>fällt aufs Wochenende</span>
+      <span><i class="km r"></i>nur in Teilen des Landes</span>
+      <span><i class="km x"></i>optional zugeschaltet</span>
+      <span><i class="km now"></i>heute</span>
+      <span id="npKeyFz"></span>
+    </div>
+    <div class="np-wrap"><table class="np" id="np"></table></div>
+    <div class="ldet" id="ldet"></div>
+  </section>
+
+  <section class="card bx" id="strecke" aria-labelledby="jsTitle">
+    <div class="sh">
+      <h2 class="sign" id="jsTitle"><span class="pk" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M1 7h18M1 13h18" stroke="currentColor" stroke-width="1.8"/><path d="M4 4v12M8 4v12M12 4v12" stroke="currentColor" stroke-width="2.2"/><circle cx="16" cy="10" r="3.2" fill="currentColor"/></svg></span><span class="tx">Jahresstrecke <span class="y"></span> · <span class="sn"></span></span></h2>
+    </div>
+    <p class="hint">Jede Zeile ein Monat, jede Schwelle ein Arbeitstag, Lücken sind Wochenenden. An den Halten steht das Signet des Feiertags; blass und klein = gilt nur in anderen Ländern. Rechts: freie Werktage im Monat (bei ganz Deutschland: bundesweit freie).</p>
+    <div class="js" id="js"></div>
+  </section>
+
+  <section class="card bx" id="verz" aria-labelledby="vzTitle">
+    <div class="sh">
+      <h2 class="sign" id="vzTitle"><span class="pk" aria-hidden="true"><svg viewBox="0 0 20 20"><circle cx="4" cy="4.5" r="2.6" fill="currentColor"/><rect x="1.6" y="8" width="5" height="5" rx="1" fill="currentColor"/><path d="M4 14.5l2.6 2.6L4 19.7 1.4 17.1Z" fill="currentColor"/><path d="M9 4.5h10M9 10.5h10M9 17h10" stroke="currentColor" stroke-width="2"/></svg></span><span class="tx">Linienverzeichnis</span></h2>
+    </div>
+    <p class="hint">Alle Feiertage einzeln, mit Kürzel und Linienfarbe. Die Form des Signets nennt die Art, rechts steht der Termin <span class="y"></span> und wo er gilt. Eintrag antippen verfolgt die Linie durch alle Ansichten.</p>
+    <div class="vz-grid" id="vz"></div>
+  </section>
+
+  <section class="card bx" id="takt" aria-labelledby="tkTitle">
+    <div class="sh">
+      <h2 class="sign" id="tkTitle"><span class="pk" aria-hidden="true"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M10 5v5l3.5 2.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span><span class="tx">Fahrplan 1991–2070</span></h2>
+      <div class="ctl">
+        <div class="seg" role="group" aria-label="Zeitraum"><button id="rAll" aria-pressed="true">1991–2070</button><button id="rMid" aria-pressed="false">2000–2040</button><button id="rNear" aria-pressed="false">±10 J.</button></div>
+        <div class="seg" role="group" aria-label="Kennzahl"><button id="mWd" aria-pressed="true">Mo–Fr</button><button id="mWe" aria-pressed="false">Aufs Wochenende</button></div>
+      </div>
+    </div>
+    <p class="hint" id="tkHint"></p>
+    <div class="key fpkey" aria-label="Zeichenerklärung Fahrplan">
+      <span><svg class="kk" viewBox="0 0 22 14" aria-hidden="true"><path d="M0 11h22M0 8h22M0 5h22" class="kw"/><circle cx="11" cy="5" r="3.6" class="kf"/></svg>Halt Mo–Fr · Form = Art der Linie</span>
+      <span><svg class="kk" viewBox="0 0 22 14" aria-hidden="true"><path d="M0 12h22M0 9h22" class="kw"/><path d="M0 5h22M0 2h22" class="kd"/><circle cx="11" cy="3.5" r="3" class="kh"/></svg>Sa/So darüber – fällt aus</span>
+      <span><svg class="kk" viewBox="0 0 22 14" aria-hidden="true"><defs><pattern id="kph" width="3" height="3" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="3" stroke="currentColor" stroke-width="1.2"/></pattern></defs><rect x="7.5" y="3.5" width="7" height="7" rx="1" fill="url(#kph)" stroke="currentColor" stroke-width="1"/></svg>nur regional</span>
+      <span><svg class="kk" viewBox="0 0 22 14" aria-hidden="true"><circle cx="11" cy="7" r="3.5" class="kf" opacity=".2"/></svg>gilt nicht im gewählten Land</span>
+      <span><svg class="kk" viewBox="0 0 22 14" aria-hidden="true"><path d="M2 8h18M2 5v6M20 5v6" class="kp"/></svg>Betriebspause (Jahre)</span>
+      <span><svg class="kk" viewBox="0 0 22 14" aria-hidden="true"><path d="M8 2v10M8 2l6 2.6L8 7.2" class="ke"/></svg>Fahrplanwechsel</span>
+      <span>Ganz Deutschland: größere Marke = mehr Länder</span>
+    </div>
+    <div class="tkw">
+      <div class="tkl" id="tkl"></div>
+      <div class="tks tk" id="tks" tabindex="0" role="group" aria-label="Taktfahrplan und Fahrplan je Linie 1991–2070. Pfeiltasten links und rechts wechseln das Jahr, hoch und runter die Linie."><svg id="tksvg" aria-hidden="true"></svg></div>
+    </div>
+    <div class="tk-info" id="tkInfo"></div>
+  </section>
+
+  <section class="card bx" id="laender" aria-labelledby="lvTitle">
+    <div class="sh">
+      <h2 class="sign" id="lvTitle"><span class="pk" aria-hidden="true"><svg viewBox="0 0 20 20"><rect x="1.5" y="3" width="7.5" height="14" rx="1.5" fill="currentColor"/><rect x="11" y="3" width="7.5" height="14" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/></svg></span><span class="tx">Gleise im Vergleich <span class="y"></span></span></h2>
+    </div>
+    <p class="hint">Zahl = Feiertage, die auf Mo–Fr fallen. Jede Zeile ist ein Haltestellenschild: Diese Linien halten dort, blasse fallen aufs Wochenende. Antippen wählt das Land.</p>
     <div class="duo">
       <div><div class="tiles" id="tiles"></div><div class="scale" id="scale"></div></div>
       <div class="rank" id="rank"></div>
     </div>
   </section>
 
-  <section class="card">
-    <div class="sh">
-      <div><h2>Jahresblatt <span class="y"></span> · <span class="sn"></span></h2><p class="hint">Jede Zeile ein Monat, jedes Kästchen ein Tag. Rote Kästchen antippen für Details, Punkt = Feiertag nur in anderen Ländern.</p></div>
-      <div class="legend" id="callegend"></div>
-    </div>
-    <div class="yb" id="months"></div>
-    <div class="detail" id="detail"></div>
-  </section>
-
-  <section class="card">
-    <div class="sh">
-      <div><h2>Alle Feiertage <span class="y"></span></h2><p class="hint">Zeile antippen zeigt Details im Jahresblatt, Länderkürzel wählt das Land.</p></div>
-      <div class="seg" role="group" aria-label="Filter">
-        <button id="fWd" aria-pressed="true">Nur Mo–Fr</button>
-        <button id="fAll" aria-pressed="false">Alle</button>
-      </div>
-    </div>
-    <div class="legend"><span><i class="dot f"></i>Feiertag Mo–Fr</span><span><i class="dot o"></i>fällt aufs Wochenende</span><span><i class="dot r"></i>nur in Teilen des Landes</span></div>
-    <div class="mx-wrap"><table id="mx"></table></div>
-  </section>
-
   <section class="notes">
-    <h2>Hinweise</h2>
+    <h2 class="sign"><span class="pk" aria-hidden="true"><svg viewBox="0 0 20 20"><circle cx="10" cy="4" r="2.2" fill="currentColor"/><path d="M10 8.5v9" stroke="currentColor" stroke-width="3.2"/></svg></span><span class="tx">Hinweise</span></h2>
     <ul>
       <li>Maßgeblich ist das Bundesland des Arbeitsorts, nicht des Wohnorts.</li>
       <li>Regional: Fronleichnam gilt in Sachsen und Thüringen nur in einzelnen Gemeinden, Mariä Himmelfahrt in Bayern nur in Gemeinden mit überwiegend katholischer Bevölkerung, das Friedensfest (8. August) nur in Augsburg. Diese Tage zählen nicht in die Landessummen.</li>
@@ -337,8 +617,56 @@ tfoot th.c1{font:500 11px var(--f-mono);text-transform:uppercase;letter-spacing:
   </footer>
 </div>
 
+<script id="feiertage-daten">
+// Rechtslage, rein rechnerisch und ohne DOM – die einzige Quelle dafür, welcher Tag wo frei ist.
+// Jeder Feiertag hat eine feste id. Geprüft gegen tests/golden-holidays.txt (node tests/holidays.test.mjs).
+(function(g){
+const LAENDER=['SH','MV','HB','HH','BE','NW','NI','ST','BB','RP','HE','TH','SN','SL','BW','BY'];
+const pad=n=>String(n).padStart(2,'0');
+const addD=(d,n)=>new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);
+const key=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const XNOTE='Kein gesetzlicher Feiertag, hier optional für alle Länder als frei gewertet.';
+// Gregorianische Osterformel (Meeus/Jones/Butcher)
+function easter(y){const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),kk=c%4,l=(32+2*e+2*i-h-kk)%7,m=Math.floor((a+11*h+22*l)/451),x=h+l-7*m+114;return new Date(y,Math.floor(x/31)-1,(x%31)+1);}
+// holidays(y, {rm,ha,sv}) → [{id, n, d, k, full, reg, note, x?}], nach Datum sortiert.
+// full: Länder, in denen der Tag landesweit gilt; reg: nur in Teilen des Landes (zählt nicht in Summen).
+function holidays(y,ex){
+ ex=ex||{};
+ const E=easter(y),L=[],D=(m,d)=>new Date(y,m-1,d),ALL=LAENDER;
+ const add=(id,n,d,full,reg,note)=>L.push({id,n,d,full,reg:reg||[],note:note||'',k:key(d)});
+ add('neujahr','Neujahr',D(1,1),ALL);
+ add('drei-koenige','Heilige Drei Könige',D(1,6),y>=1993?['BW','BY','ST']:['BW','BY']);
+ const fr=[];if(y>=2019)fr.push('BE');if(y>=2023)fr.push('MV');if(fr.length)add('frauentag','Internationaler Frauentag',D(3,8),fr);
+ add('karfreitag','Karfreitag',addD(E,-2),ALL);
+ add('ostersonntag','Ostersonntag',E,['BB'],[],'Nur Brandenburg führt ihn ausdrücklich als gesetzlichen Feiertag.');
+ add('ostermontag','Ostermontag',addD(E,1),ALL);
+ add('tag-der-arbeit','Tag der Arbeit',D(5,1),ALL);
+ if(y===2020||y===2025)add('befreiung','Tag der Befreiung',D(5,8),['BE'],[],'Einmaliger Feiertag in Berlin.');
+ add('himmelfahrt','Christi Himmelfahrt',addD(E,39),ALL);
+ add('pfingstsonntag','Pfingstsonntag',addD(E,49),['BB'],[],'Nur Brandenburg führt ihn ausdrücklich als gesetzlichen Feiertag.');
+ add('pfingstmontag','Pfingstmontag',addD(E,50),ALL);
+ add('fronleichnam','Fronleichnam',addD(E,60),['BW','BY','HE','NW','RP','SL'],['SN','TH'],'In Sachsen und Thüringen nur in einzelnen Gemeinden.');
+ add('friedensfest','Augsburger Friedensfest',D(8,8),[],['BY'],'Gilt nur im Stadtgebiet Augsburg.');
+ add('mariae-himmelfahrt','Mariä Himmelfahrt',D(8,15),['SL'],['BY'],'In Bayern nur in Gemeinden mit überwiegend katholischer Bevölkerung.');
+ if(y>=2019)add('weltkindertag','Weltkindertag',D(9,20),['TH']);
+ add('einheit','Tag der Deutschen Einheit',D(10,3),ALL);
+ add('reformationstag','Reformationstag',D(10,31),y===2017?ALL:y>=2018?['BB','MV','SN','ST','TH','HB','HH','NI','SH']:['BB','MV','SN','ST','TH'],[],y===2017?'2017 einmalig bundesweit zum 500. Reformationsjubiläum.':'');
+ add('allerheiligen','Allerheiligen',D(11,1),['BW','BY','NW','RP','SL']);
+ let b=D(11,22);while(b.getDay()!==3)b=addD(b,-1);add('buss-und-bettag','Buß- und Bettag',b,y<1995?ALL:['SN'],[],y<1995?'Bis 1994 bundesweit, seit 1995 nur noch in Sachsen.':'');
+ add('weihnachten-1','1. Weihnachtstag',D(12,25),ALL);
+ add('weihnachten-2','2. Weihnachtstag',D(12,26),ALL);
+ if(ex.rm){add('rosenmontag','Rosenmontag',addD(E,-48),ALL,[],XNOTE+' Im Rheinland vielerorts ohnehin arbeitsfrei.');L[L.length-1].x=true;}
+ if(ex.ha){add('heiligabend','Heiligabend',D(12,24),ALL,[],XNOTE);L[L.length-1].x=true;}
+ if(ex.sv){add('silvester','Silvester',D(12,31),ALL,[],XNOTE);L[L.length-1].x=true;}
+ L.sort((a,b)=>a.d-b.d);return L;
+}
+g.FEIERTAGE={LAENDER,easter,holidays,key};
+})(globalThis);
+</script>
 <script>
 (function(){
+'use strict';
+const F=window.FEIERTAGE;
 const STATES=[
  {c:'SH',n:'Schleswig-Holstein',r:0,col:2},{c:'MV',n:'Mecklenburg-Vorpommern',r:0,col:3},
  {c:'HB',n:'Bremen',r:1,col:1},{c:'HH',n:'Hamburg',r:1,col:2},{c:'BE',n:'Berlin',r:1,col:3},
@@ -348,7 +676,8 @@ const STATES=[
 ];
 const BY=Object.fromEntries(STATES.map(s=>[s.c,s]));
 const ALPHA=[...STATES].sort((a,b)=>a.n.localeCompare(b.n,'de'));
-const ALL=STATES.map(s=>s.c);
+// Netzordnung: so sortiert, dass Länder mit gemeinsamen Feiertagen nebeneinander liegen (Linien laufen durch)
+const NETZ=['BE','MV','BB','SN','TH','SH','HH','HB','NI','ST','BW','BY','SL','RP','NW','HE'];
 const WD=['So','Mo','Di','Mi','Do','Fr','Sa'];
 const WDL=['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
 const MON=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
@@ -357,280 +686,615 @@ const dm=d=>pad(d.getDate())+'.'+pad(d.getMonth()+1)+'.';
 const fmt=d=>WD[d.getDay()]+' '+dm(d);
 const isWd=d=>{const w=d.getDay();return w>0&&w<6};
 const addD=(d,n)=>new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);
-const k=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
-const now=new Date();const TODAY=new Date(now.getFullYear(),now.getMonth(),now.getDate());const TK=k(TODAY);
-const YMIN=1991,YMAX=2070;
-let year=Math.min(YMAX,Math.max(YMIN,TODAY.getFullYear()));
-let sel='DE';try{const s=localStorage.getItem('wtf-sel');if(s&&(s==='DE'||BY[s]))sel=s;}catch(e){}
-let onlyWd=true,detailK=null,first=true;
-let extras={rm:false,ha:false,sv:false};try{const x=JSON.parse(localStorage.getItem('wtf-ex')||'{}');for(const kk in extras)if(typeof x[kk]==='boolean')extras[kk]=x[kk];}catch(e){}
-const exKey=()=>(extras.rm?'r':'')+(extras.ha?'h':'')+(extras.sv?'s':'');
-const XNOTE='Kein gesetzlicher Feiertag, hier optional für alle Länder als frei gewertet.';
+const kf=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const now=new Date();const TODAY=new Date(now.getFullYear(),now.getMonth(),now.getDate());const TK=kf(TODAY);const TY=TODAY.getFullYear();
+const YMIN=1991,YMAX=2070;const clampY=y=>Math.min(YMAX,Math.max(YMIN,Math.round(+y)||TY));
+const plural=(n,a,b)=>n===1?a:b;
 const $=id=>document.getElementById(id);
 const stName=c=>c==='DE'?'Ganz Deutschland':BY[c].n;
-const plural=(n,a,b)=>n===1?a:b;
+const daysTo=d=>Math.round((d-TODAY)/864e5);
+const relDays=n=>n===0?'heute':n===1?'morgen':n===-1?'gestern':n>0?`in ${n} Tagen`:`vor ${-n} Tagen`;
+const inDays=d=>relDays(daysTo(d));
+function wdBetween(a,b){let n=0;for(let d=new Date(a);d<b;d=addD(d,1))if(isWd(d))n++;return n;}
+const RM=matchMedia('(prefers-reduced-motion: reduce)');
 
-function easter(y){const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),kk=c%4,l=(32+2*e+2*i-h-kk)%7,m=Math.floor((a+11*h+22*l)/451),x=h+l-7*m+114;return new Date(y,Math.floor(x/31)-1,(x%31)+1);}
+/* ---- Linien: jede id ein Signet aus Form (Kategorie), Farbe und Kürzel ----
+   bg/fg: Schildfarben (Text erfüllt WCAG AA), ed: dunklere Kante für helle Farben auf hellem Grund,
+   dk: aufgehellte Linienfarbe für dunklen Grund. */
+const CATS={
+ bund:{n:'bundesweit',s:'Kreis'},
+ teil:{n:'nur einige Länder',s:'Quadrat'},
+ reg:{n:'nur regional',s:'Raute'},
+ einm:{n:'einmalig',s:'Sechseck'},
+ so:{n:'fällt immer auf Sonntag',s:'Ring'},
+ opt:{n:'optional, kein gesetzlicher Feiertag',s:'Kapsel, gestrichelt'}
+};
+const LN={
+ 'neujahr':{c:'NJ',n:'Neujahr',cat:'bund',bg:'#0369A1',fg:'#FFFFFF',r:'1. Januar'},
+ 'drei-koenige':{c:'3K',n:'Heilige Drei Könige',cat:'teil',bg:'#CA8A04',fg:'#111111',ed:'#9A6A03',r:'6. Januar · ST seit 1993'},
+ 'rosenmontag':{c:'RM',n:'Rosenmontag',cat:'opt',bg:'#F472B6',fg:'#111111',ed:'#B9497F',r:'48 Tage vor Ostersonntag'},
+ 'frauentag':{c:'FT',n:'Internationaler Frauentag',k:'Frauentag',cat:'teil',bg:'#7C3AED',fg:'#FFFFFF',dk:'#9A68F1',r:'8. März · BE seit 2019, MV seit 2023'},
+ 'karfreitag':{c:'KF',n:'Karfreitag',cat:'bund',bg:'#475569',fg:'#FFFFFF',dk:'#8592A6',r:'Freitag vor Ostern'},
+ 'ostersonntag':{c:'OS',n:'Ostersonntag',cat:'so',bg:'#BEF264',fg:'#111111',ed:'#5F7F22',r:'Osterformel · nur BB'},
+ 'ostermontag':{c:'OM',n:'Ostermontag',cat:'bund',bg:'#16A34A',fg:'#111111',ed:'#12823B',r:'Montag nach Ostern'},
+ 'tag-der-arbeit':{c:'TA',n:'Tag der Arbeit',cat:'bund',bg:'#EF4444',fg:'#111111',r:'1. Mai'},
+ 'befreiung':{c:'BF',n:'Tag der Befreiung',cat:'einm',bg:'#0F766E',fg:'#FFFFFF',dk:'#2E9C92',r:'8. Mai · BE nur 2020 und 2025'},
+ 'himmelfahrt':{c:'CH',n:'Christi Himmelfahrt',cat:'bund',bg:'#7DD3FC',fg:'#111111',ed:'#3D84A8',r:'39 Tage nach Ostersonntag'},
+ 'pfingstsonntag':{c:'PS',n:'Pfingstsonntag',cat:'so',bg:'#FDBA74',fg:'#111111',ed:'#A4692F',r:'49 Tage nach Ostersonntag · nur BB'},
+ 'pfingstmontag':{c:'PM',n:'Pfingstmontag',cat:'bund',bg:'#EA580C',fg:'#111111',r:'50 Tage nach Ostersonntag'},
+ 'fronleichnam':{c:'FL',n:'Fronleichnam',cat:'teil',bg:'#A21CAF',fg:'#FFFFFF',dk:'#C04FCB',r:'60 Tage nach Ostersonntag'},
+ 'friedensfest':{c:'AF',n:'Augsburger Friedensfest',k:'Friedensfest',cat:'reg',bg:'#4D7C0F',fg:'#FFFFFF',dk:'#6E9E2E',r:'8. August · nur Stadt Augsburg'},
+ 'mariae-himmelfahrt':{c:'MH',n:'Mariä Himmelfahrt',cat:'teil',bg:'#1D4ED8',fg:'#FFFFFF',dk:'#5479E6',r:'15. August'},
+ 'weltkindertag':{c:'WK',n:'Weltkindertag',cat:'teil',bg:'#22D3EE',fg:'#111111',ed:'#138597',r:'20. September · TH seit 2019'},
+ 'einheit':{c:'TE',n:'Tag der Deutschen Einheit',k:'Deutsche Einheit',cat:'bund',bg:'#111111',fg:'#FACC15',dk:'#FACC15',r:'3. Oktober'},
+ 'reformationstag':{c:'RT',n:'Reformationstag',cat:'teil',bg:'#9F1239',fg:'#FFFFFF',dk:'#C9567A',r:'31. Oktober · 2017 bundesweit'},
+ 'allerheiligen':{c:'AH',n:'Allerheiligen',cat:'teil',bg:'#A8A29E',fg:'#111111',ed:'#77726E',r:'1. November'},
+ 'buss-und-bettag':{c:'BT',n:'Buß- und Bettag',cat:'teil',bg:'#78350F',fg:'#FFFFFF',dk:'#AB7350',r:'Mittwoch vor dem 23. November · bis 1994 bundesweit'},
+ 'heiligabend':{c:'HA',n:'Heiligabend',cat:'opt',bg:'#FDE68A',fg:'#111111',ed:'#8B7A35',r:'24. Dezember'},
+ 'weihnachten-1':{c:'W1',n:'1. Weihnachtstag',cat:'bund',bg:'#C8102E',fg:'#FFFFFF',dk:'#E0465E',r:'25. Dezember'},
+ 'weihnachten-2':{c:'W2',n:'2. Weihnachtstag',cat:'bund',bg:'#14532D',fg:'#FFFFFF',dk:'#4E9A6C',r:'26. Dezember'},
+ 'silvester':{c:'SV',n:'Silvester',cat:'opt',bg:'#312E81',fg:'#FFFFFF',dk:'#7F7BC4',r:'31. Dezember'}
+};
+const ORDER=['neujahr','drei-koenige','rosenmontag','frauentag','karfreitag','ostersonntag','ostermontag','tag-der-arbeit','befreiung','himmelfahrt','pfingstsonntag','pfingstmontag','fronleichnam','friedensfest','mariae-himmelfahrt','weltkindertag','einheit','reformationstag','allerheiligen','buss-und-bettag','heiligabend','weihnachten-1','weihnachten-2','silvester'];
+const EXID={rm:'rosenmontag',ha:'heiligabend',sv:'silvester'};
+// Fremdeingaben (Hash, localStorage, data-*) nur als eigene Schlüssel annehmen – nie „constructor“, „__proto__“ …
+const own=(o,k)=>typeof k==='string'&&Object.prototype.hasOwnProperty.call(o,k);
+const isLand=c=>c==='DE'||own(BY,c);
+const isLine=f=>own(LN,f);
+(function lineCSS(){
+ let a='',d='';
+ ORDER.forEach(id=>{const L=LN[id];
+  a+=`[data-h="${id}"]{--lc:${L.bg};--ls:${L.ed||L.bg};--sbg:${L.bg};--sfg:${L.fg};--edge:${L.ed||'transparent'}}`;
+  const lc=L.dk||L.bg;d+=`[data-h="${id}"]{--lc:${lc};--ls:${lc};--edge:${L.dk?L.dk:'transparent'}}`;});
+ const pre=(sel,css)=>css.replace(/\[data-h=/g,sel+' [data-h=');
+ $('linecss').textContent=a+'@media (prefers-color-scheme:dark){'+pre(':root:not([data-theme="light"])',d)+'}'+pre(':root[data-theme="dark"]',d);
+})();
+const SH={
+ bund:'<circle class="bg" cx="16" cy="16" r="14.8"/>',
+ teil:'<rect class="bg" x="1.4" y="1.4" width="29.2" height="29.2" rx="5"/>',
+ reg:'<path class="bg" d="M16 .4 31.6 16 16 31.6 .4 16Z"/>',
+ einm:'<path class="bg" d="M8.4 1.8h15.2l7.9 14.2-7.9 14.2H8.4L.5 16Z"/>',
+ opt:'<rect class="bg" x=".6" y="4.6" width="30.8" height="22.8" rx="11.4"/><rect class="dash" x="3.2" y="7.2" width="25.6" height="17.6" rx="8.8"/>',
+ so:'<circle class="bg ring" cx="16" cy="16" r="13.4"/>'
+};
+function sig(id,cls){const L=LN[id];return `<svg class="sg sg-${L.cat}${cls?' '+cls:''}" data-h="${id}" viewBox="0 0 32 32" aria-hidden="true" focusable="false">${SH[L.cat]}<text x="16" y="16.6">${L.c}</text></svg>`;}
+function sigAt(id,x,y,s,cls){const L=LN[id];return `<svg class="sg sg-${L.cat}${cls?' '+cls:''}" data-h="${id}" x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${s}" height="${s}" viewBox="0 0 32 32">${SH[L.cat]}<text x="16" y="16.6">${L.c}</text></svg>`;}
+const shape=cat=>`<svg class="shape" viewBox="0 0 32 32" aria-hidden="true">${SH[cat]}</svg>`;
+
+/* ---- Zustand: ein Auswahlmodell für alle Ansichten ---- */
+const S={land:'DE',jahr:Math.min(YMAX,Math.max(YMIN,TY)),fid:null,tag:null};
+const HV={fid:null,land:null,jahr:null};           // flüchtige Vorschau (Hover/Fokus)
+try{const s=localStorage.getItem('wtf-sel');if(isLand(s))S.land=s;}catch(e){}
+let extras={rm:false,ha:false,sv:false};try{const x=JSON.parse(localStorage.getItem('wtf-ex')||'{}');if(x&&typeof x==='object')for(const kk of Object.keys(extras))if(own(x,kk)&&typeof x[kk]==='boolean')extras[kk]=x[kk];}catch(e){}
+const exKey=()=>(extras.rm?'r':'')+(extras.ha?'h':'')+(extras.sv?'s':'');
 const cache={};
-function holidays(y){
- const ck=y+'|'+exKey();if(cache[ck])return cache[ck];
- const E=easter(y),L=[],D=(m,d)=>new Date(y,m-1,d);
- const add=(n,d,full,reg,note)=>L.push({n,d,full,reg:reg||[],note:note||'',k:k(d)});
- add('Neujahr',D(1,1),ALL);
- add('Heilige Drei Könige',D(1,6),y>=1993?['BW','BY','ST']:['BW','BY']);
- const fr=[];if(y>=2019)fr.push('BE');if(y>=2023)fr.push('MV');if(fr.length)add('Internationaler Frauentag',D(3,8),fr);
- add('Karfreitag',addD(E,-2),ALL);
- add('Ostersonntag',E,['BB'],[],'Nur Brandenburg führt ihn ausdrücklich als gesetzlichen Feiertag.');
- add('Ostermontag',addD(E,1),ALL);
- add('Tag der Arbeit',D(5,1),ALL);
- if(y===2020||y===2025)add('Tag der Befreiung',D(5,8),['BE'],[],'Einmaliger Feiertag in Berlin.');
- add('Christi Himmelfahrt',addD(E,39),ALL);
- add('Pfingstsonntag',addD(E,49),['BB'],[],'Nur Brandenburg führt ihn ausdrücklich als gesetzlichen Feiertag.');
- add('Pfingstmontag',addD(E,50),ALL);
- add('Fronleichnam',addD(E,60),['BW','BY','HE','NW','RP','SL'],['SN','TH'],'In Sachsen und Thüringen nur in einzelnen Gemeinden.');
- add('Augsburger Friedensfest',D(8,8),[],['BY'],'Gilt nur im Stadtgebiet Augsburg.');
- add('Mariä Himmelfahrt',D(8,15),['SL'],['BY'],'In Bayern nur in Gemeinden mit überwiegend katholischer Bevölkerung.');
- if(y>=2019)add('Weltkindertag',D(9,20),['TH']);
- add('Tag der Deutschen Einheit',D(10,3),ALL);
- add('Reformationstag',D(10,31),y===2017?ALL:y>=2018?['BB','MV','SN','ST','TH','HB','HH','NI','SH']:['BB','MV','SN','ST','TH'],[],y===2017?'2017 einmalig bundesweit zum 500. Reformationsjubiläum.':'');
- add('Allerheiligen',D(11,1),['BW','BY','NW','RP','SL']);
- let b=D(11,22);while(b.getDay()!==3)b=addD(b,-1);add('Buß- und Bettag',b,y<1995?ALL:['SN'],[],y<1995?'Bis 1994 bundesweit, seit 1995 nur noch in Sachsen.':'');
- add('1. Weihnachtstag',D(12,25),ALL);
- add('2. Weihnachtstag',D(12,26),ALL);
- if(extras.rm){add('Rosenmontag',addD(E,-48),ALL,[],XNOTE+' Im Rheinland vielerorts ohnehin arbeitsfrei.');L[L.length-1].x=true;}
- if(extras.ha){add('Heiligabend',D(12,24),ALL,[],XNOTE);L[L.length-1].x=true;}
- if(extras.sv){add('Silvester',D(12,31),ALL,[],XNOTE);L[L.length-1].x=true;}
- L.sort((a,b)=>a.d-b.d);return cache[ck]=L;
+const hol=y=>{const ck=y+'|'+exKey();return cache[ck]||(cache[ck]=F.holidays(y,extras));};
+const findH=(y,id)=>hol(y).find(h=>h.id===id);
+const applies=(h,L)=>L==='DE'?h.full.length===16:h.full.includes(L);
+function stats(y,c){const H=hol(y),full=H.filter(h=>h.full.includes(c));return{full,wk:full.filter(h=>isWd(h.d)),we:full.filter(h=>!isWd(h.d)),rg:H.filter(h=>h.reg.includes(c)&&isWd(h.d))};}
+const scope=h=>h.full.length===16?'bundesweit':h.full.length?h.full.length+' '+plural(h.full.length,'Land','Länder'):'nur regional';
+const codes=a=>NETZ.filter(c=>a.includes(c)).join(' ');
+const gleise=h=>h.full.length===16?'alle 16':[codes(h.full),h.reg.length?codes(h.reg)+' (reg.)':''].filter(Boolean).join(' · ');
+function readHash(){
+ const p=new URLSearchParams(location.hash.slice(1));
+ const j=p.get('jahr');if(j&&/^\d{4}$/.test(j))S.jahr=clampY(j);
+ const l=p.get('land');if(isLand(l))S.land=l;
+ const f=p.get('linie');S.fid=isLine(f)?f:null;
+ const t=p.get('tag');S.tag=t&&/^\d{4}-\d\d-\d\d$/.test(t)&&+t.slice(0,4)>=YMIN&&+t.slice(0,4)<=YMAX?t:null;
+ if(S.tag)S.jahr=clampY(S.tag.slice(0,4));
 }
-const applies=(h,S)=>S==='DE'?h.full.length===16:h.full.includes(S);
-function stats(y,c){const H=holidays(y),full=H.filter(h=>h.full.includes(c));return{full,wk:full.filter(h=>isWd(h.d)),we:full.filter(h=>!isWd(h.d)),rg:H.filter(h=>h.reg.includes(c)&&isWd(h.d))};}
-const scope=h=>h.full.length===16?'bundesweit':h.full.length+' '+plural(h.full.length,'Land','Länder');
+function writeHash(){
+ const p=new URLSearchParams();p.set('jahr',S.jahr);p.set('land',S.land);if(S.fid)p.set('linie',S.fid);if(S.tag)p.set('tag',S.tag);
+ const h='#'+p.toString();if(location.hash!==h)history.replaceState(null,'',h);
+}
+function normalize(){
+ S.jahr=clampY(S.jahr);
+ if(!isLand(S.land))S.land='DE';
+ if(S.fid&&!isLine(S.fid))S.fid=null;
+ if(S.tag){const L=hol(+S.tag.slice(0,4)).filter(h=>h.k===S.tag);if(!L.length)S.tag=null;else if(!S.fid||!L.some(h=>h.id===S.fid))S.fid=L[0].id;}
+ if(S.fid){const h=findH(S.jahr,S.fid);S.tag=h?h.k:null;}else S.tag=null;
+}
+function commit(p){Object.assign(S,p);normalize();writeHash();renderAll();}
+function setLand(c){if(!isLand(c))c='DE';S.land=c;HV.land=null;HV.fid=null;HV.jahr=null;try{localStorage.setItem('wtf-sel',c);}catch(e){}commit({});}
 
-function renderAnswer(){
- const t=TODAY,S=sel,ty=t.getFullYear();
- const hs=[...holidays(ty),...holidays(ty+1)].filter(h=>h.d>=t);
- const nx=hs.find(h=>applies(h,S)&&isWd(h.d));
- const isToday=nx.k===TK;
- let last=addD(nx.d,-1);while(!isWd(last))last=addD(last,-1);
- let wdc=0;for(let d=new Date(t);d<nx.d;d=addD(d,1))if(isWd(d))wdc++;
- const weB=hs.filter(h=>h.d<nx.d&&!isWd(h.d)&&(S==='DE'?h.full.length>0:h.full.includes(S)));
- const regB=hs.filter(h=>h.d<nx.d&&isWd(h.d)&&(S==="DE"?h.reg.length>0&&h.full.length===0:h.reg.includes(S)));
- let exc=[];
- if(S==='DE'){const g={};STATES.forEach(s=>{const n2=hs.find(h=>h.full.includes(s.c)&&isWd(h.d));if(n2&&n2.d<nx.d)(g[n2.k]=g[n2.k]||{h:n2,st:[]}).st.push(s.n);});exc=Object.values(g).sort((a,b)=>a.h.d-b.h.d);}
- const facts=[];
- facts.push(['Dann frei',`<b>${fmt(nx.d)}${nx.d.getFullYear()!==ty?nx.d.getFullYear():''}</b> · ${nx.n}${S==='DE'?'':' · '+scope(nx)}`]);
- if(S==='DE')facts.push(['Früher frei',exc.length?exc.map(e=>`${e.st.join(', ')}: <b>${fmt(e.h.d)}</b> ${e.h.n}`).join('<br>'):'Kein Land hat vorher einen Werktags-Feiertag.']);
- facts.push(['Aufs Wochenende',weB.length?weB.map(h=>`${h.n} (${fmt(h.d)}${S==='DE'?', '+scope(h):''})`).join(', '):'Bis dahin fällt kein Feiertag aufs Wochenende.']);
- if(regB.length)facts.push(['Nur regional',regB.map(h=>`${h.n} (${fmt(h.d)}) – ${h.note}`).join('<br>')]);
- if(S!=='DE'){const st=stats(ty,S),p=st.wk.filter(h=>h.d<t).length,f=st.wk.length-p;
-  facts.push([`Bilanz ${ty}`,`${st.wk.length} Feiertage Mo–Fr: <b>${p} vorbei</b>, ${f} ${plural(f,'kommt','kommen')} noch · ${st.we.length} ${plural(st.we.length,'fällt','fallen')} aufs Wochenende`]);}
- else{const nat=holidays(ty).filter(h=>h.full.length===16),wk=nat.filter(h=>isWd(h.d)),p=wk.filter(h=>h.d<t).length;
-  facts.push([`Bilanz ${ty}`,`Von 9 bundesweiten Feiertagen liegen ${wk.length} auf Mo–Fr: <b>${p} vorbei</b>, ${wk.length-p} ${plural(wk.length-p,'kommt','kommen')} noch`]);}
- let ticks='';for(let d=new Date(t);d<=nx.d;d=addD(d,1)){const key=k(d);let c='t';if(key===nx.k)c+=' h';else if(!isWd(d))c+=' we';else if(key===TK)c+=' now';ticks+=`<i class="${c}" title="${fmt(d)}"></i>`;}
- const kicker=isToday?'Heute ist':'Normale Arbeitstage bis '+WDL[last.getDay()];
- const big=isToday?'frei':dm(last);
- const sub=isToday?`${nx.n}${S==='DE'?' – bundesweit.':' in '+BY[S].n+'.'}`:`<b>${wdc} ${plural(wdc,'Arbeitstag','Arbeitstage')}</b> am Stück (ab heute), dann ist ${fmt(nx.d)} frei${S==='DE'?' – in allen 16 Ländern':''}.`;
- $('answer').innerHTML=`<div class="ans-grid"><div class="ans-text">
-  <p class="label">Stand heute, ${fmt(t)}${ty} · ${stName(S)}</p>
-  <p class="ans-kicker">${kicker}</p><p class="ans-date">${big}</p><p class="ans-sub">${sub}</p></div>
-  <div class="sheet" aria-label="Nächster freier Werktag"><div class="sh-wd">${WDL[nx.d.getDay()]}</div><div class="sh-day">${nx.d.getDate()}</div><div class="sh-mon">${MON[nx.d.getMonth()]}</div><div class="sh-name">${nx.n}</div></div></div>
-  <div class="ticks-wrap"><div class="ticks">${ticks}</div><div class="ticks-cap"><span>Heute</span><span>Jeder Strich ein Arbeitstag, Lücken sind Wochenenden</span><span>${dm(nx.d)}</span></div></div>
-  <ul class="facts">${facts.map(f=>`<li><span class="fk">${f[0]}</span><span>${f[1]}</span></li>`).join('')}</ul>`;
-}
-
-function renderMap(){
- const counts=STATES.map(s=>stats(year,s.c).wk.length),mn=Math.min(...counts),mx=Math.max(...counts);
- $('tiles').innerHTML=STATES.map((s,i)=>{const n=counts[i],p=Math.round(18+(n-mn)/((mx-mn)||1)*82),fg=p>=58?'var(--on-red)':'var(--ink)';
-  return `<button class="tile${s.span?' span':''}" style="grid-row:${s.r+1};grid-column:${s.col+1}${s.span?' / span 2':''};background:color-mix(in oklab,var(--red) ${p}%,var(--panel));color:${fg}" data-state="${s.c}" aria-pressed="${sel===s.c}" title="${s.n}: ${n} Feiertage Mo–Fr"><span class="tc">${s.c}</span><span class="tn">${n}</span></button>`;}).join('');
- $('scale').innerHTML=`<span>${mn}</span><i></i><span>${mx} Tage</span>`;
-}
-function renderRank(){
- const rows=STATES.map(s=>Object.assign({s},stats(year,s.c))).sort((a,b)=>b.wk.length-a.wk.length||a.s.n.localeCompare(b.s.n,'de'));
- $('rank').innerHTML=rows.map(r=>{
-  const dots=[...r.full.map(h=>({h,cl:isWd(h.d)?'f':'o'})),...r.rg.map(h=>({h,cl:'r'}))].sort((a,b)=>a.h.d-b.h.d)
-   .map(o=>`<i class="dot ${o.cl}${o.h.d<TODAY?' past':''}" title="${fmt(o.h.d)} ${o.h.n}${o.cl==='o'?' – Wochenende':o.cl==='r'?' – regional':''}"></i>`).join('');
-  return `<button class="rk" data-state="${r.s.c}" aria-pressed="${sel===r.s.c}"><span class="rk-n">${r.s.n}</span><span class="rk-d">${dots}</span><span class="rk-c">${r.wk.length}${r.rg.length?`<small>+${r.rg.length} reg.</small>`:''}</span></button>`;}).join('');
-}
-function ensureDetail(){
- const H=holidays(year);if(detailK&&H.some(h=>h.k===detailK))return;
- const rel=h=>sel==='DE'||h.full.includes(sel)||h.reg.includes(sel);
- const nx=H.find(h=>h.d>=TODAY&&rel(h)&&isWd(h.d))||H.find(h=>h.d>=TODAY&&rel(h))||[...H].reverse().find(h=>rel(h)&&isWd(h.d))||H[0];
- detailK=nx.k;
-}
-function renderCal(){
- const H=holidays(year),byK={};H.forEach(h=>(byK[h.k]=byK[h.k]||[]).push(h));
- let html='<span class="yb-m"></span>';
- for(let d=1;d<=31;d++)html+=`<span class="yb-h">${d===1||d%5===0?d:''}</span>`;
- html+='<span class="yb-h yb-n">frei</span>';
- for(let m=0;m<12;m++){
-  const days=new Date(year,m+1,0).getDate();let mc=0,row='';
-  for(let dd=1;dd<=31;dd++){
-   if(dd>days){row+='<span class="c x"></span>';continue;}
-   const d=new Date(year,m,dd),key=k(d),L=byK[key]||[],wd=isWd(d);let cls='c'+(wd?'':' we'),style='';
-   if(L.length){
-    if(sel==='DE'){const set=new Set();L.forEach(h=>h.full.forEach(c=>set.add(c)));const n=set.size;
-     if(n===16){cls+=wd?' hw':' he';if(wd)mc++;}
-     else if(n>0){if(wd){cls+=' hp';style=` style="--mix:${Math.round(22+n/16*48)}%"`;mc++;}else cls+=' he';}
-     else cls+=' rg';}
-    else{const f=L.some(h=>h.full.includes(sel)),r=L.some(h=>h.reg.includes(sel));
-     if(f){cls+=wd?' hw':' he';if(wd)mc++;}else if(r)cls+=' rg';else cls+=' oth';}
-   }
-   if(d<TODAY)cls+=' past';if(key===TK)cls+=' today';if(key===detailK)cls+=' cur';
-   const tt=`${fmt(d)}${year}${key===TK?' · heute':''}${L.length?': '+L.map(h=>h.n).join(', '):''}`;
-   row+=L.length?`<button class="${cls}"${style} data-k="${key}" title="${tt}" aria-label="${tt}"></button>`:`<span class="${cls}" title="${tt}"></span>`;
-  }
-  html+=`<span class="yb-m">${MON[m].slice(0,3)}</span>${row}<span class="yb-n">${mc?mc+'×':''}</span>`;
+/* ---- Abfahrtstafel ---- */
+function flaps(txt,cls,i0){let i=i0||0;return `<span class="flaps ${cls||''}" aria-hidden="true">${txt.split(' ').map(w=>`<span class="w">${[...w].map(ch=>`<b style="--i:${i++}">${ch}</b>`).join('')}</span>`).join('')}</span>`;}
+let boardKey='';
+function renderBoard(){
+ const t=TODAY,L=S.land,ty=TY,key=L+'|'+exKey();
+ if(key===boardKey)return;boardKey=key;
+ const head=`<div class="bd-head"><span class="bd-title" id="bdTitle"><span class="pk" aria-hidden="true"><svg viewBox="0 0 20 20"><rect x="3" y="2" width="14" height="13" rx="3" fill="currentColor"/><rect x="5.5" y="4.5" width="9" height="4.5" rx="1" fill="#ffd400"/><circle cx="7" cy="12" r="1.3" fill="#ffd400"/><circle cx="13" cy="12" r="1.3" fill="#ffd400"/><path d="M6 15l-2.5 4M14 15l2.5 4" stroke="currentColor" stroke-width="2"/></svg></span>Abfahrt ab heute</span><span class="bd-clock">${WDL[t.getDay()]}, ${dm(t)}${ty}</span><span class="bd-gl">Gleis <b>${L}</b></span></div>`;
+ // Daten gibt es nur für 1991–2070: nichts aus 2071 anzeigen
+ const hs=[ty,ty+1].filter(y=>y>=YMIN&&y<=YMAX).flatMap(hol).filter(h=>h.d>=t);
+ const nx=hs.find(h=>applies(h,L)&&isWd(h.d));
+ if(!nx){$('bdMain').innerHTML=head+`<div class="bd-main"><div><p class="bd-k">Fahrplanende</p><p style="margin:0">${flaps('KEIN HALT','xl')}<span class="sr">Kein Halt mehr</span></p><p class="bd-sub">${ty>YMAX||ty<YMIN?'Die Seite rechnet für die Jahre 1991 bis 2070; für heute liegen keine Daten vor.':`Bis Ende 2070 kommt ${L==='DE'?'kein bundesweiter Feiertag':'in '+BY[L].n+' kein Feiertag'} mehr auf einen Werktag. Für die Zeit nach 2070 liegen keine Daten vor.`}</p></div></div>`;$('bdFoot').innerHTML='';return;}
+ const inR=ty>=YMIN&&ty<=YMAX;
+ const isToday=nx.k===TK,nxSame=hs.filter(h=>h.k===nx.k&&h!==nx);
+ const wdc=wdBetween(t,nx.d);
+ let last=null;if(wdc>0){last=addD(nx.d,-1);while(!isWd(last))last=addD(last,-1);}
+ const rows=[];let after=0;
+ for(const h of hs){
+  if(h.d<nx.d){let kind=null;
+   if(L==='DE'){if(h.full.length===16)kind='aus';else if(h.full.length)kind=isWd(h.d)?'frueh':'aus';else if(isWd(h.d))kind='reg';}
+   else if(h.full.includes(L))kind='aus';else if(h.reg.includes(L))kind=isWd(h.d)?'reg':null;else if(h.full.length&&isWd(h.d))kind='durch';
+   if(kind)rows.push({h,kind});}
+  else if(h===nx)rows.push({h,kind:'nx'});
+  else if(applies(h,L)&&isWd(h.d)){rows.push({h,kind:'halt'});if(++after>=3)break;}
  }
- $('months').innerHTML=html;
- $('callegend').innerHTML=sel==='DE'
-  ?`<span><i class="dot f"></i>bundesweit Mo–Fr</span><span><i class="dot" style="background:color-mix(in oklab,var(--red) 40%,var(--panel))"></i>in einzelnen Ländern</span><span><i class="dot o"></i>Wochenende</span>`
-  :`<span><i class="dot f"></i>frei Mo–Fr</span><span><i class="dot o"></i>Wochenende</span><span><i class="dot r"></i>regional</span>`;
+ const ST={nx:['stat-nx','Nächster Halt'],halt:['stat-halt','Halt'],aus:['stat-aus','fällt aus'],frueh:['','früher frei'],durch:['','Durchfahrt'],reg:['','Teilhalt']};
+ const via=r=>{const h=r.h;switch(r.kind){
+  case 'nx':return isToday?'heute frei':wdc?`${wdc} ${plural(wdc,'Arbeitstag','Arbeitstage')} am Stück bis dahin`:'kein Arbeitstag bis dahin';
+  case 'halt':return `${scope(h)} · ${inDays(h.d)}`;
+  case 'aus':return `fällt auf ${WDL[h.d.getDay()]}${L==='DE'?' · '+scope(h):''}`;
+  case 'frueh':return 'nur '+NETZ.filter(c=>h.full.includes(c)).map(c=>BY[c].n).join(', ');
+  case 'durch':return 'hält nicht in '+BY[L].n;
+  case 'reg':return h.note||'nur in Teilen des Landes';}};
+ const alsoOf=h=>hs.filter(x=>x.k===h.k&&x!==h).map(x=>x.n);
+ const list=rows.map(r=>{const h=r.h,[sc,st]=ST[r.kind],also=alsoOf(h);
+  return `<tr class="bk-${r.kind}" data-h="${h.id}" data-k="${h.k}" data-pick="h"><td class="c-t">${fmt(h.d)}${h.d.getFullYear()!==ty?`<small>${h.d.getFullYear()}</small>`:''}</td><td class="c-l"><button data-pick="h" data-h="${h.id}" data-k="${h.k}" aria-label="Linie ${LN[h.id].c}: ${h.n} wählen">${sig(h.id,isWd(h.d)?'':'we')}</button></td><td class="c-z"><span class="zn">${h.n}</span><span class="zv">${via(r)}${also.length?' · zugleich '+also.join(', '):''}</span><span class="zs"><span class="stat ${sc}">${st}</span></span></td><td class="c-g">${gleise(h)}</td><td class="c-s"><span class="stat ${sc}">${st}</span></td></tr>`;}).join('');
+ let ticks='';for(let d=new Date(t);d<=nx.d;d=addD(d,1)){const k=kf(d);if(k===nx.k)break;ticks+=k===TK?'<i class="now"></i>':isWd(d)?'<i class="sl"></i>':'<i></i>';}
+ // Kein Arbeitstag vor dem Halt (z. B. Samstag vor Ostermontag): nicht „bis gestern“ anzeigen, sondern den Halt selbst
+ const nxY=nx.d.getFullYear()!==ty?nx.d.getFullYear():'';
+ const kick=isToday?'Heute ist':wdc?'Normale Arbeitstage bis':'Kein Arbeitstag mehr bis';
+ const bigTxt=isToday?'HEUTE FREI':wdc?WD[last.getDay()].toUpperCase()+' '+dm(last):WD[nx.d.getDay()].toUpperCase()+' '+dm(nx.d);
+ const bigSr=isToday?'heute frei':wdc?WDL[last.getDay()]+', '+dm(last):'(kein Arbeitstag vor dem Halt)';
+ const sub=isToday?`${nx.n}${L==='DE'?' – bundesweit.':' in '+BY[L].n+'.'}`:wdc?`<b>${wdc} ${plural(wdc,'Arbeitstag','Arbeitstage')}</b> am Stück (ab heute), dann ist ${fmt(nx.d)}${nxY} frei${L==='DE'?' – in allen 16 Ländern':''}.`:`Kein Arbeitstag bis dahin: Der nächste Werktag, ${fmt(nx.d)}${nxY}, ist schon frei${L==='DE'?' – in allen 16 Ländern':''}.`;
+ $('bdMain').innerHTML=`${head}
+ <div class="bd-main"><div><p class="bd-k">${kick}</p><p style="margin:0">${flaps(bigTxt,'xl')}<span class="sr">${bigSr}</span></p><p class="bd-sub">${sub}</p></div>
+ <div data-h="${nx.id}"><p class="bd-k">Nächster Halt · ${stName(L)}</p><div class="bd-dest">${sig(nx.id)}<span>${flaps(nx.n.toUpperCase(),'lg',10)}<span class="sr">${nx.n}</span></span></div>${nxSame.map(x=>`<div class="bd-dest bd-also" data-h="${x.id}">${sig(x.id)}<span>zugleich <b>${x.n}</b></span></div>`).join('')}<p class="bd-when">${WDL[nx.d.getDay()]}, ${dm(nx.d)}${nx.d.getFullYear()} <span>· ${scope(nx)} · ${inDays(nx.d)}</span></p></div></div>
+ <div class="trk-wrap" aria-hidden="true"><div class="trk">${ticks}<span class="end">${sig(nx.id)}</span></div><div class="trk-cap"><span>Heute</span><span>Jede Schwelle ein Arbeitstag, Lücken sind Wochenenden</span><span>${dm(nx.d)}</span></div></div>
+ <table class="bd-list"><caption>Weitere Abfahrten${L==='DE'?' – alle Länder':' – Gleis '+L}</caption><thead><tr><th scope="col">Datum</th><th scope="col">Linie</th><th scope="col">Ziel</th><th scope="col" class="c-g">Gleise</th><th scope="col" class="c-s">Hinweis</th></tr></thead><tbody>${list}</tbody></table>`;
+ let bil;
+ if(L!=='DE'){const st=stats(ty,L),p=st.wk.filter(h=>h.d<t).length,f=st.wk.length-p;
+  bil=`${st.wk.length} Feiertage Mo–Fr: <b>${p} vorbei</b>, ${f} ${plural(f,'kommt','kommen')} noch · ${st.we.length} ${plural(st.we.length,'fällt','fallen')} aufs Wochenende`;}
+ else{const nat=hol(ty).filter(h=>h.full.length===16),wk=nat.filter(h=>isWd(h.d)),p=wk.filter(h=>h.d<t).length;
+  bil=`Von ${nat.length} bundesweiten Feiertagen liegen ${wk.length} auf Mo–Fr: <b>${p} vorbei</b>, ${wk.length-p} ${plural(wk.length-p,'kommt','kommen')} noch`;}
+ $('bdFoot').innerHTML=inR?`<div class="bd-foot"><span class="k">Bilanz ${ty}</span><span>${bil}</span></div>`:'';
 }
-function renderDetail(){
- const L=holidays(year).filter(h=>h.k===detailK);if(!L.length){$('detail').innerHTML='';return;}
- const d=L[0].d,diff=Math.round((d-TODAY)/864e5);
- const when=diff===0?'heute':diff>0?`in ${diff} ${plural(diff,'Tag','Tagen')}`:`vor ${-diff} ${plural(-diff,'Tag','Tagen')}`;
- $('detail').innerHTML=L.map(h=>{
-  let status;
-  if(sel==='DE')status=h.full.length===16?(isWd(d)?'Bundesweit frei.':'Bundesweit, fällt aber aufs Wochenende.'):h.full.length?`Feiertag in ${scope(h)}${isWd(d)?'':', fällt aufs Wochenende'}.`:'Nur regional.';
-  else{const s=BY[sel].n;status=h.full.includes(sel)?(isWd(d)?`In ${s} frei.`:`In ${s} Feiertag, fällt aber aufs Wochenende.`):h.reg.includes(sel)?`In ${s} nur regional.`:`In ${s} kein Feiertag.`;}
-  const chips=h.full.length===16?`<span class="chip"><i class="dot ${isWd(d)?'f':'o'}"></i>alle 16 Länder</span>`
-   :[...ALPHA.filter(s=>h.full.includes(s.c)).map(s=>`<button class="chip" data-state="${s.c}"><i class="dot ${isWd(d)?'f':'o'}"></i>${s.n}</button>`),...ALPHA.filter(s=>h.reg.includes(s.c)).map(s=>`<button class="chip" data-state="${s.c}"><i class="dot r"></i>${s.n} (regional)</button>`)].join('');
-  return `<p class="label">${WDL[d.getDay()]}, ${dm(d)}${year} · ${when}</p><h4>${h.n}</h4><p>${status}${h.note?' '+h.note:''}</p><div class="chips">${chips}</div>`;}).join('');
+function nextOcc(id,L){
+ const rel=h=>L==='DE'?(h.full.length?'f':h.reg.length?'r':''):(h.full.includes(L)?'f':h.reg.includes(L)?'r':'');
+ let first=null;
+ for(let y=Math.max(TY,YMIN);y<=YMAX;y++){const h=findH(y,id);if(!h||h.d<TODAY)continue;const r=rel(h);if(!r)continue;if(!first)first={h,r};if(r==='f'&&isWd(h.d))return{first,stop:h};}
+ let lastP=null;for(let y=Math.min(TY,YMAX);y>=YMIN;y--){const h=findH(y,id);if(h&&h.d<TODAY&&rel(h)){lastP=h;break;}}
+ return{first,stop:null,lastP};
 }
-function renderMatrix(){
- const H=holidays(year).filter(h=>!onlyWd||isWd(h.d)),cur=year===TODAY.getFullYear();
- const trow=`<tr class="trow"><td colspan="17"><div class="tline">Heute · ${fmt(TODAY)}</div></td></tr>`;
- let rows='',done=!cur;
- H.forEach(h=>{if(!done&&h.d>=TODAY){rows+=trow;done=true;}
-  const cells=ALPHA.map(s=>{const f=h.full.includes(s.c),r=h.reg.includes(s.c),cl=f?(isWd(h.d)?'f':'o'):r?'r':'n';return `<td class="${sel===s.c?'on':''}"><i class="dot ${cl}"></i></td>`;}).join('');
-  rows+=`<tr class="${h.d<TODAY?'past':''}${isWd(h.d)?'':' wkend'}" data-k="${h.k}"><th class="c1" scope="row"><span class="c-date">${fmt(h.d)}</span><span class="c-name">${h.n}${h.x?' <span class="xtag">optional</span>':''}</span></th>${cells}</tr>`;});
- if(!done)rows+=trow;
- const st=ALPHA.map(s=>stats(year,s.c));
- let foot=`<tr><th class="c1">Mo–Fr gesamt</th>${st.map((x,i)=>`<td class="${sel===ALPHA[i].c?'on':''}">${x.wk.length}</td>`).join('')}</tr>`;
- if(year>=TODAY.getFullYear()&&cur)foot+=`<tr><th class="c1">Noch offen</th>${st.map((x,i)=>`<td class="${sel===ALPHA[i].c?'on':''}">${x.wk.filter(h=>h.d>=TODAY).length}</td>`).join('')}</tr>`;
- $('mx').innerHTML=`<thead><tr><th class="c1">Datum · Feiertag</th>${ALPHA.map(s=>`<th class="st${sel===s.c?' on':''}"><button data-state="${s.c}" title="${s.n}">${s.c}</button></th>`).join('')}</tr></thead><tbody>${rows}</tbody><tfoot>${foot}</tfoot>`;
+let lineKey='';
+function renderBoardLine(){
+ const f=HV.fid||S.fid,key=(f||'')+'|'+S.land+'|'+exKey();if(key===lineKey)return;lineKey=key;
+ const el=$('bdLine');
+ if(!f){el.innerHTML=`<div class="bd-line off">Linie wählen (Signet, Station oder Eintrag im Linienverzeichnis antippen), dann zeigt die Tafel ihren nächsten Halt${S.land==='DE'?'':' auf Gleis '+S.land}.</div>`;return;}
+ const L=LN[f],o=nextOcc(f,S.land),where=S.land==='DE'?'':' in '+BY[S.land].n;
+ let t;
+ if(o.stop&&o.first.h===o.stop)t=`nächster Halt${where}: <b>${WDL[o.stop.d.getDay()]}, ${dm(o.stop.d)}${o.stop.d.getFullYear()}</b> · ${inDays(o.stop.d)}${S.land==='DE'?' · '+gleise(o.stop):''}`;
+ else if(o.stop)t=`nächstes Mal${where} ${fmt(o.first.h.d)}${o.first.h.d.getFullYear()} – ${o.first.r==='r'?'nur in Teilen des Landes':isWd(o.first.h.d)?'':'fällt aufs Wochenende'}; nächster freier Werktag: <b>${fmt(o.stop.d)}${o.stop.d.getFullYear()}</b>`;
+ else if(o.first)t=o.first.r==='r'?`gilt bis Ende 2070${where} nur regional, nächstes Mal ${fmt(o.first.h.d)}${o.first.h.d.getFullYear()}`:`fällt bis Ende 2070${where} auf keinen Werktag mehr – nächstes Mal ${fmt(o.first.h.d)}${o.first.h.d.getFullYear()}, am Wochenende`;
+ else if(o.lastP)t=`verkehrt bis Ende 2070${where} nicht mehr – zuletzt <b>${fmt(o.lastP.d)}${o.lastP.d.getFullYear()}</b>`;
+ else t=`hält${where} nicht${extras[Object.keys(EXID).find(k=>EXID[k]===f)]===false?' – oben zuschalten':''}`;
+ const sd=o.stop?hol(o.stop.d.getFullYear()).filter(x=>x.k===o.stop.k&&x.id!==f):[];if(sd.length)t+=` · am selben Tag auch ${sd.map(x=>x.n).join(', ')}`;
+ el.innerHTML=`<div class="bd-line on" data-h="${f}">${sig(f)}<span class="bl-n">${L.n}</span><span class="bl-t">${t}</span></div>`;
 }
-/* ---- Liniendiagramm ---- */
+
+/* ---- Liniennetzplan ---- */
+const setP=(e,v)=>{v=String(v);if(e.getAttribute('aria-pressed')!==v)e.setAttribute('aria-pressed',v);};
+let netzAll=true,LA={},laKey='',netzKey='',jsKey='',vzKey='',lvKey='';
+function computeLA(){
+ const k=S.jahr+'|'+exKey();if(k===laKey)return;laKey=k;
+ const H=hol(S.jahr);LA={};
+ NETZ.forEach(c=>{const f=[],w=[],r=[];H.forEach(h=>{if(h.full.includes(c))(isWd(h.d)?f:w).push(h.id);else if(h.reg.includes(c))r.push(h.id);});LA[c]=`data-hf="${f.join(' ')}" data-hw="${w.join(' ')}" data-hr="${r.join(' ')}"`;});
+}
+function renderNetz(){
+ const nk=[S.jahr,S.land,exKey(),netzAll].join('|');
+ if(nk===netzKey){$('np').querySelectorAll('.stb').forEach(b=>setP(b,b.dataset.h===S.fid));return;}netzKey=nk;
+ const y=S.jahr,cur=y===TY,H=hol(y).filter(h=>netzAll||isWd(h.d));
+ const nowAt=cur?H.findIndex(h=>h.d>=TODAY):-2;
+ const st=(h,c)=>h.full.includes(c)?(isWd(h.d)?'f':'w'):h.reg.includes(c)?'r':'';
+ const STL={f:'frei',w:'Feiertag, fällt aufs Wochenende',r:'nur in Teilen des Landes'};
+ let cg='<colgroup><col class="c-lb">';H.forEach((h,i)=>{if(i===nowAt)cg+='<col class="c-now">';cg+='<col>';});if(nowAt===-1)cg+='<col class="c-now">';cg+='<col class="c-tot"></colgroup>';
+ const nowTh=`<th class="nowc" scope="col"><span class="nowlab" aria-hidden="true">heute · ${dm(TODAY)}</span><span class="nowpin"></span><span class="sr">Heute, ${fmt(TODAY)}</span></th>`;
+ let th='<tr><th class="lbh" scope="col">Gleis</th>';
+ H.forEach((h,i)=>{if(i===nowAt)th+=nowTh;const wd=isWd(h.d);
+  th+=`<th class="st${wd?'':' we'}${h.d<TODAY?' past':''}" data-h="${h.id}" scope="col"><button class="stb" data-pick="h" data-h="${h.id}" data-k="${h.k}" aria-pressed="${S.fid===h.id}" aria-label="${LN[h.id].c} ${h.n}, ${WDL[h.d.getDay()]} ${dm(h.d)}${y}${wd?'':', Wochenende'}"><span class="nm">${LN[h.id].k||h.n}</span>${sig(h.id,wd?'':'we')}<span class="dt">${WD[h.d.getDay()]}<br>${dm(h.d)}</span></button></th>`;});
+ if(nowAt===-1)th+=nowTh;
+ th+=`<th class="tot" scope="col">Mo–Fr</th></tr>`;
+ const sel=S.land!=='DE'?S.land:null;
+ let fz={};if(sel){const st2=stats(y,sel).wk.filter(h=>netzAll||true);for(let i=0;i<st2.length-1;i++)fz[st2[i].id]=wdBetween(addD(st2[i].d,1),st2[i+1].d);}
+ let body='';
+ NETZ.forEach((c,ri)=>{
+  const prev=NETZ[ri-1],next=NETZ[ri+1];
+  let row=`<th class="lb" scope="row"><button class="lbb" data-pick="l" data-l="${c}" aria-pressed="${S.land===c}" title="${BY[c].n}"><span class="gp">${c}</span><span class="ln">${BY[c].n}</span></button></th>`;
+  H.forEach((h,i)=>{if(i===nowAt)row+='<td class="nowc"></td>';
+   const s=st(h,c);
+   if(!s){row+=`<td data-h="${h.id}"></td>`;return;}
+   const u=prev&&st(h,prev),d=next&&st(h,next);
+   const fzl=c===sel&&s==='f'&&fz[h.id]!=null?`<span class="fz${i+1===nowAt||(nowAt===-1&&i===H.length-1)?' fzl':''}" title="${fz[h.id]} Arbeitstage bis zum nächsten Halt">${fz[h.id]}</span>`:'';
+   row+=`<td class="s ${s}${h.x?' x':''}${h.d<TODAY?' past':''}" data-h="${h.id}" title="${BY[c].n} · ${h.n}, ${fmt(h.d)}: ${STL[s]}"><i class="v${u?' u':''}${d?' d':''}"></i><i class="m"></i>${fzl}</td>`;});
+  if(nowAt===-1)row+='<td class="nowc"></td>';
+  const x=stats(y,c),open=x.wk.filter(h=>h.d>=TODAY).length;
+  row+=`<td class="tot" title="${BY[c].n}: ${x.wk.length} Feiertage Mo–Fr${x.rg.length?', dazu '+x.rg.length+' nur regional':''}${cur?', '+open+' noch offen':''}"><b>${x.wk.length}</b>${x.rg.length?`<em>+${x.rg.length} reg.</em>`:''}${cur?`<small>${open} offen</small>`:''}</td>`;
+  body+=`<tr data-l="${c}" ${LA[c]}>${row}</tr>`;
+ });
+ $('npKeyFz').innerHTML=sel?`<span class="fzk">12</span>Arbeitstage bis zum nächsten Halt in ${BY[sel].n}`:'';
+ $('np').style.setProperty('--n',H.length);
+ $('np').innerHTML=`<caption class="sr">Liniennetz ${y}: Zeilen sind die Länder, Spalten die Feiertage</caption>${cg}<thead>${th}</thead><tbody>${body}</tbody>`;
+}
+const wdIdx=d=>(d.getDay()+6)%7; // Mo=0 … So=6
+const occC={};
+function occ(id){const ck=id+'|'+exKey();if(occC[ck])return occC[ck];const w=[0,0,0,0,0,0,0];let n=0;for(let y=YMIN;y<=YMAX;y++){const h=findH(y,id);if(h){w[wdIdx(h.d)]++;n++;}}return occC[ck]={w,n};}
+let ldetKey='';
+function renderLdet(){
+ const f=HV.fid||S.fid,yv=(HV.fid&&HV.jahr)||S.jahr,key=(f||'')+'|'+yv+'|'+S.land+'|'+exKey()+'|'+S.fid;if(key===ldetKey)return;ldetKey=key;
+ const el=$('ldet');
+ if(!f){el.className='ldet empty';el.innerHTML=`Keine Linie gewählt. Eine Station im Netz, ein Signet oder ein Eintrag im Linienverzeichnis zeigt hier ihren Steckbrief – und hebt sie in allen Ansichten hervor.`;return;}
+ el.className='ldet';
+ const L=LN[f],y=yv,h=findH(y,f),o=occ(f),mx=Math.max(...o.w,1);
+ let when='',status='',chips='',same='';
+ if(h){const dd=daysTo(h.d);when=`<b>${WDL[h.d.getDay()]}, ${dm(h.d)}${y}</b> · ${isWd(h.d)?'Mo–Fr':'Wochenende'} · ${relDays(dd)}`;
+  if(S.land==='DE')status=h.full.length===16?(isWd(h.d)?'Bundesweit frei.':'Bundesweit, fällt aber aufs Wochenende.'):h.full.length?`Feiertag in ${h.full.length} ${plural(h.full.length,'Land','Ländern')}${isWd(h.d)?'':', fällt aufs Wochenende'}.`:'Nur regional.';
+  else{const s=BY[S.land].n;status=h.full.includes(S.land)?(isWd(h.d)?`In ${s} frei.`:`In ${s} Feiertag, fällt aber aufs Wochenende.`):h.reg.includes(S.land)?`In ${s} nur regional.`:`In ${s} kein Feiertag.`;}
+  if(h.note)status+=' '+h.note;
+  const sm=hol(y).filter(x=>x.k===h.k&&x.id!==f);
+  if(sm.length)same=`<div class="same"><span>Am selben Tag:</span>${sm.map(x=>`<button class="chip" data-pick="h" data-h="${x.id}" data-k="${x.k}">${sig(x.id)}${x.n} – umschalten</button>`).join('')}</div>`;
+  chips=h.full.length===16?'<span class="chip"><span class="gp">16</span>alle Länder</span>':[...NETZ.filter(c=>h.full.includes(c)).map(c=>`<button class="chip" data-pick="l" data-l="${c}"><span class="gp">${c}</span>${BY[c].n}</button>`),...NETZ.filter(c=>h.reg.includes(c)).map(c=>`<button class="chip rg" data-pick="l" data-l="${c}"><span class="gp">${c}</span>${BY[c].n} (regional)</button>`)].join('');}
+ else{when=`verkehrt ${y} nicht`;status=L.cat==='opt'?'Optionaler Tag – oben zuschalten, dann rechnen alle Ansichten mit.':`${L.n}: ${L.r}.`;}
+ const bars=o.w.map((v,i)=>`<span class="${i>4?'we':''}"><i style="height:${Math.round(v/mx*30)}px"></i>${['Mo','Di','Mi','Do','Fr','Sa','So'][i]}</span>`).join('');
+ const wk=o.w.slice(0,5).reduce((a,b)=>a+b,0);
+ el.innerHTML=`<div class="ld-h">${sig(f)}<div><h3 data-h="${f}">${L.n}<small>Linie ${L.c} · ${CATS[L.cat].n} · ${L.r}</small></h3><p class="meta">${when}</p></div></div><p>${status}</p>${same}${chips?`<div class="chips">${chips}</div>`:''}<div data-h="${f}"><p class="meta">1991–2070: ${o.n} ${plural(o.n,'Termin','Termine')}, davon <b>${wk}× Mo–Fr</b> und ${o.n-wk}× am Wochenende</p><div class="wdh" aria-hidden="true">${bars}</div></div>`;
+}
+
+/* ---- Jahresstrecke ---- */
+function renderStrecke(){
+ const jk=[S.jahr,S.land,exKey()].join('|');if(jk===jsKey)return;jsKey=jk;
+ const y=S.jahr,H=hol(y),byK={},L=S.land;H.forEach(h=>(byK[h.k]=byK[h.k]||[]).push(h));
+ const rank=h=>L==='DE'?(h.full.length?2:1):(h.full.includes(L)?3:h.reg.includes(L)?2:1);
+ let html='<span class="js-m"></span>';for(let d=1;d<=31;d++)html+=`<span class="js-h">${d===1||d%5===0?d:''}</span>`;html+='<span class="js-h">frei</span>';
+ for(let m=0;m<12;m++){
+  const dim=new Date(y,m+1,0).getDate();let mc=0,row='';
+  for(let dd=1;dd<=31;dd++){
+   if(dd>dim){row+='<span class="d x"></span>';continue;}
+   const d=new Date(y,m,dd),key=kf(d),wd=isWd(d),past=d<TODAY?' past':'',today=key===TK?' today':'';
+   const Ls=byK[key];
+   if(Ls){const srt=[...Ls].sort((a,b)=>rank(b)-rank(a)),relOf=h=>L==='DE'?(h.full.length?'f':'r'):(h.full.includes(L)?'f':h.reg.includes(L)?'r':'o');
+    if(wd&&srt.some(h=>applies(h,L)))mc++;
+    const btn=(h,cls)=>{const rel=relOf(h),lab=`${fmt(d)}${y}: ${h.n}${Ls.length>1?' (zugleich '+Ls.filter(x=>x!==h).map(x=>x.n).join(', ')+')':''}${rel==='o'?' – nicht in '+BY[L].n:rel==='r'?' – nur regional':''}${wd?'':' – Wochenende'}`;
+     return `<button class="${cls} ${rel}" data-pick="h" data-h="${h.id}" data-k="${key}" title="${lab}" aria-label="${lab}">${sig(h.id,wd?'':'we')}</button>`;};
+    if(srt.length===1)row+=btn(srt[0],`d h ${wd?'wd':'we'}${past}${today}`);
+    else row+=`<span class="d h2 ${wd?'wd':'we'}${past}${today}">${srt.map(h=>btn(h,'dh')).join('')}</span>`;}
+   else row+=`<span class="d ${wd?'wd':'we'}${past}${today}"${today?' title="heute"':''}></span>`;
+  }
+  html+=`<span class="js-m">${MON[m].slice(0,3)}</span>${row}<span class="js-n">${mc?mc+'×':''}</span>`;
+ }
+ $('js').innerHTML=html;
+}
+
+/* ---- Linienverzeichnis ---- */
+function renderVerz(){
+ const vk=[S.jahr,S.land,exKey()].join('|');
+ if(vk===vzKey){$('vz').querySelectorAll('.vz').forEach(b=>setP(b,b.dataset.h===S.fid));$('vz').querySelectorAll('[data-ex]').forEach(b=>setP(b,extras[b.dataset.ex]));return;}vzKey=vk;
+ const y=S.jahr,H=hol(y),byId={};H.forEach(h=>{if(!byId[h.id])byId[h.id]=h;});
+ const exOf=id=>Object.keys(EXID).find(k=>EXID[k]===id);
+ $('vz').innerHTML=Object.keys(CATS).map(cat=>{
+  const ids=ORDER.filter(id=>LN[id].cat===cat);
+  return `<div class="vz-cat"><h3>${shape(cat)}${CATS[cat].n}<small>${CATS[cat].s}</small></h3><ul>${ids.map(id=>{const L=LN[id],h=byId[id];
+   const Ld=S.land,na=Ld!=='DE'&&(!h||(!h.full.includes(Ld)&&!h.reg.includes(Ld)));
+   const yv=h?`<span class="vz-y${isWd(h.d)?'':' we'}">${fmt(h.d)}</span><span class="vz-g">${Ld==='DE'?gleise(h):gleise(h).replace(new RegExp('\\b'+Ld+'\\b'),'<b>'+Ld+'</b>')}</span>`:`<span class="vz-y na">${L.cat==='opt'?'aus':'nicht '+y}</span><span class="vz-g"></span>`;
+   const ex=exOf(id);
+   return `<li><button class="vz dm${na?' na':''}" data-pick="h" data-h="${id}" aria-pressed="${S.fid===id}" aria-label="Linie ${L.c}: ${L.n}">${sig(id,h&&!isWd(h.d)?'':'')}<span class="vz-n">${L.n}</span><span class="vz-r">${L.c} · ${L.r}</span>${yv}</button>${ex?`<div class="vz-x"><button data-ex="${ex}" aria-pressed="${extras[ex]}">als frei werten</button></div>`:''}</li>`;}).join('')}</ul></div>`;}).join('');
+}
+
+/* ---- Taktfahrplan (Land × Jahr) + Fahrplan 1991–2070 (eine Spur je Linie) ---- */
 const YEARS=[];for(let y=YMIN;y<=YMAX;y++)YEARS.push(y);
-let metric='wk',rng='all',hovY=null,hotG=-1,TG=null;const sCache={};
+let tkMetric='wk',tkRange='all',TKG=null,tkJ=-1,tkKey='';
 const EVENTS={1993:'Sachsen-Anhalt führt den 6. Januar ein',1995:'Buß- und Bettag entfällt, außer in Sachsen',2017:'Reformationstag einmalig bundesweit',2018:'Reformationstag neu in HB, HH, NI, SH',2019:'Neu: Frauentag in BE, Weltkindertag in TH',2020:'Berlin: 8. Mai einmalig frei',2023:'Neu: Frauentag in MV',2025:'Berlin: 8. Mai einmalig frei'};
-function seriesAll(){
- const sk=metric+'|'+exKey();if(sCache[sk])return sCache[sk];const o={};
- STATES.forEach(s=>{o[s.c]=YEARS.map(y=>{const x=stats(y,s.c);return metric==='wk'?x.wk.length:x.we.length;});});
- return sCache[sk]=o;
-}
-const fmtN=v=>v.toFixed(1).replace('.',',');
+const EVH={1993:['drei-koenige'],1995:['buss-und-bettag'],2017:['reformationstag'],2018:['reformationstag'],2019:['frauentag','weltkindertag'],2020:['befreiung'],2023:['frauentag'],2025:['befreiung']};
+const serC={};
+function series(){const sk=tkMetric+'|'+exKey();if(serC[sk])return serC[sk];const o={};NETZ.forEach(c=>{o[c]=YEARS.map(y=>{const x=stats(y,c);return tkMetric==='wk'?x.wk.length:x.we.length;});});return serC[sk]=o;}
 function viewYears(){
- if(rng==='mid')return YEARS.filter(y=>y>=2000&&y<=2040);
- if(rng==='near'){let b=Math.min(YMAX,year+10),a=Math.max(YMIN,b-20);b=Math.min(YMAX,a+20);return YEARS.filter(y=>y>=a&&y<=b);}
+ if(tkRange==='mid')return YEARS.filter(y=>y>=2000&&y<=2040);
+ if(tkRange==='near'){let b=Math.min(YMAX,S.jahr+10),a=Math.max(YMIN,b-20);b=Math.min(YMAX,a+20);return YEARS.filter(y=>y>=a&&y<=b);}
  return YEARS;
 }
-function renderTrend(){
- const el=$('chart'),W=Math.max(300,Math.floor(el.clientWidth||600)),narrow=W<560,H=narrow?270:350;
- const S=seriesAll(),VY=viewYears(),i0=YEARS.indexOf(VY[0]),n=VY.length,sl=a=>a.slice(i0,i0+n),gm={};
- ALPHA.forEach(s=>{const v=sl(S[s.c]),key=v.join(',');(gm[key]=gm[key]||{v,st:[]}).st.push(s.c);});
- const G=Object.values(gm).map(g=>Object.assign(g,{mean:g.v.reduce((a,b)=>a+b,0)/g.v.length})).sort((a,b)=>a.mean-b.mean);
- const avg=VY.map((_,i)=>ALPHA.reduce((a,s)=>a+S[s.c][i0+i],0)/16);
- const all=G.flatMap(g=>g.v),lo=Math.min(...all),hi=Math.max(...all);
- const m={l:30,r:narrow?12:122,t:30,b:30},pw=W-m.l-m.r,ph=H-m.t-m.b,y0=lo-0.6,y1=hi+0.6,step=pw/(n-1);
- const X=i=>m.l+i*step,Yv=v=>m.t+(y1-v)/(y1-y0)*ph,f1=v=>v.toFixed(1);
- G.forEach((g,i)=>{g.o=(i-(G.length-1)/2)*1.4;g.pts=g.v.map((v,j)=>[X(j),Yv(v)+g.o]);g.d='M'+g.pts.map(p=>f1(p[0])+','+f1(p[1])).join('L');});
- const ty=TODAY.getFullYear(),ti=VY.indexOf(ty),yi=VY.indexOf(year);
- let s=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Liniendiagramm: ${metric==='wk'?'Feiertage Montag bis Freitag':'Feiertage am Wochenende'} je Bundesland, ${VY[0]} bis ${VY[n-1]}">`;
- if(ti>=0&&ti<n-1)s+=`<rect class="fut" x="${f1(X(ti))}" y="${m.t}" width="${f1(X(n-1)-X(ti))}" height="${ph}"/>`;
- else if(VY[0]>ty)s+=`<rect class="fut" x="${m.l}" y="${m.t}" width="${pw}" height="${ph}"/>`;
- const pastTxt=narrow?'← bisher':'← Vergangenheit',futTxt=narrow?'Prognose →':'Prognose nach heutigem Recht →';
- if(ti>0)s+=`<text class="era" x="${f1(X(ti)-7)}" y="${m.t-12}" text-anchor="end">${pastTxt}</text>`;
- if(ti>=0&&ti<n-1)s+=`<text class="era" x="${f1(X(ti)+7)}" y="${m.t-12}">${futTxt}</text>`;
- else if(VY[0]>ty)s+=`<text class="era" x="${m.l}" y="${m.t-12}">${futTxt}</text>`;
- else if(VY[n-1]<ty)s+=`<text class="era" x="${W-m.r}" y="${m.t-12}" text-anchor="end">${pastTxt}</text>`;
- if(yi>=0)s+=`<rect class="band" x="${f1(X(yi)-step/2)}" y="${m.t}" width="${f1(step)}" height="${ph}"/>`;
- s+='<g class="grid">';
- for(let v=Math.ceil(y0);v<=Math.floor(y1);v++)s+=`<line x1="${m.l}" x2="${W-m.r}" y1="${f1(Yv(v))}" y2="${f1(Yv(v))}"/><text class="ax" x="${m.l-8}" y="${f1(Yv(v)+4)}" text-anchor="end">${v}</text>`;
- s+='</g>';
- if(ti>=0)s+=`<line class="nowl" x1="${f1(X(ti))}" x2="${f1(X(ti))}" y1="${m.t-6}" y2="${H-m.b}"/>`;
- VY.forEach((y,j)=>{if(EVENTS[y])s+=`<line class="evl" x1="${f1(X(j))}" x2="${f1(X(j))}" y1="${m.t}" y2="${H-m.b}"/><circle class="evd" cx="${f1(X(j))}" cy="${H-m.b}" r="3"/>`;});
- const tstep=n<=16?(narrow?2:1):n<=45?5:(narrow&&n>60?20:10);
- VY.forEach((y,j)=>{const show=tstep<=2?j%tstep===0:y%tstep===0;if(!show)return;
-  s+=`<text class="ax${y===year?' cury':''}" x="${f1(X(j))}" y="${H-9}" text-anchor="middle">${tstep<=2&&narrow?"'"+String(y).slice(2):y}</text>`;});
- s+=`<path class="avg" d="M${avg.map((v,j)=>f1(X(j))+','+f1(Yv(v))).join('L')}"/>`;
- G.forEach((g,i)=>{s+=`<path class="ln${g.st.includes(sel)?' sel':''}" data-g="${i}" d="${g.d}"/>`;});
- const sg=G.findIndex(g=>g.st.includes(sel));
- if(sg>=0&&step>=9)G[sg].pts.forEach(p=>{s+=`<circle class="pt sel" cx="${f1(p[0])}" cy="${f1(p[1])}" r="3"/>`;});
- s+='<g id="hov"></g>';
- if(!narrow){
-  const items=G.map((g,i)=>({i,y:g.pts[n-1][1],t:g.st.join('·')}));items.push({i:-1,y:Yv(avg[n-1]),t:'Ø '+fmtN(avg[n-1])});
-  items.sort((a,b)=>a.y-b.y);for(let q=1;q<items.length;q++)if(items[q].y<items[q-1].y+13)items[q].y=items[q-1].y+13;
-  const lim=H-m.b+2;if(items[items.length-1].y>lim){items[items.length-1].y=lim;for(let q=items.length-2;q>=0;q--)if(items[q].y>items[q+1].y-13)items[q].y=items[q+1].y-13;}
-  items.forEach(it=>{s+=`<text class="lb${it.i<0?' av':''}${it.i>=0&&it.i===sg?' sel':''}" data-g="${it.i}" x="${W-m.r+10}" y="${f1(it.y+4)}">${it.t}</text>`;});
- }
- s+=`<rect id="ov" x="${f1(m.l-step/2)}" y="0" width="${f1(pw+step)}" height="${H}" fill="transparent" style="cursor:pointer"/></svg>`;
- el.innerHTML=s;
- TG={G,avg,X,m,W,H,pw,step,n,el,VY};
- const svg=el.querySelector('svg'),ov=$('ov');
- ov.addEventListener('pointermove',e=>{
-  const r=svg.getBoundingClientRect(),sx=(e.clientX-r.left)*(W/r.width),sy=(e.clientY-r.top)*(H/r.height);
-  const fx=Math.max(0,Math.min(n-1,(sx-m.l)/step)),j=Math.round(fx),j0=Math.floor(fx),j1=Math.min(n-1,j0+1),t=fx-j0;
-  let best=-1,bd=9;G.forEach((g,i)=>{const yy=g.pts[j0][1]*(1-t)+g.pts[j1][1]*t,dd=Math.abs(yy-sy);if(dd<bd){bd=dd;best=i;}});
-  const ch=VY[j]!==hovY;hovY=VY[j];hotG=best;if(ch)updateHover();updateHot();
- });
- ov.addEventListener('pointerleave',()=>{hovY=null;hotG=-1;updateHover();updateHot();});
- ov.addEventListener('click',()=>{if(hovY!=null&&hovY!==year){year=hovY;hovY=null;detailK=null;render();}});
- updateHover();updateHot();
+const f1=v=>v.toFixed(1);
+const narrowTk=()=>matchMedia('(max-width:700px)').matches;
+// Marke in Form der Linienkategorie (klein, ohne Kürzel)
+function mark(cat,cx,cy,r,cls,fill){const a=fill?` style="fill:${fill}"`:'',c=`class="${cls}"`;
+ switch(cat){
+  case 'teil':return `<rect ${c}${a} x="${f1(cx-r*.9)}" y="${f1(cy-r*.9)}" width="${f1(r*1.8)}" height="${f1(r*1.8)}" rx="1"/>`;
+  case 'reg':return `<path ${c}${a} d="M${f1(cx)},${f1(cy-r*1.15)}l${f1(r*1.15)},${f1(r*1.15)}l${f1(-r*1.15)},${f1(r*1.15)}l${f1(-r*1.15)},${f1(-r*1.15)}Z"/>`;
+  case 'einm':return `<path ${c}${a} d="M${f1(cx-r*.55)},${f1(cy-r)}h${f1(r*1.1)}l${f1(r*.55)},${f1(r)}l${f1(-r*.55)},${f1(r)}h${f1(-r*1.1)}l${f1(-r*.55)},${f1(-r)}Z"/>`;
+  case 'opt':return `<rect ${c}${a} x="${f1(cx-r*1.25)}" y="${f1(cy-r*.75)}" width="${f1(r*2.5)}" height="${f1(r*1.5)}" rx="${f1(r*.75)}"/>`;
+  default:return `<circle ${c}${a} cx="${f1(cx)}" cy="${f1(cy)}" r="${f1(r)}"/>`;}
 }
-function updateHover(){
- if(!TG)return;const{G,avg,X,m,H,VY}=TG,yv=hovY??Math.min(VY[VY.length-1],Math.max(VY[0],year)),j=VY.indexOf(yv);
- let h='';if(hovY!=null)h+=`<line class="guide" x1="${X(j).toFixed(1)}" x2="${X(j).toFixed(1)}" y1="${m.t}" y2="${H-m.b}"/>`;
- G.forEach((g,i)=>{const p=g.pts[j],on=g.st.includes(sel);h+=`<circle class="pt${on?' sel':''}" data-g="${i}" cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="${on?4.2:3}"/>`;});
- $('hov').innerHTML=h;
- const byV={},ord=c=>ALPHA.findIndex(s=>s.c===c);
- G.forEach(g=>{(byV[g.v[j]]=byV[g.v[j]]||[]).push(...g.st);});
- const vals=Object.keys(byV).map(Number).sort((a,b)=>b-a);
- const label=metric==='wk'?'Feiertage Mo–Fr':'Feiertage am Wochenende';
- const era=yv>TODAY.getFullYear()?'Prognose':yv===TODAY.getFullYear()?'laufendes Jahr':'vergangen';
- $('tip').innerHTML=`<div class="tip-h"><b>${yv}</b><span>${label}</span><span>Ø ${fmtN(avg[j])}</span><span>Spanne ${vals[vals.length-1]}–${vals[0]}</span><span>${era}</span>${EVENTS[yv]?`<span class="ev">● ${EVENTS[yv]}</span>`:''}${exKey()?`<span>inkl. ${[extras.rm&&'Rosenmontag',extras.ha&&'Heiligabend',extras.sv&&'Silvester'].filter(Boolean).join(', ')}</span>`:''}</div>`+
-  vals.map(v=>`<div class="tv"><b>${v}</b><div class="codes">${byV[v].sort((a,b)=>ord(a)-ord(b)).map(c=>`<button class="code${c===sel?' sel':''}" data-state="${c}" data-c="${c}" title="${BY[c].n}">${c}</button>`).join('')}</div></div>`).join('');
+const FPCATS=['bund','teil','reg','einm','so','opt'];
+const LH=28,LG=3.2,LMO=22,FH=24;   // Spurhöhe, Abstand der Wochentagslinien, Lage der Mo-Linie, Kopf je Kategorie
+function buildTakt(){
+ const nar=narrowTk(),VY=viewYears(),n=VY.length,i0=YEARS.indexOf(VY[0]),SR=series(),L=S.land;
+ const PADL=4,PADR=10,minCw=nar?11:9,cw=Math.max(minCw,((tksW||700)-PADL-PADR)/n),W=Math.round(PADL+PADR+cw*n);
+ const evH=32,axH=18,rh=nar?15:17,yA=evH+axH,hA=16*rh,yB0=yA+hA+40;
+ const X=j=>PADL+j*cw,XC=j=>PADL+(j+.5)*cw;
+ let lo=99,hi=0;NETZ.forEach(c=>{for(let j=0;j<n;j++){const v=SR[c][i0+j];if(v<lo)lo=v;if(v>hi)hi=v;}});
+ const qn=v=>hi===lo?4:Math.round((v-lo)/(hi-lo)*8);
+ // Spuren je Kategorie
+ const groups=[],lanes=[];let y=yB0;
+ FPCATS.forEach(cat=>{const ids=ORDER.filter(id=>LN[id].cat===cat&&(cat!=='opt'||extras[Object.keys(EXID).find(k=>EXID[k]===id)]));if(!ids.length)return;
+  groups.push({cat,top:y});y+=FH;ids.forEach(id=>{lanes.push({id,top:y});y+=LH;});y+=6;});
+ const H=y+18,ti=VY.indexOf(TY);
+ let s=`<defs><pattern id="tkh" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="currentColor" stroke-width="1" opacity=".09"/></pattern></defs>`;
+ // Prognose-Fläche, Jahrzehnt-Linien
+ if(ti>=0&&ti<n-1)s+=`<rect class="fut" x="${f1(X(ti+1))}" y="${yA}" width="${f1(X(n)-X(ti+1))}" height="${H-yA-14}" style="color:var(--ink)"/>`;
+ else if(VY[0]>TY)s+=`<rect class="fut" x="${PADL}" y="${yA}" width="${f1(X(n)-PADL)}" height="${H-yA-14}" style="color:var(--ink)"/>`;
+ let dec='';VY.forEach((yr,j)=>{if(yr%10===0)dec+=`M${f1(X(j))},${yB0}V${H-14}`;});s+=`<path class="fpdec" d="${dec}"/>`;
+ // Achse
+ const tstep=cw>=30?1:cw>=15?5:10;
+ VY.forEach((yr,j)=>{if(yr%tstep===0||(j===0&&yr%tstep>2&&tstep>1))s+=`<text class="ax" data-yr="${yr}" x="${f1(XC(j))}" y="${yA-5}" text-anchor="middle">${yr}</text>`;});
+ s+=`<text id="tkSelL" class="ax cur" x="-99" y="${yA-5}" text-anchor="middle"></text>`;
+ // Taktfahrplan: Land × Jahr
+ NETZ.forEach((c,ri)=>{s+=`<rect class="rowhl" data-l="${c}" x="0" y="${yA+ri*rh}" width="${W}" height="${rh}"/>`;});
+ NETZ.forEach((c,ri)=>{const yy=yA+ri*rh;
+  for(let j=0;j<n;j++){const v=SR[c][i0+j],q=qn(v);
+   s+=`<rect class="q${q}" x="${f1(X(j)+.5)}" y="${yy+.5}" width="${f1(Math.max(1,cw-1))}" height="${rh-1}"/>`;
+   if(cw>=11)s+=`<text class="cv${q>=6?' inv':''}" x="${f1(XC(j))}" y="${f1(yy+rh/2+3.5)}">${v}</text>`;}});
+ if(!nar&&ti>=0&&ti<n-6)s+=`<text class="bl" x="${f1(X(ti+1)+3)}" y="${yA+hA+14}">Prognose nach heutigem Recht →</text>`;
+ // Kategorie-Trenner
+ groups.forEach(g=>{s+=`<path class="fpg" d="M${PADL},${g.top+FH-4}H${W-PADR}"/>`;});
+ // Spuren
+ const rOf=h=>L==='DE'?2+2.2*Math.sqrt((h.full.length||1)/16):3.5;
+ lanes.forEach(ln=>{const id=ln.id,t=ln.top,cat=LN[id].cat,mo=t+LMO;
+  let st='';for(let k=0;k<5;k++)st+=`M${PADL},${f1(mo-k*LG)}H${W-PADR}`;
+  const we=`M${PADL},${f1(mo-5*LG)}H${W-PADR}M${PADL},${f1(mo-6*LG)}H${W-PADR}`;
+  let mk='',pz='',ev='',run=null;const pts=[];
+  const pause=(a,b)=>{const x0=X(a)+2,x1=X(b+1)-2,ym=mo-2*LG,len=b-a+1;let o=`<path class="pz" d="M${f1(x0)},${f1(ym)}H${f1(x1)}M${f1(x0)},${f1(ym-3)}v6M${f1(x1)},${f1(ym-3)}v6"/>`;
+   if(x1-x0>=26)o+=`<text class="pzt" x="${f1((x0+x1)/2)}" y="${f1(ym-3.2)}">${len} J.</text>`;return o;};
+  VY.forEach((yr,j)=>{const h=findH(yr,id);
+   if(!h){pts.push(null);if(run===null)run=j;return;}
+   if(run!==null){pz+=pause(run,j-1);run=null;}
+   const w=wdIdx(h.d),cy=mo-(w<5?w:w)*LG,wd=w<5;
+   const rel=L==='DE'?(h.full.length?'f':'r'):(h.full.includes(L)?'f':h.reg.includes(L)?'r':'o');
+   const cls=(wd?'':'we ')+rel;
+   mk+=mark(cat==='so'?'bund':cat,XC(j),cy,rOf(h),'m '+cls,rel==='r'&&wd?`url(#fph-${id})`:'');
+   pts.push({h,y:cy});
+   if(EVH[yr]&&EVH[yr].includes(id))ev+=`<path class="evf" d="M${f1(XC(j))},${f1(t+1)}v8M${f1(XC(j))},${f1(t+1)}l5,2.2l-5,2.2"/>`;});
+  if(run!==null)pz+=pause(run,n-1);
+  s+=`<g class="fpl" data-h="${id}"><defs><pattern id="fph-${id}" width="3" height="3" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="3" height="3" class="phb"/><line x1="0" y1="0" x2="0" y2="3" class="phl"/></pattern></defs><rect class="band" x="0" y="${t}" width="${W}" height="${LH}"/><path class="fpw" d="${st}"/><path class="fpd" d="${we}"/>${pz}${ev}${mk}</g>`;
+  ln.pts=pts;});
+ // Fahrplanwechsel oben, mit Signets der betroffenen Linien
+ VY.forEach((yr,j)=>{if(!EVENTS[yr])return;const cx=XC(j);
+  s+=`<line class="evl" x1="${f1(cx)}" x2="${f1(cx)}" y1="${evH-2}" y2="${H-14}"/>`;
+  if(cw<10)s+=`<circle class="evd" cx="${f1(cx)}" cy="${evH-6}" r="2.6"/>`;
+  else EVH[yr].forEach((id,q)=>{s+=sigAt(id,cx-6.5,evH-15-q*13.5,13,'dm');});});
+ // heute, gewähltes Jahr, Vorschau-Spalte, Overlay
+ if(ti>=0){const yl=new Date(TY,1,29).getMonth()===1?366:365,px=X(ti)+cw*(Math.round((TODAY-new Date(TY,0,1))/864e5)+.5)/yl;
+  s+=`<line class="nowl" x1="${f1(px)}" x2="${f1(px)}" y1="${yA-2}" y2="${H-8}"/><text class="nowt" x="${f1(px+4)}" y="${H-2}">heute</text>`;}
+ s+=`<rect id="tkSel" class="sely" x="-99" y="${yA-1}" width="${f1(cw)}" height="${f1(H-yA-12)}" rx="2"/>`;
+ s+=`<g id="tov"></g><rect id="tkx" class="xcol" x="0" y="${yA}" width="${f1(cw)}" height="${f1(H-yA-14)}" visibility="hidden"/>`;
+ s+=`<rect class="hit" x="0" y="0" width="${W}" height="${H}"/>`;
+ const sv=$('tksvg');sv.setAttribute('width',W);sv.setAttribute('height',H);sv.setAttribute('viewBox',`0 0 ${W} ${H}`);sv.innerHTML=s;
+ // Zeilenköpfe (stehen fest, wenn die Spuren seitlich scrollen)
+ let lb=`<div class="tkh" style="top:${evH-17}px">Fahrplanwechsel</div>`;
+ NETZ.forEach((c,ri)=>{lb+=`<button class="tkr" data-pick="l" data-l="${c}" style="top:${yA+ri*rh}px;height:${rh}px" aria-pressed="${S.land===c}" title="${BY[c].n}"><span class="gp">${c}</span><span class="ln">${BY[c].n}</span></button>`;});
+ lb+=`<div class="tkh fpt" style="top:${yA+hA+12}px">Fahrplan je Linie</div>`;
+ groups.forEach(g=>{lb+=`<div class="fpc" style="top:${g.top}px;height:${FH}px">${shape(g.cat)}<span>${CATS[g.cat].n}</span></div>`;});
+ lanes.forEach(ln=>{const L2=LN[ln.id];lb+=`<button class="fph" data-pick="h" data-h="${ln.id}" style="top:${ln.top}px;height:${LH}px" aria-pressed="false" aria-label="Linie ${L2.c}: ${L2.n}">${sig(ln.id)}<span class="fpn">${L2.n}</span><span class="fps"></span></button>`;});
+ const tl=$('tkl');tl.style.height=H+'px';tl.innerHTML=lb;
+ TKG={VY,n,X,XC,cw,PADL,yA,rh,hA,yB0,W,H,lanes,groups,i0,land:L};tovKey='';
+ $('tkHint').textContent=`Oben der Taktfahrplan: je Land und Jahr die Zahl der Feiertage ${tkMetric==='wk'?'auf Mo–Fr':'am Wochenende'}, kräftiger = mehr. Darunter der Fahrplan: jede Linie hat eine eigene Spur, ihre Marke steht auf dem Wochentag – feste Termine wandern jedes Jahr eine Linie weiter, Ostertermine bleiben auf ihrer. Steigt die Marke über Fr hinaus, fällt der Feiertag aufs Wochenende aus. Fahnen zeigen Fahrplanwechsel, Klammern mit Jahreszahl Betriebspausen.`;
 }
-function updateHot(){
- if(!TG)return;const el=TG.el,hs=hotG>=0?TG.G[hotG].st:[];
- el.classList.toggle('dim',hotG>=0);
- el.querySelectorAll('[data-g]').forEach(e=>e.classList.toggle('hot',+e.dataset.g===hotG&&hotG>=0));
- $('tip').querySelectorAll('.code').forEach(e=>e.classList.toggle('hot',hs.includes(e.dataset.c)));
+let tksW=0;
+function renderTakt(){
+ if(!tksW)tksW=Math.floor($('tks').clientWidth);   // nur beim ersten Mal gemessen, danach liefert der ResizeObserver die Breite
+ const k=[tkRange,tkRange==='near'?S.jahr:'',tksW,exKey(),tkMetric,S.land,narrowTk()].join('|');
+ const fresh=k!==tkKey;if(fresh){tkKey=k;buildTakt();brush(true);}
+ markTakt();renderTov();if(!$('tkInfo').contains(document.activeElement))updateTkInfo();
+ // Scrollposition nur prüfen, wenn die Spuren überhaupt breiter sind als der Ausschnitt – und erst im nächsten Frame
+ if(TKG&&TKG.W>tksW+2)requestAnimationFrame(()=>{if(fresh||!tkInView())keepTkVisible();});
 }
-$('tip').addEventListener('pointerover',e=>{if(!TG)return;const b=e.target.closest('.code');const g=b?TG.G.findIndex(x=>x.st.includes(b.dataset.c)):-1;if(g!==hotG){hotG=g;updateHot();}});
-$('tip').addEventListener('pointerleave',()=>{hotG=-1;updateHot();});
-function setMetric(mt){metric=mt;$('mWd').setAttribute('aria-pressed',mt==='wk');$('mWe').setAttribute('aria-pressed',mt==='we');$('trendTitle').textContent=mt==='wk'?'Feiertage Mo–Fr pro Jahr':'Feiertage am Wochenende pro Jahr';hotG=-1;renderTrend();}
-function setRange(r){rng=r;[['rAll','all'],['rMid','mid'],['rNear','near']].forEach(([id,v])=>$(id).setAttribute('aria-pressed',r===v));hovY=null;hotG=-1;renderTrend();}
-$('rAll').addEventListener('click',()=>setRange('all'));$('rMid').addEventListener('click',()=>setRange('mid'));$('rNear').addEventListener('click',()=>setRange('near'));
-$('mWd').addEventListener('click',()=>setMetric('wk'));
-$('mWe').addEventListener('click',()=>setMetric('we'));
-let lastW=0;if('ResizeObserver' in window)new ResizeObserver(()=>{const w=Math.floor($('chart').clientWidth);if(w&&w!==lastW){lastW=w;requestAnimationFrame(renderTrend);}}).observe($('chart'));
+function markTakt(){
+ if(!TKG)return;const{VY,X,XC,cw}=TKG,si=VY.indexOf(S.jahr);
+ $('tkSel').setAttribute('x',si>=0?f1(X(si)):-99);
+ const sl=$('tkSelL');if(si>=0){sl.setAttribute('x',f1(XC(si)));sl.textContent=S.jahr;}else sl.setAttribute('x',-99);
+ document.querySelectorAll('#tksvg .ax[data-yr]').forEach(t=>t.classList.toggle('hid',si>=0&&Math.abs(+t.dataset.yr-S.jahr)*cw<30));
+ const L=S.land;
+ document.querySelectorAll('#tkl .fph').forEach(b=>{const id=b.dataset.h,h=findH(S.jahr,id),o=b.lastChild;b.setAttribute('aria-pressed',id===S.fid);
+  let t,c='fps';
+  if(!h){t='Pause';c+=' na';}
+  else if(L!=='DE'&&!h.full.includes(L)&&!h.reg.includes(L)){t='–';c+=' na';}
+  else{t=WD[h.d.getDay()];if(!isWd(h.d))c+=' we';if(L!=='DE'&&h.reg.includes(L))t+='<small> reg.</small>';}
+  if(o.innerHTML!==t)o.innerHTML=t;if(o.className!==c)o.className=c;
+  b.title=`${LN[id].n} ${S.jahr}: ${h?fmt(h.d)+' · '+gleise(h):'verkehrt nicht'}`;});
+ document.querySelectorAll('#tkl .tkr').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===S.land));
+}
+function tkInView(){if(!TKG)return true;const sc=$('tks'),i=TKG.VY.indexOf(S.jahr);if(i<0)return true;const x=TKG.XC(i);return x>=sc.scrollLeft+20&&x<=sc.scrollLeft+sc.clientWidth-20;}
+function keepTkVisible(){const sc=$('tks');if(!TKG||sc.scrollWidth<=sc.clientWidth+2)return;const i=TKG.VY.indexOf(S.jahr);if(i<0)return;sc.scrollLeft=Math.max(0,TKG.XC(i)-sc.clientWidth/2);}
+let tovKey='',tkInfoKey='';const tovC={};
+function renderTov(){
+ if(!TKG)return;const f=HV.fid||S.fid,key=(f||'')+'|'+TKG.VY[0]+'|'+TKG.n+'|'+TKG.W+'|'+exKey();if(key===tovKey)return;tovKey=key;
+ const g=$('tov');if(!g)return;if(!f){g.removeAttribute('data-h');g.innerHTML='';return;}
+ if(!tovC[key]){const{VY,n,X,XC,cw,yA,rh}=TKG;let pf='',pw='',pr='';const w1=f1(Math.max(1,cw-1)),w2=f1(Math.max(.6,cw-2.4)),rr=Math.min(2,cw*.3);
+  for(let j=0;j<n;j++){const h=findH(VY[j],f);if(!h)continue;const wd=isWd(h.d);
+   NETZ.forEach((c,ri)=>{const yy=yA+ri*rh+rh-3.5;
+    if(h.full.includes(c)){if(wd)pf+=`M${f1(X(j)+.5)},${f1(yy)}h${w1}v3h-${w1}z`;else pw+=`M${f1(X(j)+1.2)},${f1(yy+.4)}h${w2}v2.2h-${w2}z`;}
+    else if(h.reg.includes(c))pr+=`M${f1(XC(j)-rr)},${f1(yy+1.5-rr)}h${f1(2*rr)}v${f1(2*rr)}h-${f1(2*rr)}z`;});}
+  tovC[key]=`<path class="f" d="${pf}"/><path class="w" d="${pw}"/><path class="r" d="${pr}"/>`;}
+ g.setAttribute('data-h',f);g.setAttribute('class','tov');g.innerHTML=tovC[key];
+}
+function updateTkInfo(){
+ if(!TKG)return;const{VY}=TKG;const yv=tkJ>=0?VY[tkJ]:S.jahr,j=YEARS.indexOf(yv);
+ const ik=[yv,HV.fid||S.fid,S.land,exKey(),tkMetric].join('|');if(ik===tkInfoKey)return;tkInfoKey=ik;
+ const SR=series(),byV={};NETZ.forEach(c=>{(byV[SR[c][j]]=byV[SR[c][j]]||[]).push(c);});
+ const vals=Object.keys(byV).map(Number).sort((a,b)=>b-a),avg=NETZ.reduce((a,c)=>a+SR[c][j],0)/16;
+ const era=yv>TY?'Prognose':yv===TY?'laufendes Jahr':'vergangen';
+ const f=HV.fid||S.fid;let ln='';
+ if(f){const h=findH(yv,f),same=h?hol(yv).filter(x=>x.k===h.k&&x.id!==f):[];ln=`<div class="ti-l" data-h="${f}">${sig(f)}<b>${LN[f].n}</b> ${h?`${yv}: ${fmt(h.d)} – ${isWd(h.d)?'Mo–Fr':'Wochenende'} · ${gleise(h)}${same.length?' · zugleich '+same.map(x=>x.n).join(', '):''}`:`verkehrt ${yv} nicht`}</div>`;}
+ const _ti=`<div class="ti-h"><b>${yv}</b><span>${tkMetric==='wk'?'Feiertage Mo–Fr':'Feiertage am Wochenende'}</span><span>Ø ${avg.toFixed(1).replace('.',',')}</span><span>Spanne ${vals[vals.length-1]}–${vals[0]}</span><span>${era}</span>${EVENTS[yv]?`<span class="ev">${EVH[yv].map(id=>sig(id)).join('')}Fahrplanwechsel: ${EVENTS[yv]}</span>`:''}${exKey()?`<span>inkl. ${[extras.rm&&'Rosenmontag',extras.ha&&'Heiligabend',extras.sv&&'Silvester'].filter(Boolean).join(', ')}</span>`:''}</div>`;
+ const al=(APPLIED.takt||{}).l;
+ $('tkInfo').innerHTML=_ti+vals.map(v=>`<div class="tv"><b>${v}</b><div class="codes">${byV[v].map(c=>`<button class="code${c===al?' lx-on':''}" data-pick="l" data-l="${c}" title="${BY[c].n}" aria-pressed="${S.land===c}">${c}</button>`).join('')}</div></div>`).join('')+ln;
+}
+function tkPos(e){const sv=$('tksvg');if(!TKG)return null;const r=sv.getBoundingClientRect(),G=TKG;
+ const sx=(e.clientX-r.left)*(G.W/r.width),sy=(e.clientY-r.top)*(G.H/r.height);
+ const j=Math.floor((sx-G.PADL)/G.cw);if(j<0||j>=G.n)return null;const yr=G.VY[j];let land=null,fid=null,tag=null;
+ if(sy>=G.yA&&sy<G.yA+G.hA)land=NETZ[Math.floor((sy-G.yA)/G.rh)];
+ else if(sy<G.yA-14){const ev=EVH[yr];if(ev)fid=ev[Math.min(ev.length-1,Math.max(0,Math.floor((32-sy)/13.5)))];}
+ else{const ln=G.lanes.find(l=>sy>=l.top&&sy<l.top+LH);if(ln){fid=ln.id;const p=ln.pts[j];if(p)tag=p.h.k;}}
+ return{j,yr,land,fid,tag};}
+function setTkJ(j){if(j===tkJ)return;tkJ=j;const x=$('tkx');if(x&&TKG){if(j<0)x.setAttribute('visibility','hidden');else{x.setAttribute('x',f1(TKG.X(j)));x.setAttribute('visibility','visible');}}if(!$('tkInfo').contains(document.activeElement))updateTkInfo();}
+$('tksvg').addEventListener('pointermove',e=>{if(e.pointerType==='touch')return;const p=tkPos(e);if(!p){setTkJ(-1);setHover(null,null);return;}setTkJ(p.j);setHover(p.fid,p.land,p.fid?p.yr:null);});
+$('tksvg').addEventListener('pointerleave',()=>{setTkJ(-1);setHover(null,null);});
+$('tksvg').addEventListener('click',e=>{const p=tkPos(e);if(!p)return;tkJ=-1;HV.fid=null;HV.jahr=null;HV.land=null;
+ if(p.fid&&p.tag){if(S.fid===p.fid&&S.tag===p.tag)commit({fid:null,tag:null});else commit({fid:p.fid,tag:p.tag,jahr:p.yr});}
+ else if(p.fid)commit({fid:p.fid,tag:null,jahr:p.yr});
+ else commit({jahr:p.yr});});
+$('tks').addEventListener('keydown',e=>{
+ if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();commit({jahr:S.jahr+(e.key==='ArrowLeft'?-1:1)});}
+ else if((e.key==='ArrowUp'||e.key==='ArrowDown')&&TKG){e.preventDefault();const ids=TKG.lanes.map(l=>l.id);let i=ids.indexOf(S.fid);i=e.key==='ArrowDown'?(i+1)%ids.length:(i<=0?ids.length-1:i-1);commit({fid:ids[i],tag:null});}
+});
 
-function render(){
- $('state').value=sel;$('yv').textContent=year;$('yprev').disabled=year<=YMIN;$('ynext').disabled=year>=YMAX;
- document.querySelectorAll('.y').forEach(e=>e.textContent=year);document.querySelectorAll('.sn').forEach(e=>e.textContent=stName(sel));
- document.querySelectorAll('[data-ex]').forEach(b=>b.setAttribute('aria-pressed',extras[b.dataset.ex]));
- renderTrend();renderAnswer();ensureDetail();renderMap();renderRank();renderCal();renderDetail();renderMatrix();
- if(!first)['tiles','rank','months','mx'].forEach(id=>{const e=$(id);e.classList.remove('anim');void e.offsetWidth;e.classList.add('anim');});
- first=false;
+/* ---- Gleise im Vergleich ---- */
+function renderLaender(){
+ const lk=[S.jahr,S.land,exKey()].join('|');if(lk===lvKey)return;lvKey=lk;
+ const y=S.jahr,counts=STATES.map(s=>stats(y,s.c).wk.length),mn=Math.min(...counts),mx=Math.max(...counts);
+ // Stufen wie im Taktfahrplan: 52 % und 66 % liegen um die Totzone, in der weder helle noch dunkle Schrift 4,5:1 erreicht
+ const TL=[14,23,33,43,52,66,80,100];
+ $('tiles').innerHTML=STATES.map((s,i)=>{const n=counts[i],p=TL[Math.round((n-mn)/((mx-mn)||1)*7)],fg=p>=66?'var(--on-heat)':'var(--ink)';
+  return `<button class="tile${s.span?' span':''}" style="grid-row:${s.r+1};grid-column:${s.col+1}${s.span?' / span 2':''};background:color-mix(in oklab,var(--heat) ${p}%,var(--panel));color:${fg}" data-pick="l" data-l="${s.c}" ${LA[s.c]} aria-pressed="${S.land===s.c}" title="${s.n}: ${n} Feiertage Mo–Fr"><span class="tc">${s.c}</span><span class="tn">${n}</span></button>`;}).join('');
+ $('scale').innerHTML=`<span>${mn}</span><i></i><span>${mx} Tage</span>`;
+ const rows=STATES.map(s=>Object.assign({s},stats(y,s.c))).sort((a,b)=>b.wk.length-a.wk.length||a.s.n.localeCompare(b.s.n,'de'));
+ $('rank').innerHTML=rows.map(r=>{
+  const items=[...r.full.map(h=>({h,c:isWd(h.d)?'':'we'})),...hol(y).filter(h=>h.reg.includes(r.s.c)).map(h=>({h,c:'we'}))].sort((a,b)=>a.h.d-b.h.d);
+  const sg=items.map(o=>sig(o.h.id,o.c+(o.h.reg.includes(r.s.c)?' rg':''))).join('');
+  return `<button class="rk" data-pick="l" data-l="${r.s.c}" ${LA[r.s.c]} aria-pressed="${S.land===r.s.c}" aria-label="${r.s.n}: ${r.wk.length} Feiertage Mo–Fr"><span class="gp">${r.s.c}</span><span class="rk-n">${r.s.n}</span><span class="rk-s">${sg}</span><span class="rk-c">${r.wk.length}${r.rg.length?`<small>+${r.rg.length} reg.</small>`:''}</span></button>`;}).join('');
 }
-function setSel(s){sel=s;detailK=null;try{localStorage.setItem('wtf-sel',s);}catch(e){}render();}
+
+/* ---- Leiste + Vorschau (brushing & linking) ---- */
+let barKey='';
+function renderBar(){
+ const bk=[HV.fid,HV.jahr,S.fid,S.jahr,S.tag,exKey()].join('|');if(bk===barKey)return;barKey=bk;
+ const f=HV.fid||S.fid,pv=!!HV.fid&&HV.fid!==S.fid,el=$('cur');
+ el.classList.toggle('pv',pv||(!!HV.jahr&&HV.jahr!==S.jahr));el.classList.toggle('empty',!f);
+ if(f){const yr=(HV.fid&&HV.jahr)||S.jahr,h=findH(yr,f),L=LN[f],pvy=!!HV.jahr&&HV.jahr!==S.jahr;
+  const same=h?hol(yr).filter(x=>x.k===h.k&&x.id!==f):[];
+  const sw=!pv&&!pvy?same.map(x=>`<button class="cur-sw" data-pick="h" data-h="${x.id}" data-k="${x.k}" title="Am selben Tag: ${x.n} – umschalten" aria-label="Umschalten auf ${x.n}, am selben Tag">⇄ ${sig(x.id)}<span>${x.n}</span></button>`).join(''):(same.length?`<span class="cur-d">+ ${same.map(x=>x.n).join(', ')}</span>`:'');
+  el.innerHTML=`<span class="cur-k">${pv||pvy?'Vorschau':'Linie'}</span>${sig(f)}<span class="cur-n">${L.n}</span><span class="cur-d">${h?fmt(h.d)+yr+(isWd(h.d)?' · Mo–Fr':' · Wochenende'):'nicht '+yr}</span>${sw}${S.fid&&!pv?'<button class="cur-x" data-clear aria-label="Linie lösen (Esc)">×</button>':''}`;}
+ else el.innerHTML=`<span class="cur-hint">Feiertag antippen, um seine Linie durch alle Ansichten zu verfolgen · Esc löst</span>`;
+}
+/* Brushing: keine Regeln an <html> (die erzwangen eine Neuberechnung des ganzen Dokuments).
+   Eine Vorschau setzt .has-f an den Abschnitten und .fx-on/.lx-on nur an den Treffern;
+   beim Wechsel A → B ändern sich so nur die Elemente von A und B. data-fx/data-lx an <html>
+   bleiben als Zustandsanzeige, ohne dass eine Regel daran hängt. */
+const ROOT=document.documentElement;
+// Abschnitte und ihre Brushing-Container. Nur sichtbare Abschnitte zeigen eine Vorschau (Hover/Fokus);
+// unsichtbare behalten den festen Zustand und holen die Vorschau nach, sobald sie ins Bild kommen.
+// So muss der Browser bei einem Hover nur neu zeichnen, was man sieht.
+const SECS={board:['bdMain'],netz:['np'],strecke:['js'],verz:['vz'],takt:['tksvg','tkl'],laender:['tiles','rank']};
+const VIS={},APPLIED={};
+function applySec(id,f,l,force){
+ const a=APPLIED[id]||(APPLIED[id]={}),sec=$(id);
+ if(force||a.f!==f){
+  a.f=f;
+  sec.querySelectorAll('.fx-on').forEach(e=>e.classList.remove('fx-on'));
+  SECS[id].forEach(b=>$(b).classList.toggle('has-f',!!f));
+  const L=f?LN[f]:null;
+  sec.querySelectorAll('#np tbody tr,.tile,.rk').forEach(r=>{
+   let c='';
+   if(f){const t=x=>(' '+(r.getAttribute(x)||'')+' ').indexOf(' '+f+' ')>=0;c=t('data-hf')?'fx-hf':t('data-hw')?'fx-hw':t('data-hr')?'fx-hr':'fx-no';}
+   if(r._fx!==c){if(r._fx)r.classList.remove(r._fx);if(c)r.classList.add(c);r._fx=c;}
+   if(c&&c!=='fx-no'){const g=r.classList.contains('tile')?r:r.querySelector('.gp');if(g._xb!==f){g._xb=f;g.style.setProperty('--xb',L.bg);g.style.setProperty('--xf',L.fg);g.style.setProperty('--xe',L.ed||L.bg);}}
+  });
+  if(f)sec.querySelectorAll(`[data-h="${f}"]`).forEach(e=>e.classList.add('fx-on'));
+ }
+ if(force||a.l!==l){
+  a.l=l;
+  sec.querySelectorAll('.lx-on').forEach(e=>e.classList.remove('lx-on'));
+  if(l)sec.querySelectorAll(`[data-l="${l}"]`).forEach(e=>e.classList.add('lx-on'));
+ }
+}
+function brush(force){
+ const f=HV.fid||S.fid,l=HV.land||(S.land!=='DE'?S.land:null),cf=S.fid,cl=S.land!=='DE'?S.land:null;
+ if(f)ROOT.setAttribute('data-fx',f);else ROOT.removeAttribute('data-fx');
+ if(l)ROOT.setAttribute('data-lx',l);else ROOT.removeAttribute('data-lx');
+ ROOT.toggleAttribute('data-hover',!!(HV.fid||HV.land));   // Zustandsanzeige: gerade nur Vorschau (Hover/Fokus)
+ for(const id in SECS){const v=VIS[id]!==false;applySec(id,v?f:cf,v?l:cl,force);}
+}
+let rafP=0;
+// force: nach einem Neuzeichnen (renderAll) alles aktualisieren; sonst (Hover/Fokus) keinen Bereich ersetzen,
+// in dem gerade der Tastaturfokus steht – sonst fiele der Fokus auf <body> und Tab käme nie weiter.
+function preview(force){rafP=0;brush(force);
+ const ok=id=>force||!$(id).contains(document.activeElement);
+ if(ok('cur'))renderBar();if(ok('bdLine'))renderBoardLine();if(ok('ldet'))renderLdet();
+ if(force||VIS.takt!==false){renderTov();if(ok('tkInfo'))updateTkInfo();}}
+function setHover(f,l,y){f=f||null;l=l||null;y=f&&y||null;if(f===HV.fid&&l===HV.land&&y===HV.jahr)return;HV.fid=f;HV.land=l;HV.jahr=y;if(!rafP)rafP=requestAnimationFrame(()=>preview(false));}
+function hoverFrom(t){
+ if(!t||!t.closest||t.closest('#tksvg'))return;
+ const box=t.closest('.bx,.bar,.mast');if(!box){setHover(null,null);return;}
+ const he=t.closest('[data-h]'),le=t.closest('[data-l]'),h=he&&he.dataset.h,l=le&&le.dataset.l;
+ setHover(isLine(h)?h:null,isLand(l)&&l!=='DE'?l:null);
+}
+document.addEventListener('pointerover',e=>{if(e.pointerType==='touch')return;hoverFrom(e.target);});
+document.addEventListener('pointerout',e=>{if(!e.relatedTarget)setHover(null,null);});
+// Fokus als Vorschau nur bei Tastatur (:focus-visible), nicht bei Klick/Tippen und nicht beim Zurücksetzen des Fokus
+let restoring=false;
+document.addEventListener('focusin',e=>{if(restoring)return;const t=e.target;if(t.matches&&!t.matches(':focus-visible'))return;hoverFrom(t);});
+document.addEventListener('focusout',e=>{if(!e.relatedTarget)setHover(null,null);});
+
+// Fokus über das Neuzeichnen retten: gleiches Element (gleicher Bereich, gleiche data-Attribute) wieder fokussieren
+function focusKey(){const e=document.activeElement;if(!e||e===document.body)return null;const c=e.closest('[id]');if(!c)return null;
+ if(e.id)return '#'+e.id;
+ const at=['data-pick','data-h','data-l','data-k','data-ex'].filter(a=>e.hasAttribute(a)).map(a=>`[${a}="${e.getAttribute(a)}"]`).join('');
+ return at?`#${c.id} ${e.tagName.toLowerCase()}${at}`:null;}
+function renderAll(){
+ const fk=focusKey();
+ renderAll2();
+ if(fk&&!document.activeElement.closest('[id]')){const e=document.querySelector(fk);if(e){restoring=true;try{e.focus({preventScroll:true});}finally{restoring=false;}}}
+}
+function renderAll2(){
+ computeLA();
+ $('state').value=S.land;$('yv').textContent=S.jahr;
+ const yp=$('yprev'),yn=$('ynext'),dp=S.jahr<=YMIN,dn=S.jahr>=YMAX,ae=document.activeElement;
+ if(dp&&ae===yp)yn.focus({preventScroll:true});if(dn&&ae===yn)yp.focus({preventScroll:true});
+ yp.disabled=dp;yn.disabled=dn;
+ document.querySelectorAll('.y').forEach(e=>e.textContent=S.jahr);document.querySelectorAll('.sn').forEach(e=>e.textContent=stName(S.land));
+ document.querySelectorAll('[data-ex]').forEach(b=>b.setAttribute('aria-pressed',extras[b.dataset.ex]));
+ renderBoard();renderNetz();renderStrecke();renderVerz();renderTakt();renderLaender();
+ lineKey='';ldetKey='';barKey='';if(rafP){cancelAnimationFrame(rafP);rafP=0;}preview(true);
+}
+
+/* ---- Bedienung ---- */
 $('state').innerHTML=`<option value="DE">Ganz Deutschland</option>`+ALPHA.map(s=>`<option value="${s.c}">${s.n}</option>`).join('');
-$('state').addEventListener('change',e=>setSel(e.target.value));
-$('yprev').addEventListener('click',()=>{if(year>YMIN){year--;detailK=null;render();}});
-$('ynext').addEventListener('click',()=>{if(year<YMAX){year++;detailK=null;render();}});
-$('fWd').addEventListener('click',()=>{onlyWd=true;$('fWd').setAttribute('aria-pressed','true');$('fAll').setAttribute('aria-pressed','false');renderMatrix();});
-$('fAll').addEventListener('click',()=>{onlyWd=false;$('fAll').setAttribute('aria-pressed','true');$('fWd').setAttribute('aria-pressed','false');renderMatrix();});
+$('state').addEventListener('change',e=>setLand(e.target.value));
+$('yprev').addEventListener('click',()=>commit({jahr:S.jahr-1}));
+$('ynext').addEventListener('click',()=>commit({jahr:S.jahr+1}));
+$('fAll').addEventListener('click',()=>{netzAll=true;$('fAll').setAttribute('aria-pressed','true');$('fWd').setAttribute('aria-pressed','false');renderNetz();brush(true);});
+$('fWd').addEventListener('click',()=>{netzAll=false;$('fWd').setAttribute('aria-pressed','true');$('fAll').setAttribute('aria-pressed','false');renderNetz();brush(true);});
+function setRange(r){tkRange=r;[['rAll','all'],['rMid','mid'],['rNear','near']].forEach(([id,v])=>$(id).setAttribute('aria-pressed',r===v));tkJ=-1;renderTakt();}
+$('rAll').addEventListener('click',()=>setRange('all'));$('rMid').addEventListener('click',()=>setRange('mid'));$('rNear').addEventListener('click',()=>setRange('near'));
+function setMetric(m){tkMetric=m;$('mWd').setAttribute('aria-pressed',m==='wk');$('mWe').setAttribute('aria-pressed',m==='we');renderTakt();}
+$('mWd').addEventListener('click',()=>setMetric('wk'));$('mWe').addEventListener('click',()=>setMetric('we'));
 document.addEventListener('click',e=>{
  const ex=e.target.closest('[data-ex]');
- if(ex){const kk=ex.dataset.ex;extras[kk]=!extras[kk];try{localStorage.setItem('wtf-ex',JSON.stringify(extras));}catch(err){}detailK=null;hovY=null;render();return;}
- const st=e.target.closest('[data-state]');
- if(st){const c=st.dataset.state;setSel(c===sel&&(st.classList.contains('tile')||st.classList.contains('rk')||st.classList.contains('code'))?'DE':c);return;}
- const dk=e.target.closest('[data-k]');
- if(dk){detailK=dk.dataset.k;renderCal();renderDetail();if(dk.tagName==='TR')$('detail').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});}
+ if(ex){const kk=ex.dataset.ex;if(!own(extras,kk))return;extras[kk]=!extras[kk];try{localStorage.setItem('wtf-ex',JSON.stringify(extras));}catch(err){}boardKey='';commit({});return;}
+ if(e.target.closest('[data-clear]')){commit({fid:null,tag:null});return;}
+ const p=e.target.closest('[data-pick]');if(!p)return;
+ HV.fid=null;HV.land=null;HV.jahr=null;
+ if(p.dataset.pick==='l'){const c=p.dataset.l;setLand(S.land===c?'DE':c);return;}
+ if(p.dataset.pick==='h'){const id=p.dataset.h,k=p.dataset.k;
+  if(S.fid===id&&(!k||k===S.tag))commit({fid:null,tag:null});
+  else commit(k?{fid:id,tag:k,jahr:+k.slice(0,4)}:{fid:id,tag:null});}
 });
-render();
+document.addEventListener('keydown',e=>{
+ if(e.key!=='Escape')return;
+ HV.fid=null;HV.land=null;HV.jahr=null;
+ if(S.fid)commit({fid:null,tag:null});else if(S.land!=='DE')setLand('DE');else preview(true);
+});
+window.addEventListener('hashchange',()=>{readHash();normalize();writeHash();renderAll();});
+// Sichtbarkeit der Abschnitte: Vorschau nur dort, wo man hinsieht. Kommt der Fahrplan ins Bild, holt er Overlay,
+// Jahresinfo und (auf schmalen Bildschirmen) die Scrollposition des gewählten Jahres nach.
+if('IntersectionObserver' in window){const io=new IntersectionObserver(es=>{let tk=false;
+ es.forEach(e=>{const id=e.target.id,was=VIS[id]!==false;VIS[id]=e.isIntersecting;if(id==='takt'&&e.isIntersecting&&!was)tk=true;});
+ brush(false);if(tk){renderTov();if(!$('tkInfo').contains(document.activeElement))updateTkInfo();if(TKG&&TKG.W>tksW+2&&!tkInView())keepTkVisible();}
+},{rootMargin:'150px 0px'});Object.keys(SECS).forEach(id=>io.observe($(id)));}
+if('ResizeObserver' in window)new ResizeObserver(es=>{const w=Math.floor(es[es.length-1].contentRect.width);if(w&&w!==tksW){tksW=w;requestAnimationFrame(renderTakt);}}).observe($('tks'));
+document.querySelectorAll('.optsig').forEach(e=>{e.outerHTML=sig(e.dataset.id);});
+$('strip').innerHTML=ORDER.filter(id=>LN[id].cat!=='opt').map(id=>`<i data-h="${id}"></i>`).join('');
+
+readHash();normalize();writeHash();renderAll();
 })();
 </script>
 
