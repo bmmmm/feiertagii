@@ -1606,7 +1606,12 @@ function setRange(r){tkRange=r;[['rAll','all'],['rMid','mid'],['rNear','near']].
 $('rAll').addEventListener('click',()=>setRange('all'));$('rMid').addEventListener('click',()=>setRange('mid'));$('rNear').addEventListener('click',()=>setRange('near'));
 function setMetric(m){tkMetric=m;$('mWd').setAttribute('aria-pressed',m==='wk');$('mWe').setAttribute('aria-pressed',m==='we');renderTakt();}
 $('mWd').addEventListener('click',()=>setMetric('wk'));$('mWe').addEventListener('click',()=>setMetric('we'));
-document.addEventListener('click',e=>{
+// Ein Klick hält den Abschnitt, in dem er geschah, an seiner Stelle im Bild – auch wenn die Abschnitte
+// darüber beim Neuzeichnen höher oder niedriger werden (Ruhezug: Wagen 2 wächst mit dem Jahr)
+// (Umsteigen ausgenommen: dort verschwindet der Abschnitt, und die View Transition zeichnet erst später)
+function pin(el,fn){const t=el?el.getBoundingClientRect().top:0;fn();if(el&&el.getClientRects().length){const d=el.getBoundingClientRect().top-t;if(d)scrollBy(0,d);}}
+document.addEventListener('click',e=>pin(e.target.closest('[data-ride]')?null:e.target.closest('article[id],section[id]'),()=>onClick(e)));
+function onClick(e){
  const ex=e.target.closest('[data-ex]');
  if(ex){const kk=ex.dataset.ex;if(!own(extras,kk))return;extras[kk]=!extras[kk];try{localStorage.setItem('wtf-ex',JSON.stringify(extras));}catch(err){}boardKey='';commit({});return;}
  if(e.target.closest('[data-clear]')){commit({fid:null,tag:null});return;}
@@ -1618,7 +1623,7 @@ document.addEventListener('click',e=>{
  if(p.dataset.pick==='h'){const id=p.dataset.h,k=p.dataset.k;
   if(S.fid===id&&(!k||k===S.tag))commit({fid:null,tag:null});
   else commit(k?{fid:id,tag:k,jahr:+k.slice(0,4)}:{fid:id,tag:null});}
-});
+}
 document.addEventListener('keydown',e=>{
  if(e.key!=='Escape'||ZUG==='ruhe')return;
  HV.fid=null;HV.land=null;HV.jahr=null;
