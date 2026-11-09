@@ -2,7 +2,8 @@
 //
 // Prüft die Brückentage-Rechnung in index.html (<script id="brueckentage">): feste Fälle,
 // deren Kalenderlage sich von Hand nachrechnen lässt, dazu Invarianten über alle Jahre
-// 1991–2070 und alle Länder und den Urlaubsplaner gegen eine vollständige Suche.
+// 1991–2070 und alle Länder und den Urlaubsplaner gegen eine vollständige Suche – auch nach
+// Monaten gerechnet, mit Urlaub ohne Feiertag.
 //   node tests/bridges.test.mjs
 
 import { readFileSync } from 'node:fs';
@@ -110,6 +111,43 @@ const find = (R, day) => R.T.find(t => t.V.some(v => v.urlaub.some(d => k(d) ===
   eq(B.rechne({ land: 'BY', ex: NOEX, ...jahr(2026), arbeit: [false, false, false, false, false, false, false] }).T.length, 0, 'ohne Arbeitstage keine Brücken');
 }
 
+// --- Nach Monaten: nur Brücken, deren Urlaub ganz in den Monaten liegt; dazu Urlaub ohne Feiertag ----------
+const mon = (y, land, M, o = {}) => run(y, land, { monate: M, ohne: true, ...o });
+const DAY = d => ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'][d.getDay()];
+const plan = (R, n, ziel) => B.budget(R.C.concat(R.O), n, ziel);
+const span = c => `${DAY(c.von)} ${k(c.von)}..${k(c.bis)} ${c.u}>${c.f}`;
+{ // Bayern Mai/Juni 2027: Himmelfahrt Do 6.5., Pfingstmontag 17.5., Fronleichnam Do 27.5.; 1.5. ist ein Samstag
+  const R = mon(2027, 'BY', [4, 5]);
+  eq(tix(R), ['1>4@2027-05-07', '1>4@2027-05-28', '4>9@2027-05-18'], 'BY Mai/Jun 2027: Fahrkarten');
+  ok(R.C.every(c => c.urlaub.every(d => d.getFullYear() === 2027 && (d.getMonth() === 4 || d.getMonth() === 5))), 'BY Mai/Jun 2027: Urlaub nur im Mai und Juni');
+  ok(R.O.some(c => span(c) === 'Fr 2027-06-04..2027-06-06 1>3'), 'BY Mai/Jun 2027: Fr 4.6. als langes Wochenende');
+  ok(!R.O.some(c => c.tage.some(x => x.hw)), 'BY Mai/Jun 2027: ohne Feiertag heißt ohne Feiertag an einem Arbeitstag');
+  ok(!R.O.some(c => k(c.urlaub[0]) === '2027-05-07'), 'BY Mai/Jun 2027: Fr nach Himmelfahrt ist Brücke, nicht „ohne Feiertag“');
+  eq((P => [P.u, P.f])(plan(R, 10, 'lohnend')), [10, 29], 'BY Mai/Jun 2027: 10 Urlaubstage → 29 Tage frei');
+  eq((P => [P.u, P.f])(B.budget(R.C, 10, 'lohnend')), [9, 22], 'BY Mai/Jun 2027: nur Brücken → 22 Tage, 1 Tag übrig');
+  eq((P => [P.u, P.f])(plan(R, 10, 'lang')), [10, 25], 'BY Mai/Jun 2027 lang: 25 Tage frei');
+}
+{ // Nordrhein-Westfalen August 2027: kein Feiertag – der Plan legt den Urlaub an die Wochenenden
+  const R = mon(2027, 'NW', [7]), R9 = mon(2027, 'NW', [7], { je: 9 });
+  eq([R.C.length, R.T.length], [0, 0], 'NW Aug 2027: keine Brücke');
+  ok(R.O.some(c => span(c) === 'Fr 2027-08-06..2027-08-08 1>3'), 'NW Aug 2027: Fr 6.8. → 3 Tage');
+  ok(R.O.some(c => span(c) === 'Sa 2027-07-31..2027-08-02 1>3'), 'NW Aug 2027: Mo 2.8. mit dem Wochenende davor (Juli)');
+  ok(!R.O.some(c => c.u > 4) && R9.O.some(c => span(c) === 'Sa 2027-08-07..2027-08-15 5>9'), 'NW Aug 2027: ganze Woche erst ab je 5');
+  ok(!R9.O.some(c => c.urlaub.some(d => d.getMonth() !== 7)), 'NW Aug 2027: Urlaub nur im August');
+  eq((P => [P.u, P.f])(plan(R, 10, 'lohnend')), [10, 20], 'NW Aug 2027: 10 Urlaubstage → 20 Tage frei');
+  eq(plan(R9, 10, 'lang').items.map(span), ['Sa 2027-07-31..2027-08-02 1>3', 'Di 2027-08-03..2027-08-15 9>13'], 'NW Aug 2027 lang, je 9: 13 Tage am Stück');
+}
+{ // Dezember 2026 in Bayern: Weihnachten zählt, die Verlängerung in den Januar nicht
+  const R = mon(2026, 'BY', [11], { je: 9 });
+  ok(R.C.length > 0 && R.C.every(c => c.urlaub.every(d => d.getFullYear() === 2026 && d.getMonth() === 11)), 'BY Dez 2026: Urlaub nur im Dezember 2026');
+  ok(!R.C.some(c => k(c.bis) === '2027-01-10'), 'BY Dez 2026: nichts mit Urlaub im Januar 2027');
+  ok(run(2026, 'BY', { je: 9 }).C.some(c => k(c.urlaub[0]) === '2026-12-28' && c.urlaub.some(d => d.getFullYear() === 2027)), 'BY 2026 ganzes Jahr: Weihnachten darf in den Januar reichen');
+}
+{ // ohne „ohne“ bleibt O leer; Monate allein ändern O nicht
+  eq(run(2027, 'NW', { monate: [7] }).O.length, 0, 'ohne ohne: kein O');
+  eq(run(2027, 'NW').O.length, 0, 'Jahr: kein O');
+}
+
 // --- Urlaubsplaner gegen vollständige Suche ------------------------------------------------
 const ov = (p, q) => p.von <= q.bis && q.von <= p.bis;
 function brute(C, n, val) {
@@ -132,6 +170,17 @@ for (const [y, L, je] of [[2027, 'BY', 4], [2026, 'BE', 4], [2026, 'SN', 2]]) {
   }
 }
 eq((P => [P.u, P.f])(B.budget(run(2027, 'BY').C, 10)), [10, 28], 'BY 2027: 10 Urlaubstage → 28 Tage frei');
+for (const [y, L, M] of [[2027, 'NW', [7]], [2027, 'BY', [4]], [2026, 'BE', [11]]]) {   // Brücken und Urlaub ohne Feiertag gemischt
+  const R = mon(y, L, M, { je: 2 }), K = R.C.concat(R.O);
+  for (const ziel of ['lohnend', 'lang']) {
+    const val = c => (ziel === 'lang' ? c.f * c.f : c.f) * 1000 - c.u;
+    for (const n of [1, 3, 5]) {
+      const P = B.budget(K, n, ziel), got = P.items.reduce((s, c) => s + val(c), 0);
+      ok(P.u <= n && P.items.every((c, i) => P.items.every((d, j) => i === j || !ov(c, d))), `budget ${L} ${y}/${M} ${ziel} ${n}: zulässig`);
+      eq(got, brute(K, n, val), `budget ${L} ${y}/${M} ${ziel} ${n} mit O: optimal`);
+    }
+  }
+}
 
 // --- Invarianten über alle Jahre und Länder --------------------------------------------------
 const t0 = Date.now();
@@ -159,6 +208,21 @@ for (let y = 1991; y <= 2070; y++) for (const L of ['DE', ...F.LAENDER]) for (co
     if (R.T.some((s, j) => j !== i && ov(s.best, t.best))) ok(false, `${at}: zwei Fahrkarten überschneiden sich (${tk(t.best)})`);
     if (i && R.T[i - 1].best.r < t.best.r) ok(false, `${at}: Fahrkarten nicht nach Hebel sortiert`);
   });
+}
+// Nach Monaten, über alle Jahre: Urlaub nur in den Monaten, O ohne Feiertag an Arbeitstagen, nichts doppelt
+for (let y = 1991; y <= 2070; y++) for (const L of ['BY', 'NW', 'BE', 'DE']) {
+  const M = [y % 12, (y * 5 + 3) % 12], R = mon(y, L, M, { je: 9 }), at = `${L} ${y} Monate ${M}`, seen = new Set();
+  for (const c of R.C.concat(R.O)) {
+    const id = `${k(c.von)}..${k(c.bis)}`;
+    if (seen.has(id)) ok(false, `${at}: Strecke doppelt (${id})`); seen.add(id);
+    if (c.urlaub.some(d => d.getFullYear() !== y || !M.includes(d.getMonth()))) ok(false, `${at}: Urlaub außerhalb der Monate (${tk(c)})`);
+    if (c.u !== c.urlaub.length || c.u < 1 || c.u > 9) ok(false, `${at}: u außerhalb 1…9 (${tk(c)})`);
+    if (c.f !== Math.round((c.bis - c.von) / 864e5) + 1 || c.tage.length !== c.f) ok(false, `${at}: f stimmt nicht (${tk(c)})`);
+    if (c.r <= R.base) ok(false, `${at}: nicht besser als normaler Urlaub (${tk(c)})`);
+    if (c.urlaub.some(d => !MOFR[d.getDay()])) ok(false, `${at}: Urlaub an einem freien Tag (${tk(c)})`);
+  }
+  for (const c of R.O) if (c.tage.some(x => x.hw)) ok(false, `${at}: O mit Feiertag an einem Arbeitstag (${tk(c)})`);
+  for (const c of R.C) if (!c.tage.some(x => x.hw)) ok(false, `${at}: Brücke ohne Feiertag (${tk(c)})`);
 }
 const ms = Date.now() - t0;
 ok(nT > 10000, `Invarianten: zu wenige Fahrkarten (${nT})`);

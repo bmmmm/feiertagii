@@ -54,7 +54,7 @@ Strecken. Links steht das **Stellwerk**, dort stellt man ein, womit gerechnet wi
 | Urlaub je Brücke | bis 4 | 1, bis 2, bis 4 oder bis 9 Urlaubstage für eine Brücke |
 | Urlaubstage für den Plan | 10 | das Kontingent für Wagen 2 und 3 |
 | Ziel | möglichst lohnend | viele freie Tage je Urlaubstag – oder möglichst lang am Stück |
-| Zeitraum | Kalenderjahr | oder ab heute zwölf Monate, über den Jahreswechsel |
+| Zeitraum | Kalenderjahr | oder ab heute zwölf Monate, über den Jahreswechsel – oder einzelne Monate des Jahres |
 | Bei mir auch frei | – | Rosenmontag, Heiligabend, Silvester und die regionalen Feiertage des Lands |
 
 Jede Änderung rechnet sofort neu. Daneben fahren vier Wagen:
@@ -69,17 +69,25 @@ Jede Änderung rechnet sofort neu. Daneben fahren vier Wagen:
 4. **Gut zu wissen** – wie der Zug rechnet und was er nicht kennt (Schulferien, Betriebsferien).
 
 Eine Brücke lohnt sich, wenn sie mindestens 60 % mehr freie Tage je Urlaubstag bringt als
-normaler Urlaub; der bringt bei fünf Arbeitstagen 7 freie Tage für 5. Liniennetz und Ruhezug
+normaler Urlaub; der bringt bei fünf Arbeitstagen 7 freie Tage für 5.
+
+Mit **Zeitraum: Monate** wählt man einen oder mehrere Monate – etwa „Ich will im Mai und Juni
+frei haben“. Die Monatsleiste im Stellwerk zeigt dazu je Monat einen Balken, wie viel die beste
+Brücke dort bringt. Dann zählen nur Brücken, deren Urlaubstage alle in diesen Monaten liegen, und
+der Urlaubsplan verplant die übrigen Urlaubstage auch ohne Feiertag: direkt am Wochenende, als
+langes Wochenende oder am Stück. So gibt es auch für einen August ohne Feiertag oder ein
+Weihnachten am Wochenende einen Plan. Im Link steht das als `zeit=mai-jun`. Liniennetz und Ruhezug
 zählen weiter Feiertage auf Mo–Fr und zeigen nur Hinweise: gelbe Schwellen für Brückentage in
 der Jahresstrecke, die nächste Brücke auf der Abfahrtstafel und die beste Brücke des Jahres in
 Ruhezug-Wagen 2, jeweils mit einem Knopf zum Umsteigen.
 
 Ein Link mit `#…&zug=bruecke` öffnet den Brückenzug. Was vom Stellwerk abweicht, steht mit im
-Link, etwa `#jahr=2027&land=BY&zug=bruecke&arbeit=mo-di-mi-do&je=2&urlaub=15&ziel=lang&zeit=ab&auch=mariae-himmelfahrt`.
+Link, etwa `#jahr=2027&land=BY&zug=bruecke&arbeit=mo-di-mi-do&je=2&urlaub=15&ziel=lang&zeit=ab&auch=mariae-himmelfahrt`,
+nach Monaten etwa `#jahr=2027&land=NW&zug=bruecke&zeit=jul-aug`.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/bruecke-dark.png">
-  <img src="docs/bruecke-light.png" alt="Der Brückenzug 2027 in Bayern: links das Stellwerk mit Arbeitstagen Mo bis Fr, bis 4 Urlaubstagen je Brücke, 10 Urlaubstagen für den Plan, Ziel lohnend, Zeitraum Jahr 2027 und zuschaltbaren freien Tagen. Rechts Wagen 1: Die besten Brücken 2027 sind Christi Himmelfahrt und Fronleichnam, je 1 Urlaubstag für 4 Tage frei. Darunter Fahrkarten mit Abriss 1 → 4 und 2 → 6, einer Strecke mit gelbem Brückentag und Bogen und den Varianten.">
+  <img src="docs/bruecke-light.png" alt="Der Brückenzug 2027 in Bayern: links das Stellwerk mit Arbeitstagen Mo bis Fr, bis 4 Urlaubstagen je Brücke, 10 Urlaubstagen für den Plan, Ziel lohnend, Zeitraum Jahr 2027 (daneben ab heute und Monate) und zuschaltbaren freien Tagen. Rechts Wagen 1: Die besten Brücken 2027 sind Christi Himmelfahrt und Fronleichnam, je 1 Urlaubstag für 4 Tage frei. Darunter Fahrkarten mit Abriss 1 → 4 und 2 → 6, einer Strecke mit gelbem Brückentag und Bogen und den Varianten.">
 </picture>
 
 <picture>

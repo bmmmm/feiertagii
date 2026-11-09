@@ -23,7 +23,9 @@ Abhängigkeiten, Oberfläche auf Deutsch. Live: https://bmmmm.github.io/feiertag
   Feiertag (7/5 bei Mo–Fr), `C` alle Brücken besser als `base`, `T` die Fahrkarten (je Anlass
   `best`, Varianten `V`, Vorgabe `def`). `budget(C, n, ziel)` ist der Urlaubsplan: Brücken ohne
   Überschneidung, die mit `n` Urlaubstagen am meisten bringen. `GRUND` ist die Grundstellung
-  des Stellwerks (Mo–Fr, je 4, 10 Urlaubstage, lohnend, Kalenderjahr).
+  des Stellwerks (Mo–Fr, je 4, 10 Urlaubstage, lohnend, Kalenderjahr). Mit `monate` (0–11)
+  zählt eine Brücke nur, wenn *alle* Urlaubstage in diesen Monaten liegen; mit `ohne` kommt
+  `O` dazu – Urlaub ohne Feiertag, an freie Tage angelegt, nur für den Plan, nie als Fahrkarte.
 - **Gestaltung:** ein Liniennetz. Jeder Feiertag ist eine *Linie*, jedes Land ein *Gleis*.
   `LN[id]` hält die Identität je Feiertag (Kürzel `c`, Kategorie `cat`, Linienfarbe `bg`,
   Schrift `fg`, Kanten `ed`/`dk` für hell/dunkel); `CATS` und `SH` ordnen jeder Kategorie
@@ -65,7 +67,7 @@ Abhängigkeiten, Oberfläche auf Deutsch. Live: https://bmmmm.github.io/feiertag
   immer mit `inLand(c)` bilden („im Saarland“, „bundesweit“), nie `'in '+BY[c].n`. Neue
   Rechtslage braucht hier nichts: Wagen 3 liest Fahrplanwechsel aus `EVENTS`/`EVH`.
 - **Brückenzug** (`#bruecke`, `renderBruecke()` → `renderStw()` + `renderBr1`…`renderBr4`):
-  links das Stellwerk (`BR = {arbeit, auch, je, urlaub, ziel, zeit}`), rechts vier Wagen —
+  links das Stellwerk (`BR = {arbeit, auch, je, urlaub, ziel, zeit, monate}`), rechts vier Wagen —
   Fahrkarten mit Varianten, Urlaubsplan, Länder im Vergleich, wie gerechnet wird. Land, Jahr
   und Zusatztage kommen wie überall aus `S`/`extras`; das Stellwerk ändert nur diesen Zug.
   Gezeichnet wird über `brCalc(L, span)`, das `rechne()` je Land, Zeitraum und Annahmen
@@ -73,6 +75,10 @@ Abhängigkeiten, Oberfläche auf Deutsch. Live: https://bmmmm.github.io/feiertag
   das Stellwerk nur mit `zug=bruecke` und nur, wo es von `GRUND` abweicht
   (`arbeit=mo-di-mi-do&je=2&urlaub=15&ziel=lang&zeit=ab&auch=<id>`, gelesen über
   `brFromHash`); ein solcher Link legt alles fest, was fehlt, steht in Grundstellung.
+  `zeit=mai-jun` (Kürzel `MK`) heißt `zeit:'monate'` mit diesen Monaten im eingestellten Jahr:
+  `brSpan()` liefert dann `sp.M`, `brCalc` rechnet mit `monate` und `ohne`, `brPlan` plant
+  über `C` und `O`, Texte über den Zeitraum kommen aus `brWann(sp)`. Gemerkte Monate bleiben in
+  `BR.monate`, auch wenn wieder nach Jahr gerechnet wird (`brNorm` für die Grundstellung).
   Liniennetz und Ruhezug zählen weiter Feiertage auf Mo–Fr und zeigen nur Hinweise mit den
   Annahmen aus `BR`: `brHint(L, y)` liefert die Urlaubstage der Fahrkarten (gelbe Schwellen in
   der Jahresstrecke) und einen Satz zur besten Brücke (Strecke, Ruhezug Wagen 2), die
