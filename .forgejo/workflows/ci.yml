@@ -21,6 +21,8 @@ jobs:
       - uses: https://data.forgejo.org/actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: Rechtslage gegen Golden-Datei
         run: node tests/holidays.test.mjs
+      - name: Brückentage-Rechnung
+        run: node tests/bridges.test.mjs
       - name: Seite zusammenstellen
         run: scripts/build-site.sh _site
       - name: Seite prüfen

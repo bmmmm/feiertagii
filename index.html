@@ -25,8 +25,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="fonts/barlow-condensed-700.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/barlow-500.woff2" as="font" type="font/woff2" crossorigin>
-<script>/* Ruhezug schon vor dem ersten Bild wählen (Hash vor localStorage), sonst blitzt kurz das volle Liniennetz auf */
-try{const z=(/(?:^#|&)zug=(ruhe|netz)(?:&|$)/.exec(location.hash)||[])[1]||localStorage.getItem('wtf-zug');if(z==='ruhe')document.documentElement.dataset.zug='ruhe';}catch(e){}</script>
+<script>/* Ruhe- oder Brückenzug schon vor dem ersten Bild wählen (Hash vor localStorage), sonst blitzt kurz das volle Liniennetz auf */
+try{const z=(/(?:^#|&)zug=(ruhe|netz|bruecke)(?:&|$)/.exec(location.hash)||[])[1]||localStorage.getItem('wtf-zug');if(z==='ruhe'||z==='bruecke')document.documentElement.dataset.zug=z;}catch(e){}</script>
 <style>
 /* Schriften liegen selbst gehostet unter fonts/ (SIL OFL 1.1, Latin-Subset) – keine Anfrage an Dritte.
    Barlow ist an Beschilderung im öffentlichen Raum angelehnt, Barlow Condensed trägt Schilder und Fallblätter. */
@@ -481,13 +481,13 @@ h2.sign .pk svg{width:20px;height:20px}
 .rk.lx-on{background:var(--hl-soft)}
 .code.lx-on{background:var(--hl);color:#111}
 
-/* Zugwahl im Kopf: zwei gekuppelte Wagen, der gewählte ist erleuchtet */
+/* Zugwahl im Kopf: drei gekuppelte Wagen, der gewählte ist erleuchtet */
 .mast-mid{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:0 34px}
 .mast-mid .lede{flex:1 1 420px}
 .zug{flex:none;margin:16px 0 0}
 .zug-k{font:600 12px/1.3 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:#b9c6d8;margin:0 0 8px}
 .zug-r{display:flex;align-items:flex-end}
-.wg{position:relative;display:grid;gap:3px;justify-items:start;align-content:start;text-align:left;min-width:162px;margin-bottom:9px;padding:9px 16px 11px;border:2px solid #8ea2bf;background:transparent;color:#e6ecf5;cursor:pointer;transition:background .25s,color .25s,border-color .25s,transform .25s}
+.wg{position:relative;display:grid;gap:3px;justify-items:start;align-content:start;text-align:left;min-width:150px;margin-bottom:9px;padding:9px 16px 11px;border:2px solid #8ea2bf;border-radius:10px 10px 6px 6px;background:transparent;color:#e6ecf5;cursor:pointer;transition:background .25s,color .25s,border-color .25s,transform .25s}
 .wg:first-child{border-radius:30px 10px 6px 6px;padding-left:20px}
 .wg:last-child{border-radius:10px 30px 6px 6px;padding-right:20px}
 .wg-w{display:block;justify-self:stretch;height:8px;margin:0 0 6px;border-radius:2px;background:repeating-linear-gradient(90deg,var(--win,#3d5579) 0 13px,transparent 13px 19px)}
@@ -500,18 +500,28 @@ h2.sign .pk svg{width:20px;height:20px}
 .wg[aria-pressed="true"]{background:#fff;border-color:#fff;color:#0b2545;--win:#ffd400;--whc:#fff;cursor:default;transform:none}
 .wg-k{flex:none;width:12px;height:4px;margin-bottom:26px;background:#8ea2bf}
 @media (max-width:820px){.zug{order:-1;flex-basis:100%;margin-top:18px}}
-@media (max-width:440px){.zug-r{width:100%}.wg{flex:1 1 0;min-width:0;padding-inline:12px}.wg:first-child{padding-left:14px}.wg:last-child{padding-right:14px}.wg-n{font-size:20px;gap:6px}.wg-n svg{width:18px;height:18px}.wg-s{font-size:12.5px}}
-.only-ruhe,.ruhe{display:none}
-:root[data-zug="ruhe"] .only-ruhe{display:revert}
-:root[data-zug="ruhe"] .ruhe{display:grid}
-:root[data-zug="ruhe"] :is(.bx,.notes,.opts,.strip,#cur,.only-netz){display:none}
-:root[data-zug="ruhe"] .mast{padding-bottom:clamp(18px,3.4vw,32px)}
-/* Umsteigen aus der Leiste, auch tief unten im Liniennetz */
-.ride{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 16px 0 12px;border:1.5px solid var(--sign);border-radius:999px;background:var(--sign-soft);color:var(--ink);font:600 15px var(--f-body);cursor:pointer;flex:none;white-space:nowrap}
-.ride svg{width:22px;height:22px;color:var(--heat)}
-.ride:hover{border-color:var(--ink)}
-:root[data-zug="ruhe"] .ride{margin-left:auto}
-@media (max-width:560px){.ride span{display:none}.ride{width:44px;padding:0}.cur{order:1}}
+@media (max-width:620px){.zug-r{width:100%}.wg{flex:1 1 0;min-width:0;padding-inline:10px}.wg:first-child{padding-left:13px}.wg:last-child{padding-right:13px}.wg-n{font-size:clamp(16px,4.6vw,20px);gap:5px}.wg-n svg{width:17px;height:17px}.wg-s{font-size:12.5px}.wg-k{width:8px}}
+@media (max-width:420px){.wg-s{display:none}.wg-n svg{display:none}.wg-w{height:6px;margin-bottom:4px}}
+.only-ruhe,.only-bruecke,.ruhe,.bruecke{display:none}
+:root[data-zug="ruhe"] .only-ruhe,:root[data-zug="bruecke"] .only-bruecke{display:revert}
+:root[data-zug="ruhe"] .ruhe,:root[data-zug="bruecke"] .bruecke{display:grid}
+:root:is([data-zug="ruhe"],[data-zug="bruecke"]) :is(.bx,.notes,.opts,.strip,#cur,.only-netz){display:none}
+:root:is([data-zug="ruhe"],[data-zug="bruecke"]) .mast{padding-bottom:clamp(18px,3.4vw,32px)}
+/* Umsteigen aus der Leiste, auch tief unten im Liniennetz: drei Knöpfe, der fahrende Zug ist gefüllt */
+.rides{display:inline-flex;flex:none;gap:2px;padding:2px;border:1.5px solid var(--sign);border-radius:999px;background:var(--sign-soft)}
+.ride{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:7px;height:40px;padding:0 14px 0 10px;border:0;border-radius:999px;background:none;color:var(--ink);font:600 14.5px var(--f-body);cursor:pointer;white-space:nowrap}
+.ride svg{width:21px;height:21px;color:var(--heat)}
+.ride:hover{background:color-mix(in oklab,var(--sign) 12%,transparent)}
+.ride[aria-pressed="true"]{background:var(--sign);color:var(--on-sign);cursor:default}
+.ride[aria-pressed="true"] svg{color:#ffd400}
+:root:is([data-zug="ruhe"],[data-zug="bruecke"]) .rides{margin-left:auto}
+/* Platz in der Leiste: erst verlieren die anderen Züge ihr Wort, dann auch der eigene – vorlesbar bleibt es */
+@media (max-width:1180px){.ride:not([aria-pressed="true"]) .rl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}.ride:not([aria-pressed="true"]){width:40px;padding:0}}
+@media (max-width:900px){.ride .rl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}.rides .ride{width:40px;padding:0}}
+@media (max-width:560px){.cur{order:1}}
+/* schmale Telefone: Zugwahl, Jahr und Land teilen sich eine Zeile – das Land behält Platz für seinen Namen */
+@media (max-width:480px){.bar-in{column-gap:6px}.rides{gap:0}.rides .ride{width:34px}.yr button{width:30px}.gl{padding-left:0}.gl>span:first-child{display:none}.gl select{padding:0 24px 0 10px}.gl::after{right:9px}}
+@media (max-width:370px){.rides .ride{width:31px}.ride svg{width:19px;height:19px}.yr button{width:26px}.yr output{font-size:22px;min-width:2.1em}.gl select{font-size:15px;padding:0 20px 0 8px}.gl::after{right:7px}}
 
 /* Ruhezug: wenige Wagen, je eine Kernaussage in ganzen Sätzen und ein ruhiges Bild. Eine Farbe für Daten,
    Gelb für „nächster Halt“, Rot nur für „heute“. Zwischen den Wagen ein Faltenbalg. */
@@ -625,6 +635,157 @@ h2.sign .pk svg{width:20px;height:20px}
 .ru-back{display:inline-flex;align-items:center;gap:10px;margin-top:26px;border:0;border-radius:10px;background:var(--sign);color:var(--on-sign);font:600 16.5px var(--f-body);padding:12px 18px;cursor:pointer}
 .ru-back svg{width:22px;height:22px}
 .ru-back:hover{background:color-mix(in oklab,var(--sign) 85%,#fff)}
+.ru-backs{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.ru-backs .ru-back{margin-top:0}
+/* Brückenzug: links das Stellwerk (die Annahmen der Rechnung), rechts vier Wagen. Gelb heißt hier „Urlaub nehmen“,
+   die Datenfarbe trägt die freie Strecke am Stück, Rot bleibt „heute“. */
+.bruecke{width:100%;grid-template-columns:minmax(0,1fr);gap:28px;align-items:start;margin-top:6px;font-size:18px;line-height:1.55}
+@media (min-width:1020px){.bruecke{grid-template-columns:282px minmax(0,1fr)}.stw{position:sticky;top:78px;max-height:calc(100vh - 92px);overflow-y:auto;overscroll-behavior:contain}}
+.br-cars{display:grid;gap:32px;min-width:0}
+.stw{display:grid;gap:16px;align-content:start;min-width:0;padding:20px 18px 20px;border-radius:18px;background:var(--sign);color:var(--on-sign);font-size:15px;line-height:1.4}
+.stw-h{display:flex;align-items:center;gap:10px;margin:0;font:700 27px/1 var(--f-disp);letter-spacing:.01em}
+.stw-h svg{flex:none;width:28px;height:28px;color:#ffd400}
+.stw-p{margin:-8px 0 0;color:#c4cfdf;font-size:14.5px}
+.stw-gs{display:grid;gap:15px}
+@media (min-width:640px) and (max-width:1019px){.stw-gs{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 28px}}
+.stw-g{display:grid;gap:7px;align-content:start;min-width:0;margin:0;padding:0;border:0}
+.stw-k{margin:0;padding:0;font:600 11.5px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:#ffd400}
+.stw-r{display:flex;flex-wrap:wrap;gap:5px}
+.stw-r button,.stw-st button{min-height:36px;padding:4px 10px;border:1.5px solid #6f86a8;border-radius:7px;background:none;color:#e6ecf5;font:500 14.5px/1.1 var(--f-body);cursor:pointer}
+.stw-r button:hover,.stw-st button:hover:not(:disabled){border-color:#fff;color:#fff}
+.stw-r button[aria-pressed="true"]{border-color:#ffd400;background:#ffd400;color:#111;font-weight:600}
+.stw-d{gap:4px}
+.stw-d button{min-width:31px;padding-inline:0;font:600 13.5px var(--f-mono)}
+.stw-r .opt{border-radius:999px;padding:4px 11px 4px 5px;font-size:14px}
+.stw-r .opt[aria-pressed="true"]{border-color:#ffd400;background:rgba(255,212,0,.14);color:#fff;font-weight:500}
+.stw-r .opt .sg{width:24px;height:24px}
+.stw-st{display:flex;align-items:center;gap:8px}
+.stw-st button{width:38px;padding:0;font-size:21px;line-height:1}
+.stw-st button:disabled{opacity:.35;cursor:default}
+.stw-st output{min-width:1.6em;text-align:center;font:700 30px/1 var(--f-disp);font-variant-numeric:tabular-nums}
+.stw-st span,.stw-n{color:#c4cfdf;font-size:13.5px;line-height:1.35}
+.stw-n{margin:0}
+.stw-0{justify-self:start;display:inline-flex;align-items:center;gap:8px;padding:7px 15px;border:1.5px solid #6f86a8;border-radius:999px;background:none;color:#e6ecf5;font:500 14.5px var(--f-body);cursor:pointer}
+.stw-0:hover:not(:disabled){border-color:#fff;color:#fff}
+.stw-0:disabled{opacity:.4;cursor:default}
+/* Wagen 1: Fahrkarten – links der Abschnitt mit Einsatz und Ertrag, rechts die Strecke mit den Brückenbögen */
+.tix{list-style:none;margin:28px 0 0;padding:0;display:grid;gap:12px}
+.tk{position:relative;display:grid;grid-template-columns:110px minmax(0,1fr);border:1.5px solid var(--rule);border-radius:12px;background:var(--panel)}
+.tk.top{border-color:color-mix(in oklab,var(--ink) 45%,var(--rule))}
+.stub{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:14px 6px;border-right:2px dashed var(--rule)}
+.stub::before,.stub::after{content:"";position:absolute;right:-10.5px;width:19px;height:19px;border:1.5px solid var(--rule);border-radius:50%;background:var(--panel)}
+.stub::before{top:-11px;clip-path:inset(50% 0 0 0)}
+.stub::after{bottom:-11px;clip-path:inset(0 0 50% 0)}
+.tk.top .stub::before,.tk.top .stub::after{border-color:color-mix(in oklab,var(--ink) 45%,var(--rule))}
+.cap{font:600 10.5px/1 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.nn{display:flex;align-items:center;gap:5px;font:700 34px/1 var(--f-disp);font-variant-numeric:tabular-nums}
+.nn b{font-weight:700}
+.nn b.u{padding:3px 7px 1px;border-radius:6px;background:var(--hl);color:#111}
+.nn i{font-style:normal;font-size:20px;color:var(--muted)}
+.nn.w{gap:3px;font-size:30px}.nn.w b.u{padding-inline:6px}
+.tm{min-width:0;padding:14px 18px 14px 22px}
+.tl{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px}
+.tl .sg{width:26px;height:26px}
+.tn{margin:0 4px 0 2px;font:700 25px/1.05 var(--f-disp);letter-spacing:.005em}
+.td{font:500 13.5px/1.3 var(--f-mono);color:var(--muted)}
+.tu{margin:6px 0 0;font-size:15.5px;line-height:1.4;color:var(--muted);text-wrap:pretty}
+.tu b{font-weight:600;color:var(--ink)}
+.tk-s{margin-top:10px;overflow-x:auto;padding-bottom:2px}
+.bs{display:block;max-width:100%;height:auto;overflow:visible}
+.bs rect.t-we{fill:color-mix(in oklab,var(--track) 42%,var(--panel))}
+.bs rect.t-u{fill:var(--hl)}
+.bs rect.t-c{fill:none;stroke:var(--track);stroke-width:1.2;stroke-dasharray:3 2.5}
+.bs .tt{font:600 11px var(--f-mono);text-anchor:middle;dominant-baseline:central}
+.bs .tt.t-we{fill:var(--muted)}.bs .tt.t-u{fill:#111}.bs .tt.t-c{fill:var(--muted);opacity:.75}
+.bs .ar,.bs .dk{fill:none;stroke:var(--ink);stroke-width:2.4;stroke-linecap:round}
+.bs .hg{stroke:var(--ink);stroke-width:1.3}
+.bs .fs{fill:var(--heat)}
+.bs .dl{font:500 10.5px var(--f-mono);fill:var(--muted)}.bs .dl.e{text-anchor:end}
+.var{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:10px}
+.var>span{margin-right:2px;font:600 10.5px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.var button{min-height:32px;padding:3px 11px;border:1.5px solid var(--rule);border-radius:999px;background:var(--panel);color:var(--muted);font:500 13px var(--f-mono);cursor:pointer}
+.var button b{font-weight:600;color:var(--ink)}
+.var button:hover{border-color:var(--ink)}
+.var button[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:var(--panel);cursor:default}
+.var button[aria-pressed="true"] b{color:var(--panel)}
+.tk.ab{border-style:dashed}
+.tk.ab :is(.stub,.tu,.tk-s,.var,.tl>:not(.stamp)){opacity:.5}
+.stamp{margin-left:auto;padding:4px 8px 3px;border:2px solid var(--muted);border-radius:4px;transform:rotate(-3deg);font:700 11.5px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+@media (max-width:560px){
+ .tk{grid-template-columns:minmax(0,1fr)}
+ .stub{flex-direction:row;justify-content:flex-start;gap:10px;padding:10px 16px;border-right:0;border-bottom:2px dashed var(--rule)}
+ .stub::before,.stub::after{top:auto;right:auto;bottom:-10.5px}
+ .stub::before{left:-11px;clip-path:inset(0 0 0 50%)}
+ .stub::after{right:-11px;clip-path:inset(0 50% 0 0)}
+ .nn{font-size:29px}.tm{padding:12px 14px}.tn{font-size:23px}}
+.br-as{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;margin:24px 0 0;padding-top:14px;border-top:1px dashed var(--rule);font-size:15px;line-height:1.45;color:var(--muted)}
+.br-as .k{font:600 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase}
+.br-go{display:inline-flex;align-items:center;gap:8px;margin-top:16px;padding:8px 16px;border:1.5px solid var(--ink);border-radius:999px;background:none;color:var(--ink);font:500 15.5px var(--f-body);cursor:pointer}
+.br-go:hover{background:var(--sign-soft)}
+.br-go svg{width:20px;height:20px;flex:none;color:var(--heat)}
+.br-go.sm{margin-top:0;padding:5px 13px;font-size:14.5px}
+/* Hinweise in den anderen Zügen: gelbe Schwelle in der Jahresstrecke, Zeile auf der Tafel, Satz im Ruhezug */
+.js .d.bu::before{display:block;content:"";position:absolute;left:50%;top:50%;width:7px;height:16px;margin:-8px 0 0 -3.5px;background:var(--hl);border-radius:2px;box-shadow:0 0 0 1.5px color-mix(in oklab,var(--ink) 45%,transparent)}
+.js .d.bu>*{position:relative;z-index:1}
+@media (max-width:560px){.js .d.bu::before{width:4px;height:12px;margin:-6px 0 0 -2px;border-radius:1.5px;box-shadow:0 0 0 1px color-mix(in oklab,var(--ink) 45%,transparent)}}
+.js-br{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin:16px 0 0;font-size:15px;line-height:1.45;color:var(--muted)}
+.js-br:empty{display:none}
+.js-bk{display:inline-flex;align-items:baseline;gap:9px}
+.js-bk .sw{width:7px;height:14px;box-shadow:0 0 0 1.5px color-mix(in oklab,var(--ink) 45%,transparent);transform:translateY(2px)}
+.js-bk b{color:var(--ink)}
+.bd-br{align-items:center}
+.bd-go{display:inline-flex;align-items:center;gap:7px;margin-left:auto;padding:5px 13px;border:1px solid var(--flap-y);border-radius:999px;background:none;color:var(--flap-y);font:600 14px var(--f-body);cursor:pointer}
+.bd-go svg{width:18px;height:18px;flex:none}
+.bd-go:hover{background:var(--flap-y);color:var(--board)}
+.ru-brk{margin-top:22px}
+.ru-brk+.br-go{margin-top:12px}
+/* Wagen 2: der Plan im Kalender – zwölf Monatsgleise, gelb der Urlaub, darunter die freie Strecke */
+.bud{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin:16px 0 0;font-size:16.5px}
+.stp{display:inline-flex;align-items:center;padding:2px;border:1.5px solid var(--ink);border-radius:999px}
+.stp button{width:38px;height:38px;border:0;border-radius:50%;background:none;color:var(--ink);font-size:22px;line-height:1;cursor:pointer}
+.stp button:hover:not(:disabled){background:var(--sign-soft)}
+.stp button:disabled{opacity:.3;cursor:default}
+.stp output{min-width:1.8em;text-align:center;font:700 28px/1 var(--f-disp);font-variant-numeric:tabular-nums}
+.jp{display:grid;grid-template-columns:3.3em repeat(31,minmax(0,1fr));align-items:center;row-gap:6px;margin-top:28px}
+.jp-h{font:500 10px var(--f-mono);color:var(--muted);text-align:center;white-space:nowrap}
+.jp-m{font:600 12px/1.05 var(--f-mono);letter-spacing:.04em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.jp-m small{display:block;font-size:10px;font-weight:500;letter-spacing:0}
+.jp .d{position:relative;display:grid;place-items:center;min-width:0;height:28px;background:linear-gradient(var(--track),var(--track)) 0 50%/100% 2px no-repeat}
+.jp .d.x{background:none}
+.jp .d::before,.jp .d::after{content:"";position:absolute;pointer-events:none}
+.jp .d.wd::before{left:50%;top:50%;width:3px;height:12px;margin:-6px 0 0 -1.5px;border-radius:1px;background:var(--sleeper)}
+.jp .d.in::after{left:0;right:0;top:50%;height:8px;margin-top:-4px;background:var(--heat);z-index:0}
+.jp .d.in.s::after{left:2px;border-radius:4px 0 0 4px}
+.jp .d.in.e::after{right:2px;border-radius:0 4px 4px 0}
+.jp .d.in.s.e::after{border-radius:4px}
+.jp .d.u::before{inset:3px 1px;border-radius:3px;background:var(--hl);z-index:1}
+.jp .d .sg{position:relative;z-index:2;width:min(20px,100%);height:auto;aspect-ratio:1}
+.jp .d.out{opacity:.3}
+.jp .d.past{opacity:.55}
+.jp .nw{position:absolute;left:50%;top:-4px;z-index:3;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:var(--alert);box-shadow:0 0 0 2px var(--panel)}
+@media (max-width:560px){.jp{grid-template-columns:2.5em repeat(31,minmax(0,1fr));row-gap:3px}.jp .d{height:20px}.jp .d.wd::before{width:2px;height:8px;margin:-4px 0 0 -1px}.jp .d.in::after{height:6px;margin-top:-3px}.jp .d.u::before{inset:2px 0}.jp-h{font-size:8px}.jp-m{font-size:10px}.jp-m small{font-size:8.5px}}
+.sw.u{background:var(--hl)}
+.sw.t{background:linear-gradient(var(--sleeper),var(--sleeper)) 50% 50%/3px 100% no-repeat}
+.sw.nw{width:10px;height:10px;border-radius:50%;background:var(--alert)}
+.etp{list-style:none;margin:24px 0 0;padding:0;display:grid;gap:2px}
+.etp li{display:grid;grid-template-columns:30px minmax(0,1fr) auto;align-items:center;gap:14px;padding:8px 10px;border-radius:9px}
+.etp li:nth-child(odd){background:var(--paper)}
+.etp-n{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--heat);color:var(--on-heat);font:700 16px/1 var(--f-disp)}
+.etp-t{min-width:0;font-size:17px;line-height:1.3}
+.etp-t b{font-weight:600}
+.etp-t small{display:block;margin-top:2px;font-size:14.5px;color:var(--muted)}
+.etp-c{font:700 22px/1 var(--f-disp);white-space:nowrap;font-variant-numeric:tabular-nums}
+.etp-c .u{padding:1px 5px 0;border-radius:4px;background:var(--hl);color:#111}
+.etp li.ab{opacity:.6}
+/* Wagen 3: je Land ein Balken – gelb der eingesetzte Urlaub, dahinter die freien Tage */
+.lr-w{display:block;min-width:0}
+.lr-b{display:flex;height:14px;min-width:6px;overflow:hidden;border-radius:2px 8px 8px 2px}
+.lr-b i{display:block;height:100%}
+.lr-b .u{background:var(--hl)}
+.lr-b .f{background:color-mix(in oklab,var(--heat) 50%,var(--panel))}
+.lv.on .lr:not([aria-pressed="true"]) .lr-b .f{background:color-mix(in oklab,var(--heat) 32%,var(--panel))}
+.lr[aria-pressed="true"] .lr-b .f{background:var(--heat)}
+@media (max-width:560px){.lr-b{height:11px}}
 /* Umsteigen: der alte Zug fährt nach links aus, der neue fährt von rechts ein (zurück: umgekehrt) */
 @media (prefers-reduced-motion:no-preference){
 ::view-transition-old(root){animation:zug-ab .42s cubic-bezier(.55,0,.8,.3) both}
@@ -647,19 +808,22 @@ h2.sign .pk svg{width:20px;height:20px}
     <div class="mast-top">
       <span class="hst" aria-hidden="true">H</span>
       <div>
-        <p class="eyebrow"><span class="only-netz">Liniennetz der gesetzlichen Feiertage · 16 Länder · 1991–2070</span><span class="only-ruhe">Ruhezug · das Wichtigste, in Ruhe erklärt</span></p>
+        <p class="eyebrow"><span class="only-netz">Liniennetz der gesetzlichen Feiertage · 16 Länder · 1991–2070</span><span class="only-ruhe">Ruhezug · das Wichtigste, in Ruhe erklärt</span><span class="only-bruecke">Brückenzug · Urlaub planen, Brücken schlagen</span></p>
         <h1>Werktags-Feiertage</h1>
       </div>
     </div>
     <div class="mast-mid">
       <p class="lede only-netz">Jeder Feiertag ist eine <b>Linie</b> mit eigener Farbe und eigenem Signet, jedes Bundesland ein <b>Gleis</b>, das durchs Jahr läuft. Welche Feiertage halten tatsächlich an einem Arbeitstag, welche fallen aufs Wochenende aus – und wann kommt der nächste Halt?</p>
       <p class="lede only-ruhe">Hier fährt der <b>Ruhezug</b>: nur das Wichtigste, in ganzen Sätzen und mit wenigen, ruhigen Bildern. Bundesland und Jahr wählen Sie in der Leiste darunter. Jede Linie, jedes Jahr, jedes Detail zeigt das <b>Liniennetz</b>.</p>
+      <p class="lede only-bruecke">Der <b>Brückenzug</b> fährt über die Tage dazwischen: Wo ein Urlaubstag zwischen Feiertag und Wochenende eine Brücke schlägt und wenige Urlaubstage lange freie Strecken ergeben. Wie Sie arbeiten und wie viel Urlaub Sie einsetzen, stellen Sie im <b>Stellwerk</b> ein.</p>
       <div class="zug" role="group" aria-label="Ansicht wählen">
         <p class="zug-k" aria-hidden="true">Zug wählen</p>
         <div class="zug-r">
           <button class="wg" data-ride="netz" aria-pressed="true"><span class="wg-w" aria-hidden="true"></span><span class="wg-n">Liniennetz</span><span class="wg-s">alle Ansichten, jedes Detail</span></button>
           <i class="wg-k" aria-hidden="true"></i>
           <button class="wg" data-ride="ruhe" aria-pressed="false"><span class="wg-w" aria-hidden="true"></span><span class="wg-n">Ruhezug<span class="ruhei" aria-hidden="true"></span></span><span class="wg-s">nur das Wichtigste, in Ruhe</span></button>
+          <i class="wg-k" aria-hidden="true"></i>
+          <button class="wg" data-ride="bruecke" aria-pressed="false"><span class="wg-w" aria-hidden="true"></span><span class="wg-n">Brückenzug<span class="brueckei" aria-hidden="true"></span></span><span class="wg-s">Urlaub planen, Brücken schlagen</span></button>
         </div>
       </div>
     </div>
@@ -674,14 +838,18 @@ h2.sign .pk svg{width:20px;height:20px}
 
   <nav class="bar" aria-label="Auswahl">
     <div class="bar-in">
-      <label class="gl"><span><span class="only-netz">Gleis</span><span class="only-ruhe">Land</span></span><select id="state" aria-label="Bundesland"></select></label>
+      <label class="gl"><span><span class="only-netz">Gleis</span><span class="only-ruhe only-bruecke">Land</span></span><select id="state" aria-label="Bundesland"></select></label>
       <div class="yr" role="group" aria-label="Jahr">
         <button id="yprev" aria-label="Vorheriges Jahr">‹</button>
         <output id="yv" aria-live="polite"></output>
         <button id="ynext" aria-label="Nächstes Jahr">›</button>
       </div>
       <div class="cur" id="cur"></div>
-      <button class="ride" id="rideBar" data-ride="toggle"></button>
+      <div class="rides" role="group" aria-label="Zug wählen">
+        <button class="ride" data-ride="netz" aria-pressed="true" title="Liniennetz: alle Ansichten, jedes Detail"><span class="netzi" aria-hidden="true"></span><span class="rl">Liniennetz</span></button>
+        <button class="ride" data-ride="ruhe" aria-pressed="false" title="Ruhezug: nur das Wichtigste, in Ruhe"><span class="ruhei" aria-hidden="true"></span><span class="rl">Ruhezug</span></button>
+        <button class="ride" data-ride="bruecke" aria-pressed="false" title="Brückenzug: Urlaub planen, Brücken schlagen"><span class="brueckei" aria-hidden="true"></span><span class="rl">Brückenzug</span></button>
+      </div>
     </div>
   </nav>
 
@@ -706,6 +874,16 @@ h2.sign .pk svg{width:20px;height:20px}
       </div>
       <button class="ru-back" data-ride="netz"><span class="netzi" aria-hidden="true"></span>Alle Details im Liniennetz</button>
     </aside>
+  </section>
+
+  <section class="bruecke" id="bruecke" aria-label="Brückenzug: Brückentage und Urlaubsplanung">
+    <aside class="stw" id="stw" aria-labelledby="stwh"></aside>
+    <div class="br-cars">
+      <article class="ru-car" id="br1" aria-labelledby="br1h"></article>
+      <article class="ru-car" id="br2" aria-labelledby="br2h"></article>
+      <article class="ru-car" id="br3" aria-labelledby="br3h"></article>
+      <aside class="ru-car ru-note" id="br4" aria-labelledby="br4h"></aside>
+    </div>
   </section>
 
   <section class="board bx" id="board" aria-labelledby="bdTitle">
@@ -741,6 +919,7 @@ h2.sign .pk svg{width:20px;height:20px}
     </div>
     <p class="hint">Jede Zeile ein Monat, jede Schwelle ein Arbeitstag, Lücken sind Wochenenden. An den Halten steht das Signet des Feiertags; blass und klein = gilt nur in anderen Ländern. Rechts: freie Werktage im Monat (bei ganz Deutschland: bundesweit freie).</p>
     <div class="js" id="js"></div>
+    <p class="js-br" id="jsBr"></p>
   </section>
 
   <section class="card bx" id="verz" aria-labelledby="vzTitle">
@@ -856,6 +1035,89 @@ function holidays(y,ex){
 g.FEIERTAGE={LAENDER,easter,holidays,key};
 })(globalThis);
 </script>
+<script id="brueckentage">
+// Brückentage, rein rechnerisch und ohne DOM: wo wenige Urlaubstage zwischen Feiertagen und freien Tagen
+// lange freie Strecken ergeben. Liest nur FEIERTAGE. Geprüft mit node tests/bridges.test.mjs.
+(function(g){
+const F=g.FEIERTAGE;
+const addD=(d,n)=>new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);
+const D0=new Date(1991,0,1),D1=new Date(2070,11,31);   // Datenbestand: davor und danach ist nichts bekannt
+// Grundstellung des Stellwerks. arbeit: Index = getDay() (So … Sa), true = Arbeitstag
+const GRUND={arbeit:[false,true,true,true,true,true,false],auch:[],je:4,urlaub:10,ziel:'lohnend',zeit:'jahr'};
+// Ein Feiertag macht frei, wenn er im Land gilt (DE: bundesweit) – regional nur, wenn ausdrücklich zugeschaltet
+const gilt=(h,L,auch)=>L==='DE'?h.full.length===16:h.full.includes(L)||h.reg.includes(L)&&auch.includes(h.id);
+// rechne({land, ex, arbeit, auch, je, ziel, von, bis}) → {base, C, T}
+// Eine Brücke reicht von einem freien Block bis zu einem späteren; dazwischen liegen u Arbeitstage (der Urlaub,
+// höchstens je), insgesamt f Tage frei, und mindestens ein Feiertag fällt auf einen Arbeitstag. Sie gehört in den
+// Zeitraum, in dem ihr erster Urlaubstag liegt (von ≤ Tag < bis). base: so viele Tage frei bringt ein Urlaubstag
+// ohne Feiertag (7/5 bei Mo–Fr). C: alle Brücken, die besser sind als base, nach Hebel f/u sortiert.
+// T: Fahrkarten – je Anlass die beste Brücke (best) und ihre Varianten (V, nach u): gleich gute Alternativen und
+// Verlängerungen, deren jeder weitere Urlaubstag mehr bringt als base. def: vorgewählte Variante.
+function rechne(o){
+ const L=o.land,arbeit=o.arbeit||GRUND.arbeit,auch=o.auch||[],je=o.je||GRUND.je,ziel=o.ziel||GRUND.ziel;
+ const wpw=arbeit.filter(Boolean).length,base=wpw?7/wpw:Infinity;
+ if(!wpw||o.bis<=D0||o.von>D1)return{base,C:[],T:[]};
+ const lo=new Date(Math.max(D0,addD(o.von,-70))),hi=new Date(Math.min(D1,addD(o.bis,70)));
+ const H=new Map();
+ for(let y=lo.getFullYear();y<=hi.getFullYear();y++)for(const h of F.holidays(y,o.ex))if(gilt(h,L,auch)){const a=H.get(h.k);if(a)a.push(h);else H.set(h.k,[h]);}
+ const runs=[];
+ for(let d=lo,i=0;d<=hi;d=addD(d,1),i++){
+  const hs=H.get(F.key(d))||[],w=arbeit[d.getDay()],x={d,i,hs,frei:!w||hs.length>0,hw:w&&hs.length>0,we:!w};
+  const r=runs[runs.length-1];if(r&&r.frei===x.frei){r.days.push(x);if(x.hw)r.hw++;}else runs.push({frei:x.frei,days:[x],hw:x.hw?1:0});
+ }
+ const free=runs.map((r,i)=>(r.i=i,r)).filter(r=>r.frei),C=[];
+ for(let a=0;a<free.length;a++){
+  const ra=free[a],w0=runs[ra.i+1];if(!w0)continue;
+  const first=w0.days[0].d;if(first<o.von||first>=o.bis)continue;
+  let u=0,hw=ra.hw;
+  for(let b=a+1;b<free.length;b++){
+   const rb=free[b];u+=runs[rb.i-1].days.length;hw+=rb.hw;
+   if(u>je)break;
+   if(!hw)continue;
+   const tage=runs.slice(ra.i,rb.i+1).flatMap(r=>r.days),f=tage.length;
+   if(f/u<=base+1e-9)continue;
+   const hs=[];tage.forEach(x=>x.hs.forEach(h=>{if(!hs.includes(h))hs.push(h);}));
+   C.push({u,f,r:f/u,von:tage[0].d,bis:tage[f-1].d,tage,urlaub:tage.filter(x=>!x.frei).map(x=>x.d),hs,
+    rand:+tage[0].d===+D0||+tage[f-1].d===+D1});
+  }
+ }
+ const rank=(p,q)=>q.r-p.r||q.f-p.f||p.von-q.von;
+ C.sort(rank);
+ const ov=(p,q)=>p.von<=q.bis&&q.von<=p.bis,T=[];
+ let left=C.slice();
+ while(left.length){
+  const best=left.shift(),fam=[best];left=left.filter(c=>ov(c,best)?(fam.push(c),false):true);
+  if(best.r<base*1.6-1e-9)continue;            // lohnt erst ab 60 % mehr als normaler Urlaub (Mo–Fr: 1 → 4, 2 → 5, 4 → 9)
+  const front=fam.filter(c=>!fam.some(d=>d!==c&&d.u<=c.u&&d.f>=c.f&&(d.u<c.u||d.f>c.f))).sort((p,q)=>p.u-q.u||p.von-q.von);
+  const V=[best];
+  for(const c of front){
+   if(c===best||c.u<best.u)continue;
+   if(c.u===best.u){if(c.f===best.f)V.push(c);continue;}
+   const s=V.filter(v=>v.u<c.u).reduce((m,v)=>v.f>m.f?v:m);
+   if((c.f-s.f)/(c.u-s.u)>base+1e-9)V.push(c);
+  }
+  V.sort((p,q)=>p.u-q.u||p.von-q.von);V.splice(5);
+  const lang=V.reduce((m,v)=>v.f>m.f?v:m);
+  T.push({best,V,def:V.indexOf(ziel==='lang'?lang:best),lang});
+ }
+ if(ziel==='lang')T.sort((p,q)=>q.lang.f-p.lang.f||rank(p.best,q.best));
+ return{base,C,T};
+}
+// budget(C, n, ziel) → {items, u, f}: die Brücken ohne Überschneidung, die mit höchstens n Urlaubstagen zusammen
+// am meisten freie Tage bringen (ziel 'lang': lange Strecken zählen überproportional, f²). Rucksack über Intervalle.
+function budget(C,n,ziel){
+ const K=C.filter(c=>c.u<=n).sort((p,q)=>p.bis-q.bis||p.von-q.von),N=K.length,B=n+1;
+ const val=c=>(ziel==='lang'?c.f*c.f:c.f)*1000-c.u,dp=new Float64Array((N+1)*B),pv=new Int32Array(N);
+ for(let i=0;i<N;i++){let j=i-1;while(j>=0&&K[j].bis>=K[i].von)j--;pv[i]=j+1;}
+ for(let i=1;i<=N;i++){const c=K[i-1],p=pv[i-1];
+  for(let b=0;b<B;b++){let v=dp[(i-1)*B+b];if(c.u<=b){const w=dp[p*B+b-c.u]+val(c);if(w>v)v=w;}dp[i*B+b]=v;}}
+ const items=[];let i=N,b=n;
+ while(i>0){if(dp[i*B+b]===dp[(i-1)*B+b])i--;else{const c=K[i-1];items.unshift(c);b-=c.u;i=pv[i-1];}}
+ return{items,u:items.reduce((s,c)=>s+c.u,0),f:items.reduce((s,c)=>s+c.f,0)};
+}
+g.BRUECKEN={GRUND,gilt,rechne,budget};
+})(globalThis);
+</script>
 <script>
 (function(){
 'use strict';
@@ -963,9 +1225,45 @@ const HV={fid:null,land:null,jahr:null};           // flüchtige Vorschau (Hover
 try{const s=localStorage.getItem('wtf-sel');if(isLand(s))S.land=s;}catch(e){}
 let extras={rm:false,ha:false,sv:false};try{const x=JSON.parse(localStorage.getItem('wtf-ex')||'{}');if(x&&typeof x==='object')for(const kk of Object.keys(extras))if(own(x,kk)&&typeof x[kk]==='boolean')extras[kk]=x[kk];}catch(e){}
 const exKey=()=>(extras.rm?'r':'')+(extras.ha?'h':'')+(extras.sv?'s':'');
-// Welcher Zug fährt: 'netz' (alle Ansichten) oder 'ruhe' (Ruhezug). Hash zug=… schlägt localStorage wtf-zug.
-const zugPref=()=>{try{return localStorage.getItem('wtf-zug')==='ruhe'?'ruhe':'netz';}catch(e){return 'netz';}};
+// Welcher Zug fährt: 'netz' (alle Ansichten), 'ruhe' (Ruhezug) oder 'bruecke' (Brückenzug).
+// Hash zug=… schlägt localStorage wtf-zug. Die Reihenfolge bestimmt die Fahrtrichtung beim Umsteigen.
+const ZUGE=['netz','ruhe','bruecke'];
+const zugPref=()=>{try{const z=localStorage.getItem('wtf-zug');return z==='ruhe'||z==='bruecke'?z:'netz';}catch(e){return 'netz';}};
 let ZUG=zugPref();
+// Stellwerk des Brückenzugs: die Annahmen der Rechnung (BRUECKEN.GRUND = Grundstellung). Gespeichert unter wtf-br;
+// Fremdeingaben (Hash, localStorage) nur über BRV annehmen. arbeit: Index = getDay() (So … Sa).
+const BRK=window.BRUECKEN,WDK=['so','mo','di','mi','do','fr','sa'],WOCHE=[1,2,3,4,5,6,0],JE=[1,2,4,9],UMAX=40;
+const brGrund=()=>({arbeit:BRK.GRUND.arbeit.slice(),auch:[],je:BRK.GRUND.je,urlaub:BRK.GRUND.urlaub,ziel:BRK.GRUND.ziel,zeit:BRK.GRUND.zeit});
+const BRV={
+ arbeit:v=>Array.isArray(v)&&v.length===7&&v.every(x=>typeof x==='boolean')&&v.some(Boolean),
+ auch:v=>Array.isArray(v)&&v.length<=ORDER.length&&v.every(isLine),
+ je:v=>JE.includes(v),
+ urlaub:v=>Number.isInteger(v)&&v>=1&&v<=UMAX,
+ ziel:v=>v==='lohnend'||v==='lang',
+ zeit:v=>v==='jahr'||v==='ab'
+};
+let BR=brGrund();
+try{const x=JSON.parse(localStorage.getItem('wtf-br')||'{}');if(x&&typeof x==='object')for(const kk of Object.keys(BRV))if(own(x,kk)&&BRV[kk](x[kk]))BR[kk]=Array.isArray(x[kk])?[...new Set(x[kk])]:x[kk];}catch(e){}
+const saveBr=()=>{try{localStorage.setItem('wtf-br',JSON.stringify(BR));}catch(e){}};
+// Ein Link mit zug=bruecke legt das Stellwerk ganz fest: was fehlt, steht in Grundstellung
+function brFromHash(p){
+ const b=brGrund();
+ const a=p.get('arbeit');if(a){const t=a.split('-'),m=[false,false,false,false,false,false,false];if(t.every(x=>WDK.includes(x))){t.forEach(x=>{m[WDK.indexOf(x)]=true;});if(BRV.arbeit(m))b.arbeit=m;}}
+ b.auch=[...new Set(p.getAll('auch').filter(isLine))];
+ const j=p.get('je');if(j&&/^\d$/.test(j)&&BRV.je(+j))b.je=+j;
+ const u=p.get('urlaub');if(u&&/^\d{1,2}$/.test(u)&&BRV.urlaub(+u))b.urlaub=+u;
+ const z=p.get('ziel');if(BRV.ziel(z))b.ziel=z;
+ const t=p.get('zeit');if(BRV.zeit(t))b.zeit=t;
+ return b;
+}
+// In die Adresse kommt nur, was von der Grundstellung abweicht
+function brToHash(p){
+ const g=brGrund();
+ if(BR.arbeit.some((v,i)=>v!==g.arbeit[i]))p.set('arbeit',WOCHE.filter(i=>BR.arbeit[i]).map(i=>WDK[i]).join('-'));
+ BR.auch.forEach(id=>p.append('auch',id));
+ if(BR.je!==g.je)p.set('je',BR.je);if(BR.urlaub!==g.urlaub)p.set('urlaub',BR.urlaub);
+ if(BR.ziel!==g.ziel)p.set('ziel',BR.ziel);if(BR.zeit!==g.zeit)p.set('zeit',BR.zeit);
+}
 const cache={};
 const hol=y=>{const ck=y+'|'+exKey();return cache[ck]||(cache[ck]=F.holidays(y,extras));};
 const findH=(y,id)=>hol(y).find(h=>h.id===id);
@@ -981,12 +1279,13 @@ function readHash(){
  const f=p.get('linie');S.fid=isLine(f)?f:null;
  const t=p.get('tag');S.tag=t&&/^\d{4}-\d\d-\d\d$/.test(t)&&+t.slice(0,4)>=YMIN&&+t.slice(0,4)<=YMAX?t:null;
  if(S.tag)S.jahr=clampY(S.tag.slice(0,4));
- const z=p.get('zug');if(z==='ruhe'||z==='netz')ZUG=z;
+ const z=p.get('zug');if(ZUGE.includes(z)){ZUG=z;if(z==='bruecke')BR=brFromHash(p);}
 }
 function writeHash(){
  const p=new URLSearchParams();p.set('jahr',S.jahr);p.set('land',S.land);if(S.fid)p.set('linie',S.fid);if(S.tag)p.set('tag',S.tag);
- // zug steht in der Adresse, wenn der Ruhezug fährt oder die Adresse von der gespeicherten Wahl abweicht (Link mit zug=netz)
- if(ZUG==='ruhe'||zugPref()==='ruhe')p.set('zug',ZUG);
+ // zug steht in der Adresse, wenn nicht das Liniennetz fährt oder die Adresse von der gespeicherten Wahl abweicht (Link mit zug=netz)
+ if(ZUG!=='netz'||zugPref()!=='netz')p.set('zug',ZUG);
+ if(ZUG==='bruecke')brToHash(p);
  const h='#'+p.toString();if(location.hash!==h)history.replaceState(null,'',h);
 }
 function normalize(){
@@ -1003,7 +1302,7 @@ function setLand(c){if(!isLand(c))c='DE';S.land=c;HV.land=null;HV.fid=null;HV.ja
 function flaps(txt,cls,i0){let i=i0||0;return `<span class="flaps ${cls||''}" aria-hidden="true">${txt.split(' ').map(w=>`<span class="w">${[...w].map(ch=>`<b style="--i:${i++}">${ch}</b>`).join('')}</span>`).join('')}</span>`;}
 let boardKey='';
 function renderBoard(){
- const t=TODAY,L=S.land,ty=TY,key=L+'|'+exKey();
+ const t=TODAY,L=S.land,ty=TY,key=L+'|'+exKey()+'|'+brK();
  if(key===boardKey)return;boardKey=key;
  const head=`<div class="bd-head"><span class="bd-title" id="bdTitle"><span class="pk" aria-hidden="true"><svg viewBox="0 0 20 20"><rect x="3" y="2" width="14" height="13" rx="3" fill="currentColor"/><rect x="5.5" y="4.5" width="9" height="4.5" rx="1" fill="#ffd400"/><circle cx="7" cy="12" r="1.3" fill="#ffd400"/><circle cx="13" cy="12" r="1.3" fill="#ffd400"/><path d="M6 15l-2.5 4M14 15l2.5 4" stroke="currentColor" stroke-width="2"/></svg></span>Abfahrt ab heute</span><span class="bd-clock">${WDL[t.getDay()]}, ${dm(t)}${ty}</span><span class="bd-gl">Gleis <b>${L}</b></span></div>`;
  // Daten gibt es nur für 1991–2070: nichts aus 2071 anzeigen
@@ -1051,7 +1350,12 @@ function renderBoard(){
   bil=`${st.wk.length} Feiertage Mo–Fr: <b>${p} vorbei</b>, ${f} ${plural(f,'kommt','kommen')} noch · ${st.we.length} ${plural(st.we.length,'fällt','fallen')} aufs Wochenende`;}
  else{const nat=hol(ty).filter(h=>h.full.length===16),wk=nat.filter(h=>isWd(h.d)),p=wk.filter(h=>h.d<t).length;
   bil=`Von ${nat.length} bundesweiten Feiertagen liegen ${wk.length} auf Mo–Fr: <b>${p} vorbei</b>, ${wk.length-p} ${plural(wk.length-p,'kommt','kommen')} noch`;}
- $('bdFoot').innerHTML=inR?`<div class="bd-foot"><span class="k">Bilanz ${ty}</span><span>${bil}</span></div>`:'';
+ // Nächste Brücke ab heute – mit den Annahmen aus dem Stellwerk; der Knopf steigt in den Brückenzug „ab heute“ um
+ let brl='';
+ if(inR){const r=brCalc(L,brAb()),nb=r.T.map(t=>brVar(r,t)).filter(v=>v.urlaub[0]>=t).sort((a,b)=>a.urlaub[0]-b.urlaub[0])[0];
+  if(nb){const yy=nb.urlaub[0].getFullYear()!==ty?' '+nb.urlaub[0].getFullYear():'';
+   brl=`<div class="bd-foot bd-br"><span class="k">Nächste Brücke</span><span>${nb.u===1?'Brückentag':'Urlaub'} ${uTxt(nb)}${yy}: <b>${nUT(nb.u)} → ${nb.f} Tage frei</b> · ${anlass(nb)}</span><button class="bd-go" data-ride="bruecke" data-zeit="ab">${ICON.bruecke}Im Brückenzug planen</button></div>`;}}
+ $('bdFoot').innerHTML=(inR?`<div class="bd-foot"><span class="k">Bilanz ${ty}</span><span>${bil}</span></div>`:'')+brl;
 }
 function nextOcc(id,L){
  const rel=h=>L==='DE'?(h.full.length?'f':h.reg.length?'r':''):(h.full.includes(L)?'f':h.reg.includes(L)?'r':'');
@@ -1145,27 +1449,30 @@ function renderLdet(){
 
 /* ---- Jahresstrecke ---- */
 function renderStrecke(){
- const jk=[S.jahr,S.land,exKey()].join('|');if(jk===jsKey)return;jsKey=jk;
- const y=S.jahr,H=hol(y),byK={},L=S.land;H.forEach(h=>(byK[h.k]=byK[h.k]||[]).push(h));
+ const bh=brHint(S.land,S.jahr),jk=[S.jahr,S.land,exKey(),TK,bh.key].join('|');if(jk===jsKey)return;jsKey=jk;
+ const y=S.jahr,H=hol(y),byK={},L=S.land,BU=bh.BU;H.forEach(h=>(byK[h.k]=byK[h.k]||[]).push(h));
+ // Brückentage (Urlaub, der eine Brücke schlägt) bekommen eine gelbe Schwelle – auch an Tagen, die nur anderswo Feiertag sind
+ const bu=key=>{const v=BU.get(key);return v?{c:' bu',t:` – Brückentag: ${nUT(v.u)} für ${v.f} Tage frei (${anlass(v)})`}:{c:'',t:''};};
  const rank=h=>L==='DE'?(h.full.length?2:1):(h.full.includes(L)?3:h.reg.includes(L)?2:1);
  let html='<span class="js-m"></span>';for(let d=1;d<=31;d++)html+=`<span class="js-h">${d===1||d%5===0?d:''}</span>`;html+='<span class="js-h">frei</span>';
  for(let m=0;m<12;m++){
   const dim=new Date(y,m+1,0).getDate();let mc=0,row='';
   for(let dd=1;dd<=31;dd++){
    if(dd>dim){row+='<span class="d x"></span>';continue;}
-   const d=new Date(y,m,dd),key=kf(d),wd=isWd(d),past=d<TODAY?' past':'',today=key===TK?' today':'';
+   const d=new Date(y,m,dd),key=kf(d),wd=isWd(d),past=d<TODAY?' past':'',today=key===TK?' today':'',b=bu(key);
    const Ls=byK[key];
    if(Ls){const srt=[...Ls].sort((a,b)=>rank(b)-rank(a)),relOf=h=>L==='DE'?(h.full.length?'f':'r'):(h.full.includes(L)?'f':h.reg.includes(L)?'r':'o');
     if(wd&&srt.some(h=>applies(h,L)))mc++;
-    const btn=(h,cls)=>{const rel=relOf(h),lab=`${fmt(d)}${y}: ${h.n}${Ls.length>1?' (zugleich '+Ls.filter(x=>x!==h).map(x=>x.n).join(', ')+')':''}${rel==='o'?' – nicht '+inLand(L):rel==='r'?' – nur regional':''}${wd?'':' – Wochenende'}`;
+    const btn=(h,cls)=>{const rel=relOf(h),lab=`${fmt(d)}${y}: ${h.n}${Ls.length>1?' (zugleich '+Ls.filter(x=>x!==h).map(x=>x.n).join(', ')+')':''}${rel==='o'?' – nicht '+inLand(L):rel==='r'?' – nur regional':''}${wd?'':' – Wochenende'}${b.t}`;
      return `<button class="${cls} ${rel}" data-pick="h" data-h="${h.id}" data-k="${key}" title="${lab}" aria-label="${lab}">${sig(h.id,wd?'':'we')}</button>`;};
-    if(srt.length===1)row+=btn(srt[0],`d h ${wd?'wd':'we'}${past}${today}`);
-    else row+=`<span class="d h2 ${wd?'wd':'we'}${past}${today}">${srt.map(h=>btn(h,'dh')).join('')}</span>`;}
-   else row+=`<span class="d ${wd?'wd':'we'}${past}${today}"${today?' title="heute"':''}></span>`;
+    if(srt.length===1)row+=btn(srt[0],`d h ${wd?'wd':'we'}${past}${today}${b.c}`);
+    else row+=`<span class="d h2 ${wd?'wd':'we'}${past}${today}${b.c}">${srt.map(h=>btn(h,'dh')).join('')}</span>`;}
+   else row+=`<span class="d ${wd?'wd':'we'}${past}${today}${b.c}"${today||b.t?` title="${today?'heute':''}${b.t?(today?'':fmt(d))+b.t:''}"`:''}></span>`;
   }
   html+=`<span class="js-m">${MON[m].slice(0,3)}</span>${row}<span class="js-n">${mc?mc+'×':''}</span>`;
  }
  $('js').innerHTML=html;
+ $('jsBr').innerHTML=BU.size?`<span class="js-bk"><i class="sw u" aria-hidden="true"></i><span>Gelbe Schwelle: Brückentag. ${bh.txt}</span></span><button class="br-go sm" data-ride="bruecke" data-zeit="jahr">${ICON.bruecke}Im Brückenzug planen</button>`:'';
 }
 
 /* ---- Linienverzeichnis ---- */
@@ -1376,6 +1683,8 @@ const ICON={
  ruhe:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7.4 10.2q1.6 1.5 3.2 0M13.4 10.2q1.6 1.5 3.2 0M8.6 14.6q3.4 2.6 6.8 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
  netz:'<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2 6h16M2 14h16" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M7 2v16M13 6v12" stroke="currentColor" stroke-width="2.8"/><circle cx="7" cy="6" r="2.4" style="fill:var(--panel)" stroke="currentColor" stroke-width="1.7"/><circle cx="13" cy="14" r="2.4" style="fill:var(--panel)" stroke="currentColor" stroke-width="1.7"/></svg>',
  say:'<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 7.5h3l4.5-3.6v12.2L6 12.5H3Z" fill="currentColor"/><path d="M13.4 7a4 4 0 0 1 0 6M15.6 4.8a7 7 0 0 1 0 10.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+ bruecke:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1.5 8h21" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M4 8v12M20 8v12" stroke="currentColor" stroke-width="2.4"/><path d="M4 20Q12 6 20 20" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M8 8v6.6M12 8v4.6M16 8v6.6" stroke="currentColor" stroke-width="1.5"/></svg>',
+ hebel:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="17" width="20" height="5" rx="1.5" fill="currentColor"/><path d="M7 17 5 5M12 17V4M17 17l3-11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="5" cy="4.5" r="2.2" fill="currentColor"/><circle cx="12" cy="3.5" r="2.2" fill="currentColor"/><circle cx="20" cy="5.5" r="2.2" fill="currentColor"/></svg>',
  train:'<svg viewBox="0 0 64 24" aria-hidden="true"><path class="b" d="M3 3h40c9 0 16.5 6 18.5 14.5L62 20H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path class="w" d="M7 7h6v5H7zM16 7h6v5h-6zM25 7h6v5h-6zM34 7h6v5h-6zM44 7h1.5c5 0 9 2.6 10.8 6H44Z"/><path class="s" d="M3 15.4h57"/><circle class="r" cx="11" cy="21.4" r="2.3"/><circle class="r" cx="18" cy="21.4" r="2.3"/><circle class="r" cx="45" cy="21.4" r="2.3"/><circle class="r" cx="52" cy="21.4" r="2.3"/></svg>'
 };
 // Feiertage, die hier landesweit gelten (bei DE: bundesweit): wk = davon auf Mo–Fr, we = am Wochenende
@@ -1411,7 +1720,7 @@ function renderRu1(){
 }
 // Wagen 2: das gewählte Jahr als Reiseverlauf, eine Station je Feiertag
 function renderRu2(){
- const L=S.land,y=S.jahr,k=[L,y,exKey(),TK].join('|');if(k===ru2Key)return;ru2Key=k;
+ const L=S.land,y=S.jahr,bh=brHint(L,y),k=[L,y,exKey(),TK,bh.key].join('|');if(k===ru2Key)return;ru2Key=k;
  const cur=y===TY,past=y<TY,fa=h=>h.d<TODAY?'fiel':'fällt';
  const mine=hol(y).filter(h=>L==='DE'?h.full.length===16:h.full.includes(L)||h.reg.includes(L));
  const isF=h=>applies(h,L),wk=mine.filter(h=>isF(h)&&isWd(h.d)),we=mine.filter(h=>isF(h)&&!isWd(h.d)),rg=mine.filter(h=>!isF(h));
@@ -1435,7 +1744,9 @@ function renderRu2(){
   const tag=h.k===TK?'heute':h===nxt?'nächster Halt':'';
   li+=`<li class="${cls}"><span class="rv-d">${dMid(h.d)}</span><span class="rv-n"><i></i></span><span class="rv-t"><b>${h.n}</b>${tag?`<span class="rv-tag">${tag}</span>`:''}${note?`<small>${note}</small>`:''}</span></li>`;});
  if(!nowSet)li+=nowRow;
- $('ru2').innerHTML=kick(2,`Das Jahr ${y} · ${stName(L)}`)+`<div class="ru-two"><div><h2 class="ru-h" id="ru2h">${h2}</h2>${ps.map(p=>`<p class="ru-p">${p}</p>`).join('')}</div><ol class="rv" aria-label="Feiertage ${y}${L==='DE'?', bundesweit':' '+inLand(L)}">${li}</ol></div>`;
+ // Ein Satz zur besten Brücke und der Weg in den Brückenzug – rechnen und planen tut er selbst
+ const brp=bh.txt?`<p class="ru-p ru-brk">${bh.txt}</p><button class="br-go" data-ride="bruecke" data-zeit="jahr">${ICON.bruecke}Im Brückenzug planen</button>`:'';
+ $('ru2').innerHTML=kick(2,`Das Jahr ${y} · ${stName(L)}`)+`<div class="ru-two"><div><h2 class="ru-h" id="ru2h">${h2}</h2>${ps.map(p=>`<p class="ru-p">${p}</p>`).join('')}${brp}</div><ol class="rv" aria-label="Feiertage ${y}${L==='DE'?', bundesweit':' '+inLand(L)}">${li}</ol></div>`;
 }
 // Wagen 3: gute und magere Jahre – 16 Jahre um das gewählte, ein Stapel je Jahr
 function renderRu3(){
@@ -1484,19 +1795,227 @@ function renderRu4(){
  <p class="ru-cap"><span>Jeder Wagen ein Feiertag an einem Werktag</span><span>Land antippen wählt es, noch einmal antippen löst es</span></p>`;
 }
 function renderRuhe(){renderRu1();renderRu2();renderRu3();renderRu4();}
+/* ---- Brückenzug: Stellwerk und vier Wagen ----
+   Liest S (Land, Jahr) und extras wie die anderen Züge, dazu BR, die Annahmen aus dem Stellwerk.
+   Gerechnet wird in BRUECKEN (eigener Script-Block ohne DOM); hier wird nur gezeichnet. Kein Brushing. */
+const brJahr=y=>({ab:false,von:new Date(y,0,1),bis:new Date(y+1,0,1)}),brAb=()=>({ab:true,von:TODAY,bis:new Date(TY+1,TODAY.getMonth(),TODAY.getDate())});
+const brSpan=()=>BR.zeit==='ab'?brAb():brJahr(S.jahr);
+const brC=new Map();
+// rechne() je Land und Einstellung einmal (≈ 3 ms); r.key trennt die Ergebnisse, r.vs merkt die gewählten Varianten
+function brCalc(L,sp=brSpan()){
+ const k=[L,+sp.von,+sp.bis,exKey(),BR.arbeit.map(Number).join(''),BR.auch.join(','),BR.je,BR.ziel].join('|');
+ let r=brC.get(k);
+ if(!r){if(brC.size>300)brC.clear();r=BRK.rechne({land:L,ex:extras,arbeit:BR.arbeit,auch:BR.auch,je:BR.je,ziel:BR.ziel,von:sp.von,bis:sp.bis});r.key=k;r.vs=new Map();r.P={};brC.set(k,r);}
+ return r;
+}
+// die gewählte Variante einer Fahrkarte (sonst ihre Vorgabe)
+const brVar=(r,t)=>{const i=r.vs.get(String(+t.best.von));return t.V[i!=null&&i<t.V.length?i:t.def];};
+// Annahmen ohne das Kontingent – genug für Fahrkarten und Hinweise in den anderen Zügen
+const brK=()=>[BR.arbeit.map(Number).join(''),BR.auch.join(','),BR.je,BR.ziel].join('');
+const brPlan=(r,ziel)=>{const z=ziel||BR.ziel,k=BR.urlaub+z;return r.P[k]||(r.P[k]=BRK.budget(r.C,BR.urlaub,z));};
+const brSig=()=>[S.land,S.jahr,exKey(),JSON.stringify(BR),TK].join('|');
+const nUT=n=>`${n} ${plural(n,'Urlaubstag','Urlaubstage')}`,nUTm=n=>`${n} ${plural(n,'Urlaubstag','Urlaubstagen')}`;   // „mit 10 Urlaubstagen“
+const wpw=()=>BR.arbeit.filter(Boolean).length;
+// „Christi Himmelfahrt – 1 Urlaubstag für 4 Tage frei“, bei Gleichstand „A und B – je …“; vs: Varianten, beste zuerst
+function brBest(vs,tg='em'){const v=vs[0];
+ if(BR.ziel==='lang')return{n:1,t:`<${tg}>${anlass(v)}</${tg}> – ${v.f} Tage am Stück für ${nUT(v.u)}`};
+ const tie=[...new Set(vs.filter(w=>w.u===v.u&&w.f===v.f).map(anlass))];
+ return{n:tie.length,t:tie.length>1?`<${tg}>${und(tie)}</${tg}> – je ${nUT(v.u)} für ${v.f} Tage frei`:`<${tg}>${tie[0]}</${tg}> – ${nUT(v.u)} für ${v.f} Tage frei`};}
+// Hinweis für Liniennetz und Ruhezug: Urlaubstage der Fahrkarten eines Jahres (Schlüssel → Variante) und ein Satz zur besten
+function brHint(L,y){
+ const r=brCalc(L,brJahr(y)),V=r.T.map(t=>brVar(r,t)),BU=new Map(),cur=y===TY,up=cur?V.filter(v=>v.urlaub[0]>=TODAY):V;
+ V.forEach(v=>v.urlaub.forEach(d=>{if(d.getFullYear()===y)BU.set(kf(d),v);}));
+ let txt='';
+ if(up.length){const b=brBest(up,'b'),pl=b.n>1;
+  txt=BR.ziel==='lang'?`Am längsten frei ${cur?'im Rest von '+y:y}: ${b.t}.`:`${pl?'Die besten Brücken':'Die beste Brücke'}${cur?`, die ${y} noch ${pl?'kommen':'kommt'}`:' '+y}: ${b.t}.`;}
+ else if(V.length)txt=`${y} sind alle Brücken schon abgefahren.`;
+ return{BU,txt,key:r.key+'|'+[...r.vs].join()};}
+// „Mo–Fr“, „Mo–Sa“ oder „Mo, Di, Do“
+function arbTxt(){const on=WOCHE.filter(i=>BR.arbeit[i]),a=WOCHE.indexOf(on[0]),b=WOCHE.indexOf(on[on.length-1]);
+ return on.length>2&&b-a+1===on.length?WD[on[0]]+'–'+WD[on[on.length-1]]:on.map(i=>WD[i]).join(', ');}
+// Anlass einer Brücke: die Feiertage, die auf einen Arbeitstag fallen – Ostern, Pfingsten, Weihnachten zusammengefasst
+const ANL={karfreitag:'Ostern',ostersonntag:'Ostern',ostermontag:'Ostern',pfingstsonntag:'Pfingsten',pfingstmontag:'Pfingsten',heiligabend:'Weihnachten','weihnachten-1':'Weihnachten','weihnachten-2':'Weihnachten'};
+const brHw=c=>{const a=[];c.tage.forEach(x=>{if(x.hw)x.hs.forEach(h=>{if(!a.includes(h))a.push(h);});});return a;};
+const anlass=c=>und([...new Set(brHw(c).map(h=>ANL[h.id]||LN[h.id].k||h.n))]);
+// Urlaubstage als Läufe: „Mo 30.03. – Do 02.04. und Fr 10.04.“
+function uTxt(c){const R=[];c.urlaub.forEach(d=>{const r=R[R.length-1];if(r&&+addD(r[1],1)===+d)r[1]=d;else R.push([d,d]);});
+ return und(R.map(([a,b])=>+a===+b?fmt(a):fmt(a)+' – '+fmt(b)));}
+// Regional geltende Feiertage des Lands im Zeitraum – im Stellwerk zuschaltbar
+function brRegs(L){if(L==='DE')return[];const sp=brSpan(),ids=new Set();
+ for(let y=sp.von.getFullYear();y<=addD(sp.bis,-1).getFullYear();y++)if(y>=YMIN&&y<=YMAX)hol(y).forEach(h=>{if(h.reg.includes(L))ids.add(h.id);});
+ return ORDER.filter(id=>ids.has(id));}
+function brAnnahmen(L){
+ const xs=Object.keys(EXID).filter(kk=>extras[kk]).map(kk=>LN[EXID[kk]].n),au=brRegs(L).filter(id=>BR.auch.includes(id)).map(id=>LN[id].k||LN[id].n);
+ const fe=L==='DE'?'nur bundesweite Feiertage':'die Feiertage '+inLand(L);
+ return `${arbTxt()} als Arbeitstagen · ${fe}${au.concat(xs).length?', dazu '+und(au.concat(xs)):''} · ${BR.je===1?'1 Urlaubstag':'bis '+BR.je+' Urlaubstage'} je Brücke · ${BR.ziel==='lang'?'möglichst lang':'möglichst lohnend'} — einstellbar im Stellwerk`;
+}
+let stwKey='',br1Key='',br2Key='',br3Key='',br4Key='';
+function renderStw(){
+ const k=brSig();if(k===stwKey)return;stwKey=k;
+ const L=S.land,b=(a,v,on,txt,lab,dis)=>`<button data-br="${a}" data-v="${v}" aria-pressed="${on}"${lab?` aria-label="${lab}"`:''}${dis?' aria-disabled="true"':''}>${txt}</button>`;
+ const one=wpw()===1,g=(id,k2,body,note)=>`<div class="stw-g" role="group" aria-labelledby="stw-${id}"><p class="stw-k" id="stw-${id}">${k2}</p>${body}${note?`<p class="stw-n">${note}</p>`:''}</div>`;
+ const days=`<div class="stw-r stw-d">${WOCHE.map(i=>b('arbeit',i,BR.arbeit[i],WD[i],WDL[i]+(BR.arbeit[i]?' – Arbeitstag':' – frei'),one&&BR.arbeit[i])).join('')}</div>`;
+ const je=`<div class="stw-r">${JE.map(n=>b('je',n,BR.je===n,n===1?'1 Tag':'bis '+n,n===1?'1 Urlaubstag je Brücke':'bis '+n+' Urlaubstage je Brücke')).join('')}</div>`;
+ const ur=`<div class="stw-st"><button data-br="urlaub" data-v="-1" aria-label="Ein Urlaubstag weniger, jetzt ${BR.urlaub}"${BR.urlaub<=1?' disabled':''}>−</button><output>${BR.urlaub}</output><button data-br="urlaub" data-v="+1" aria-label="Ein Urlaubstag mehr, jetzt ${BR.urlaub}"${BR.urlaub>=UMAX?' disabled':''}>+</button><span>Tage</span></div>`;
+ const zi=`<div class="stw-r">${b('ziel','lohnend',BR.ziel==='lohnend','lohnend','möglichst lohnend: viele freie Tage je Urlaubstag')}${b('ziel','lang',BR.ziel==='lang','lang am Stück','möglichst lang am Stück')}</div>`;
+ const ze=`<div class="stw-r">${b('zeit','jahr',BR.zeit==='jahr','Jahr '+S.jahr)}${b('zeit','ab',BR.zeit==='ab','ab heute, 12 Monate')}</div>`;
+ const regs=brRegs(L),au=`<div class="stw-r">${Object.keys(EXID).map(kk=>`<button class="opt" data-ex="${kk}" aria-pressed="${extras[kk]}">${sig(EXID[kk])}${LN[EXID[kk]].n}</button>`).join('')}${regs.map(id=>{const h=brSpanH(id,L);return `<button class="opt" data-br="auch" data-v="${id}" aria-pressed="${BR.auch.includes(id)}"${h&&h.note?` title="${h.note}"`:''}>${sig(id)}${LN[id].k||LN[id].n}</button>`;}).join('')}</div>`;
+ const grund=JSON.stringify(BR)===JSON.stringify(brGrund())&&!exKey();
+ $('stw').innerHTML=`<h2 class="stw-h" id="stwh">${ICON.hebel}Stellwerk</h2><p class="stw-p">So arbeiten Sie – der Brückenzug rechnet sofort neu.</p>
+ <div class="stw-gs">${g('a','Meine Arbeitstage',days,one?'Mindestens ein Arbeitstag bleibt gestellt.':'')}${g('j','Urlaub je Brücke',je)}${g('u','Urlaubstage für den Plan',ur,'für Wagen 2 und 3')}${g('z','Ziel: möglichst …',zi)}${g('t','Zeitraum',ze)}${g('f','Bei mir auch frei',au,L==='DE'?'Regionale Feiertage: oben ein Land wählen.':regs.length?'':'')}</div>
+ <button class="stw-0" data-br="reset"${grund?' disabled':''}>↺ Grundstellung</button>`;
+}
+const brSpanH=(id,L)=>{const sp=brSpan();for(let y=sp.von.getFullYear();y<=addD(sp.bis,-1).getFullYear();y++){const h=y>=YMIN&&y<=YMAX?findH(y,id):null;if(h&&h.reg.includes(L))return h;}return null;};
+// Die Strecke einer Brücke: je Tag ein Feld (gelb = Urlaub, grau = frei, Signet = Feiertag), davor und danach
+// der Arbeitstag als Ufer, über jedem Urlaubslauf ein Bogen von Ufer zu Ufer, darunter die freie Strecke
+function brStrip(c){
+ const P=29,Q=26,y0=26,row=[{d:addD(c.von,-1),k:'c'},...c.tage.map(x=>({d:x.d,x,k:x.hs.length?'h':x.frei?'we':'u'})),{d:addD(c.bis,1),k:'c'}];
+ const W=row.length*P-3,H=y0+Q+26;let s=`<rect class="fs" x="${P}" y="${y0+Q+5}" width="${(row.length-2)*P-3}" height="5" rx="2.5"/>`;
+ row.forEach((t,i)=>{const x=i*P;
+  if(t.k==='h')s+=sigAt(t.x.hs[0].id,x,y0,Q,t.x.hw?'':'we');
+  else s+=`<rect class="t-${t.k}" x="${x+.5}" y="${y0+.5}" width="${Q-1}" height="${Q-1}" rx="4"/><text class="tt t-${t.k}" x="${x+Q/2}" y="${y0+Q/2+.5}">${WD[t.d.getDay()]}</text>`;});
+ for(let i=1;i<row.length-1;i++)if(row[i].k==='u'&&row[i-1].k!=='u'){
+  let j=i;while(row[j].k==='u')j++;
+  const xa=(i-1)*P+Q/2,xb=j*P+Q/2,hA=14,b0=y0-3,top=b0-hA-3;let hg='';
+  for(let m=i;m<j;m++){const x=m*P+Q/2,t=(x-xa)/(xb-xa);hg+=`<path class="hg" d="M${x} ${top}V${(b0-4*hA*t*(1-t)).toFixed(1)}"/>`;}
+  s+=`<path class="ar" d="M${xa} ${b0}Q${(xa+xb)/2} ${b0-2*hA} ${xb} ${b0}"/>${hg}<path class="dk" d="M${xa-5} ${top}H${xb+5}"/>`;}
+ s+=`<text class="dl" x="${P}" y="${H-1}">${dm(c.von)}</text><text class="dl e" x="${(row.length-1)*P-3}" y="${H-1}">${dm(c.bis)}</text>`;
+ return `<svg class="bs" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" style="min-width:${Math.round(W*.7)}px" aria-hidden="true" focusable="false">${s}</svg>`;
+}
+const brYr=(d,sp)=>d.getFullYear()!==sp.von.getFullYear()||sp.ab&&d.getFullYear()!==TY?String(d.getFullYear()):'';
+// Wagen 1: die besten Brücken des Zeitraums als Fahrkarten, mit Varianten
+function renderBr1(){
+ const L=S.land,sp=brSpan(),r=brCalc(L),k=brSig()+'|'+[...r.vs].join();if(k===br1Key)return;br1Key=k;
+ const el=$('br1'),wann=sp.ab?'ab heute':String(S.jahr),head=kick(1,`Die besten Brücken · ${wann} · ${stName(L)}`);
+ if(sp.ab&&(TY<YMIN||TY>YMAX)){el.innerHTML=head+`<h2 class="ru-h" id="br1h">Für heute liegen keine Daten vor.</h2><p class="ru-p">Die Seite rechnet für die Jahre 1991 bis 2070.</p>`;return;}
+ const gone=!sp.ab&&S.jahr===TY,X=r.T.map(t=>{const v=brVar(r,t);return{t,v,ab:gone&&v.urlaub[0]<TODAY};});
+ const up=X.filter(x=>!x.ab),list=up.concat(X.filter(x=>x.ab)),n=wpw();
+ let h2,ps=[],go='';
+ if(!X.length){h2=`${sp.ab?'In den nächsten zwölf Monaten':S.jahr} findet der Zug ${inLand(L)} keine Brücke, die sich lohnt.`;
+  ps.push(`Eine Brücke lohnt, wenn sie mindestens 60 % mehr freie Tage bringt als normaler Urlaub.${BR.je<9?' Mit mehr Urlaub je Brücke finden sich längere.':''}`);
+  if(BR.je<9)go=`<button class="br-go" data-br="je" data-v="9">Bis 9 Urlaubstage je Brücke zulassen</button>`;}
+ else if(!up.length){h2=`${S.jahr} sind alle Brücken schon abgefahren.`;ps.push('Ab heute gerechnet geht es weiter – auch über den Jahreswechsel.');
+  go=`<button class="br-go" data-br="zeit" data-v="ab">Ab heute rechnen</button>`;}
+ else{const b=brBest(up.map(x=>x.v));
+  h2=BR.ziel==='lang'?`Am längsten frei ${wann}: ${b.t}.`:`Die ${b.n>1?'besten Brücken':'beste Brücke'} ${wann}: ${b.t}.`;
+  ps.push(`Jede Fahrkarte nennt links den Einsatz und was er bringt: so viele Urlaubstage, so viele Tage am Stück frei. <b>Gelb</b> sind die Tage, an denen Sie Urlaub nehmen.`);
+  ps.push(`${X.length===1?'Sie lohnt':'Alle '+X.length+' lohnen'} sich mehr als normaler Urlaub – der bringt ${de1(r.base)} freie Tage je Urlaubstag, eine Woche 7 für ${n}.${X.length>up.length?` ${X.length-up.length} ${plural(X.length-up.length,'ist','sind')} schon abgefahren.`:''}`);}
+ const tk=(x,i)=>{const t=x.t,v=x.v,an=anlass(v),hw=brHw(v),yv=brYr(v.von,sp),yb=brYr(v.bis,sp);
+  const sigs=v.hs.map(h=>sig(h.id,hw.includes(h)?'':'we')).join('');
+  const rand=v.rand?' Am Rand des Datenbestands: Was vor 1991 oder nach 2070 liegt, ist nicht berechnet.':'';
+  const ch=t.V.length>1?`<div class="var" role="group" aria-label="Varianten für ${an}"><span aria-hidden="true">Varianten</span>${t.V.map((w,j)=>`<button data-br="var" data-t="${+t.best.von}" data-v="${j}" aria-pressed="${w===v}" aria-label="${nUT(w.u)} für ${w.f} Tage frei, ${dMid(w.von)} bis ${dMid(w.bis)}"><b>${w.u} → ${w.f}</b> ${dm(w.von)}–${dm(w.bis)}</button>`).join('')}</div>`:'';
+  return `<li class="tk${i===0&&!x.ab?' top':''}${x.ab?' ab':''}"><div class="stub" aria-hidden="true"><span class="cap">Urlaub</span><span class="nn${v.f>9?' w':''}"><b class="u">${v.u}</b><i>→</i><b>${v.f}</b></span><span class="cap">Tage frei</span></div>
+  <div class="tm"><div class="tl">${sigs}<h3 class="tn">${an}</h3><span class="td">${fmt(v.von)}${yv} – ${fmt(v.bis)}${yb}</span>${x.ab?'<span class="stamp">abgefahren</span>':''}</div>
+  <p class="tu"><span class="sr">${nUT(v.u)} für ${v.f} Tage frei am Stück. </span>${v.u===1?'Brückentag':'Urlaub'}: <b>${uTxt(v)}</b>${rand}</p>
+  <div class="tk-s">${brStrip(v)}</div>${ch}</div></li>`;};
+ el.innerHTML=head+`<h2 class="ru-h" id="br1h">${h2}</h2>${ps.map(p=>`<p class="ru-p">${p}</p>`).join('')}${go}
+ ${list.length?`<ol class="tix" aria-label="Fahrkarten ${wann}">${list.map(tk).join('')}</ol>`:''}
+ <p class="br-as"><span class="k">Gerechnet mit</span><span>${brAnnahmen(L)}</span></p>`;
+}
+// Wagen 2: der Urlaubsplan – Brücken ohne Überschneidung, die mit dem Budget am meisten freie Tage bringen
+function renderBr2(){
+ const L=S.land,sp=brSpan(),k=brSig();if(k===br2Key)return;br2Key=k;
+ const el=$('br2'),r=brCalc(L),P=brPlan(r),n=BR.urlaub,wann=sp.ab?'ab heute':String(S.jahr);
+ const head=kick(2,`Ihr Urlaubsplan · ${wann} · ${stName(L)}`);
+ const stp=`<p class="bud"><span id="br2u">Urlaubstage für Brücken</span><span class="stp" role="group" aria-labelledby="br2u"><button data-br="urlaub" data-v="-1" aria-label="Ein Urlaubstag weniger, jetzt ${n}"${n<=1?' disabled':''}>−</button><output>${n}</output><button data-br="urlaub" data-v="+1" aria-label="Ein Urlaubstag mehr, jetzt ${n}"${n>=UMAX?' disabled':''}>+</button></span></p>`;
+ if(sp.ab&&(TY<YMIN||TY>YMAX)){el.innerHTML=head+`<h2 class="ru-h" id="br2h">Für heute liegen keine Daten vor.</h2>`;return;}
+ const m=P.items.length,left=n-P.u,gone=!sp.ab&&S.jahr===TY;
+ let h2,ps=[];
+ if(!m){h2=`Mit ${nUTm(n)} findet der Zug ${wann==='ab heute'?'in den nächsten zwölf Monaten':S.jahr} keine Brücke, die sich lohnt.`;}
+ else{h2=`${P.u<n?`Mit ${P.u} von ${n} Urlaubstagen`:`Mit ${nUTm(n)}`} haben Sie <em>${P.f} Tage frei</em> – in ${m} ${plural(m,'Etappe','Etappen')}.`;
+  ps.push(`Das sind ${de1(P.f/P.u)} freie Tage je Urlaubstag; normaler Urlaub bringt ${de1(r.base)}.`+(left?` ${left} ${plural(left,'Urlaubstag bleibt','Urlaubstage bleiben')} übrig${BR.je<9?' – mit mehr Urlaub je Brücke lassen sich längere Brücken einplanen':''}.`:''));
+  const lg=x=>x.items.reduce((a,c)=>Math.max(a,c.f),0),Q=brPlan(r,BR.ziel==='lang'?'lohnend':'lang');
+  if(BR.ziel==='lohnend'&&lg(Q)>lg(P))ps.push(`Lieber lange am Stück? Mit dem Ziel „möglichst lang“ sind es bis zu <b>${lg(Q)} Tage am Stück</b>, insgesamt ${Q.f} Tage frei.<br><button class="br-go" data-br="ziel" data-v="lang">Ziel: möglichst lang</button>`);
+  else if(BR.ziel==='lang'&&Q.f>P.f)ps.push(`Möglichst lohnend verteilt wären es insgesamt <b>${Q.f} Tage frei</b>, in ${Q.items.length} Etappen – dafür höchstens ${lg(Q)} am Stück.<br><button class="br-go" data-br="ziel" data-v="lohnend">Ziel: möglichst lohnend</button>`);}
+ // Kalender: ein Gleis je Monat, im Zeitraum von bis
+ const U=new Set(),IN=new Map(),HK={};
+ P.items.forEach((c,i)=>{c.tage.forEach((x,j)=>IN.set(kf(x.d),(j===0?'s':'')+(j===c.tage.length-1?' e':'')));c.urlaub.forEach(d=>U.add(kf(d)));});
+ for(let y=sp.von.getFullYear();y<=addD(sp.bis,-1).getFullYear();y++)if(y>=YMIN&&y<=YMAX)hol(y).forEach(h=>{if(BRK.gilt(h,L,BR.auch))(HK[h.k]=HK[h.k]||[]).push(h);});
+ let cal='<span class="jp-m"></span>';for(let d=1;d<=31;d++)cal+=`<span class="jp-h">${d===1||d%5===0?d:''}</span>`;
+ const last=addD(sp.bis,-1);
+ for(let mo=new Date(sp.von.getFullYear(),sp.von.getMonth(),1);mo<=last;mo=new Date(mo.getFullYear(),mo.getMonth()+1,1)){
+  const y=mo.getFullYear(),mm=mo.getMonth(),dim=new Date(y,mm+1,0).getDate(),lbl=sp.ab&&(+mo===+new Date(sp.von.getFullYear(),sp.von.getMonth(),1)||mm===0)?`<small>${y}</small>`:'';
+  cal+=`<span class="jp-m">${MON[mm].slice(0,3)}${lbl}</span>`;
+  for(let dd=1;dd<=31;dd++){
+   if(dd>dim){cal+='<span class="d x"></span>';continue;}
+   const d=new Date(y,mm,dd),key=kf(d),hs=HK[key],w=BR.arbeit[d.getDay()],io=IN.get(key);
+   const c=['d',hs?'h':U.has(key)?'u':w?'wd':'we',io!=null?'in '+io:'',d<sp.von||d>=sp.bis||y<YMIN||y>YMAX?'out':'',d<TODAY&&gone?'past':''].filter(Boolean).join(' ');
+   cal+=`<span class="${c.trim()}">${hs?sig(hs[0].id,w?'':'we'):''}${key===TK?'<i class="nw"></i>':''}</span>`;}
+ }
+ const showT=TODAY>=sp.von&&TODAY<sp.bis;
+ const et=P.items.map((c,i)=>{const yv=brYr(c.von,sp),yb=brYr(c.bis,sp),ab=gone&&c.urlaub[0]<TODAY;
+  return `<li${ab?' class="ab"':''}><span class="etp-n" aria-hidden="true">${i+1}</span><span class="etp-t"><b>${anlass(c)}</b>${ab?' · abgefahren':''}<small>${fmt(c.von)}${yv} – ${fmt(c.bis)}${yb} · Urlaub: ${uTxt(c)}</small></span><b class="etp-c"><span aria-hidden="true"><span class="u">${c.u}</span> → ${c.f}</span><span class="sr">${nUT(c.u)} für ${c.f} Tage frei</span></b></li>`;}).join('');
+ el.innerHTML=head+`<h2 class="ru-h" id="br2h">${h2}</h2>${stp}${ps.map(p=>`<p class="ru-p">${p}</p>`).join('')}
+ <div class="ru-fig jp" aria-hidden="true">${cal}</div>
+ <p class="ru-cap"><span><i class="sw u"></i>Urlaub nehmen</span><span><i class="sw"></i>frei am Stück</span><span><i class="sw t"></i>Arbeitstag</span>${showT?'<span><i class="sw nw"></i>heute</span>':''}</p>
+ ${m?`<ol class="etp" aria-label="Etappen des Plans">${et}</ol>`:''}`;
+}
+// Wagen 3: die Länder im Vergleich – derselbe Plan mit denselben Einstellungen, je Land gerechnet
+function renderBr3(){
+ const L=S.land,sp=brSpan(),k=brSig();if(k===br3Key)return;br3Key=k;
+ const el=$('br3'),wann=sp.ab?'ab heute':String(S.jahr),n=BR.urlaub;
+ const head=kick(3,`Die Länder im Vergleich · ${wann}`);
+ if(sp.ab&&(TY<YMIN||TY>YMAX)){el.innerHTML=head+`<h2 class="ru-h" id="br3h">Für heute liegen keine Daten vor.</h2>`;return;}
+ const R=STATES.map(s=>{const p=brPlan(brCalc(s.c));return{s,u:p.u,f:p.f};}).sort((p,q)=>q.f-p.f||p.u-q.u||p.s.n.localeCompare(q.s.n,'de'));
+ const mx=R[0].f,mn=R[R.length-1].f,names=v=>R.filter(x=>x.f===v&&x.s.c!==L).map(x=>x.s.n);
+ const tail=(lb,v)=>{const a=names(v);return a.length>4?`${lb}: ${v} Tage, in ${a.length} Ländern.`:`${lb}: ${a.join(', ')} (${v}).`;};
+ const also=(lb,v)=>{const a=names(v);return a.length?(a.length>4?`${lb} haben ${a.length} weitere Länder.`:`${lb}: ${a.join(', ')}.`):'';};
+ let h2,sub;
+ if(L==='DE'){h2=mx===mn?`Mit ${nUTm(n)} sind es überall <em>${mx} Tage frei</em>.`:`Mit ${nUTm(n)}: zwischen <em>${mn} und ${mx} Tagen frei</em> – je nach Bundesland.`;sub=mx===mn?'':tail('Am meisten',mx)+' '+tail('Am wenigsten',mn);}
+ else{const me=R.find(x=>x.s.c===L),nm=L==='SL'?'Das Saarland':BY[L].n,pos=me.f===mx?'vorn':me.f===mn?'hinten':'im Mittelfeld';
+  h2=`${nm} ${!sp.ab&&S.jahr<TY?'lag':'liegt'} <em>${pos}</em>: ${me.f} Tage frei mit ${nUTm(me.u)}.`;
+  if(me.f===mx)sub=(also('Ebenso viele',mx)||'Kein anderes Land holt so viel heraus.')+' '+(mn<mx?tail('Am wenigsten',mn):'');
+  else if(me.f===mn)sub=(also('Ebenso wenige',mn)+' '+tail('Am meisten',mx)).trim();
+  else sub=tail('Am meisten',mx)+' '+tail('Am wenigsten',mn);}
+ const au=BR.auch.length?' Zugeschaltete regionale Tage zählen nur in ihrem Land.':'';
+ const rows=R.map(x=>`<button class="lr" data-pick="l" data-l="${x.s.c}" aria-pressed="${L===x.s.c}" aria-label="${x.s.n}: ${x.f} Tage frei mit ${nUTm(x.u)}"><span class="lr-n" aria-hidden="true">${x.s.n}</span><span class="lr-w" aria-hidden="true"><span class="lr-b" style="width:${(mx?x.f/mx*100:0).toFixed(1)}%"><i class="u" style="flex:${x.u}"></i><i class="f" style="flex:${x.f-x.u}"></i></span></span><b class="lr-c" aria-hidden="true">${x.f}</b></button>`).join('');
+ el.innerHTML=head+`<h2 class="ru-h" id="br3h">${h2}</h2><p class="ru-p">${sub}${au}</p>
+ <div class="ru-fig lv${L!=='DE'?' on':''}" role="group" aria-label="Bundesländer, nach freien Tagen im Plan sortiert">${rows}</div>
+ <p class="ru-cap"><span><i class="sw u"></i>eingesetzter Urlaub</span><span><i class="sw"></i>freie Tage insgesamt</span><span>Land antippen wählt es, noch einmal antippen löst es</span></p>`;
+}
+// Wagen 4: wie der Brückenzug rechnet
+function renderBr4(){
+ const k=JSON.stringify(BR);if(k===br4Key)return;br4Key=k;
+ const n=wpw(),base=7/n;
+ $('br4').innerHTML=kick(4,'Gut zu wissen')+`<h2 class="ru-h" id="br4h">So rechnet der Brückenzug.</h2>
+ <ul class="ru-p">
+  <li>Urlaub kostet nur Ihre Arbeitstage (${arbTxt()}). Wochenenden und Feiertage mitten in einer Brücke kosten nichts.</li>
+  <li>Eine Brücke lohnt, wenn sie mindestens 60 % mehr freie Tage bringt als normaler Urlaub. Der bringt ${de1(base)} Tage je Urlaubstag – eine Woche 7 für ${n}.</li>
+  <li>Eine Variante verlängert eine Fahrkarte nur, wenn jeder weitere Urlaubstag mehr bringt als normaler Urlaub.</li>
+  <li>Eine Brücke zählt zu dem Jahr, in dem ihr erster Urlaubstag liegt. Die Tage zwischen den Jahren gehören also zum alten Jahr, auch wenn die Brücke bis Neujahr reicht.</li>
+  <li>Der Plan wählt Brücken, die sich nicht überschneiden. „Möglichst lohnend“ holt die meisten freien Tage heraus, „möglichst lang“ bevorzugt lange Strecken am Stück.</li>
+  <li>Es zählt das Bundesland, in dem Sie arbeiten. Feiertage, die nur in einzelnen Orten gelten, zählen erst, wenn Sie sie im Stellwerk zuschalten.</li>
+  <li>Schulferien, Betriebsferien und Urlaubssperren kennt der Zug nicht – und den Urlaub genehmigt weiter Ihr Arbeitgeber.</li>
+ </ul>
+ <div class="ru-backs"><button class="ru-back" data-ride="netz">${ICON.netz}Alle Details im Liniennetz</button><button class="ru-back" data-ride="ruhe">${ICON.ruhe}Das Wichtigste im Ruhezug</button></div>`;
+}
+function renderBruecke(){renderStw();renderBr1();renderBr2();renderBr3();renderBr4();}
+// Ein Hebel im Stellwerk (oder eine Variante auf einer Fahrkarte): Wert prüfen, setzen, speichern, neu zeichnen
+function setBr(a,v,t){
+ if(a==='var'){const r=brCalc(S.land),i=+v,tk=r.T.find(x=>String(+x.best.von)===t);if(!tk||!Number.isInteger(i)||i<0||i>=tk.V.length)return;r.vs.set(t,i);renderAll();return;}
+ switch(a){
+  case 'arbeit':{const i=+v;if(!Number.isInteger(i)||i<0||i>6)return;const m=BR.arbeit.slice();m[i]=!m[i];if(!BRV.arbeit(m))return;BR.arbeit=m;break;}
+  case 'je':{const n=+v;if(!BRV.je(n))return;BR.je=n;break;}
+  case 'urlaub':{const n=BR.urlaub+(v==='+1'?1:v==='-1'?-1:0);if(!BRV.urlaub(n)||n===BR.urlaub)return;BR.urlaub=n;break;}
+  case 'ziel':if(!BRV.ziel(v))return;BR.ziel=v;break;
+  case 'zeit':if(!BRV.zeit(v))return;BR.zeit=v;if(v==='ab'){S.jahr=clampY(TY);S.fid=null;}break;
+  case 'auch':if(!isLine(v))return;BR.auch=BR.auch.includes(v)?BR.auch.filter(x=>x!==v):BR.auch.concat(v);break;
+  case 'reset':BR=brGrund();Object.keys(extras).forEach(kk=>{extras[kk]=false;});try{localStorage.setItem('wtf-ex',JSON.stringify(extras));}catch(e){}boardKey='';break;
+  default:return;
+ }
+ saveBr();commit({});
+}
 // Umsteigen: Zustand setzen, Schalter nachziehen, neu zeichnen – mit Ein- und Ausfahrt, wo der Browser das kann
 function applyZug(){
- const r=ZUG==='ruhe',rb=$('rideBar');document.documentElement.dataset.zug=ZUG;
- document.querySelectorAll('.wg[data-ride]').forEach(b=>setP(b,b.dataset.ride===ZUG));
- rb.innerHTML=(r?ICON.netz:ICON.ruhe)+`<span>${r?'Liniennetz':'Ruhezug'}</span>`;
- const t=r?'Zurück ins Liniennetz: alle Ansichten, jedes Detail':'In den Ruhezug umsteigen: nur das Wichtigste, in Ruhe';rb.setAttribute('aria-label',t);rb.title=t;
+ document.documentElement.dataset.zug=ZUG;
+ document.querySelectorAll('.wg[data-ride],.ride[data-ride]').forEach(b=>setP(b,b.dataset.ride===ZUG));
 }
 function setZug(z){
- if(z!=='ruhe')z='netz';if(z===ZUG)return;
+ if(!ZUGE.includes(z))z='netz';if(z===ZUG)return;
  try{localStorage.setItem('wtf-zug',z);}catch(e){}
  HV.fid=null;HV.land=null;HV.jahr=null;
  const go=()=>{ZUG=z;applyZug();writeHash();renderAll();if(scrollY>0)scrollTo(0,0);};
- document.documentElement.dataset.dir=z==='ruhe'?'fwd':'back';
+ document.documentElement.dataset.dir=ZUGE.indexOf(z)>ZUGE.indexOf(ZUG)?'fwd':'back';
  if(document.startViewTransition&&!RM.matches)document.startViewTransition(go);else go();
 }
 
@@ -1559,7 +2078,7 @@ function preview(force){rafP=0;brush(force);
  if(force||VIS.takt!==false){renderTov();if(ok('tkInfo'))updateTkInfo();}}
 function setHover(f,l,y){f=f||null;l=l||null;y=f&&y||null;if(f===HV.fid&&l===HV.land&&y===HV.jahr)return;HV.fid=f;HV.land=l;HV.jahr=y;if(!rafP)rafP=requestAnimationFrame(()=>preview(false));}
 function hoverFrom(t){
- if(ZUG==='ruhe'||!t||!t.closest||t.closest('#tksvg'))return;
+ if(ZUG!=='netz'||!t||!t.closest||t.closest('#tksvg'))return;
  const box=t.closest('.bx,.bar,.mast');if(!box){setHover(null,null);return;}
  const he=t.closest('[data-h]'),le=t.closest('[data-l]'),h=he&&he.dataset.h,l=le&&le.dataset.l;
  setHover(isLine(h)?h:null,isLand(l)&&l!=='DE'?l:null);
@@ -1574,7 +2093,7 @@ document.addEventListener('focusout',e=>{if(!e.relatedTarget)setHover(null,null)
 // Fokus über das Neuzeichnen retten: gleiches Element (gleicher Bereich, gleiche data-Attribute) wieder fokussieren
 function focusKey(){const e=document.activeElement;if(!e||e===document.body)return null;const c=e.closest('[id]');if(!c)return null;
  if(e.id)return '#'+e.id;
- const at=['data-pick','data-h','data-l','data-k','data-ex','data-jahr'].filter(a=>e.hasAttribute(a)).map(a=>`[${a}="${e.getAttribute(a)}"]`).join('');
+ const at=['data-pick','data-h','data-l','data-k','data-ex','data-jahr','data-br','data-t','data-v'].filter(a=>e.hasAttribute(a)).map(a=>`[${a}="${e.getAttribute(a)}"]`).join('');
  return at?`#${c.id} ${e.tagName.toLowerCase()}${at}`:null;}
 function renderAll(){
  const fk=focusKey();
@@ -1589,8 +2108,9 @@ function renderAll2(){
  yp.disabled=dp;yn.disabled=dn;
  document.querySelectorAll('.y').forEach(e=>e.textContent=S.jahr);document.querySelectorAll('.sn').forEach(e=>e.textContent=stName(S.land));
  document.querySelectorAll('[data-ex]').forEach(b=>b.setAttribute('aria-pressed',extras[b.dataset.ex]));
- // Im Ruhezug bleibt das Liniennetz verborgen und ungezeichnet; beim Umsteigen holen es die Schlüssel der Ansichten nach
+ // Im Ruhe- und im Brückenzug bleibt das Liniennetz verborgen und ungezeichnet; beim Umsteigen holen es die Schlüssel der Ansichten nach
  if(ZUG==='ruhe'){renderRuhe();return;}
+ if(ZUG==='bruecke'){renderBruecke();return;}
  renderBoard();renderNetz();renderStrecke();renderVerz();renderTakt();renderLaender();
  lineKey='';ldetKey='';barKey='';if(rafP){cancelAnimationFrame(rafP);rafP=0;}preview(true);
 }
@@ -1598,8 +2118,10 @@ function renderAll2(){
 /* ---- Bedienung ---- */
 $('state').innerHTML=`<option value="DE">Ganz Deutschland</option>`+ALPHA.map(s=>`<option value="${s.c}">${s.n}</option>`).join('');
 $('state').addEventListener('change',e=>setLand(e.target.value));
-$('yprev').addEventListener('click',()=>commit({jahr:S.jahr-1}));
-$('ynext').addEventListener('click',()=>commit({jahr:S.jahr+1}));
+// Ein Jahr weiter oder zurück heißt im Brückenzug: wieder nach Kalenderjahr rechnen (statt „ab heute“)
+const stepY=d=>{if(ZUG==='bruecke'&&BR.zeit==='ab'){BR.zeit='jahr';saveBr();}commit({jahr:S.jahr+d});};
+$('yprev').addEventListener('click',()=>stepY(-1));
+$('ynext').addEventListener('click',()=>stepY(1));
 $('fAll').addEventListener('click',()=>{netzAll=true;$('fAll').setAttribute('aria-pressed','true');$('fWd').setAttribute('aria-pressed','false');renderNetz();brush(true);});
 $('fWd').addEventListener('click',()=>{netzAll=false;$('fWd').setAttribute('aria-pressed','true');$('fAll').setAttribute('aria-pressed','false');renderNetz();brush(true);});
 function setRange(r){tkRange=r;[['rAll','all'],['rMid','mid'],['rNear','near']].forEach(([id,v])=>$(id).setAttribute('aria-pressed',r===v));tkJ=-1;renderTakt();}
@@ -1615,7 +2137,11 @@ function onClick(e){
  const ex=e.target.closest('[data-ex]');
  if(ex){const kk=ex.dataset.ex;if(!own(extras,kk))return;extras[kk]=!extras[kk];try{localStorage.setItem('wtf-ex',JSON.stringify(extras));}catch(err){}boardKey='';commit({});return;}
  if(e.target.closest('[data-clear]')){commit({fid:null,tag:null});return;}
- const rd=e.target.closest('[data-ride]');if(rd){setZug(rd.dataset.ride==='toggle'?(ZUG==='ruhe'?'netz':'ruhe'):rd.dataset.ride);return;}
+ const rd=e.target.closest('[data-ride]');
+ if(rd){const z=rd.dataset.zeit;   // Hinweis-Knöpfe nehmen ihren Zeitraum mit: Tafel „ab heute“, Strecke und Ruhezug das Jahr
+  if(z==='ab'||z==='jahr'){if(BR.zeit!==z){BR.zeit=z;saveBr();}if(z==='ab'){S.jahr=TY;normalize();}}
+  if(rd.dataset.ride===ZUG)commit({});else setZug(rd.dataset.ride);return;}
+ const br=e.target.closest('[data-br]');if(br){setBr(br.dataset.br,br.dataset.v,br.dataset.t);return;}
  const yj=e.target.closest('[data-jahr]');if(yj){commit({jahr:clampY(yj.dataset.jahr)});return;}
  const p=e.target.closest('[data-pick]');if(!p)return;
  HV.fid=null;HV.land=null;HV.jahr=null;
@@ -1625,7 +2151,7 @@ function onClick(e){
   else commit(k?{fid:id,tag:k,jahr:+k.slice(0,4)}:{fid:id,tag:null});}
 }
 document.addEventListener('keydown',e=>{
- if(e.key!=='Escape'||ZUG==='ruhe')return;
+ if(e.key!=='Escape'||ZUG!=='netz')return;
  HV.fid=null;HV.land=null;HV.jahr=null;
  if(S.fid)commit({fid:null,tag:null});else if(S.land!=='DE')setLand('DE');else preview(true);
 });
@@ -1638,7 +2164,7 @@ if('IntersectionObserver' in window){const io=new IntersectionObserver(es=>{let 
 },{rootMargin:'150px 0px'});Object.keys(SECS).forEach(id=>io.observe($(id)));}
 if('ResizeObserver' in window)new ResizeObserver(es=>{const w=Math.floor(es[es.length-1].contentRect.width);if(w&&w!==tksW){tksW=w;requestAnimationFrame(renderTakt);}}).observe($('tks'));
 document.querySelectorAll('.optsig').forEach(e=>{e.outerHTML=sig(e.dataset.id);});
-document.querySelectorAll('.ruhei').forEach(e=>{e.outerHTML=ICON.ruhe;});document.querySelectorAll('.netzi').forEach(e=>{e.outerHTML=ICON.netz;});
+document.querySelectorAll('.ruhei').forEach(e=>{e.outerHTML=ICON.ruhe;});document.querySelectorAll('.netzi').forEach(e=>{e.outerHTML=ICON.netz;});document.querySelectorAll('.brueckei').forEach(e=>{e.outerHTML=ICON.bruecke;});
 $('strip').innerHTML=ORDER.filter(id=>LN[id].cat!=='opt').map(id=>`<i data-h="${id}"></i>`).join('');
 
 readHash();normalize();applyZug();writeHash();renderAll();
