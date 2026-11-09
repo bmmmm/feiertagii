@@ -656,6 +656,13 @@ h2.sign .pk svg{width:20px;height:20px}
 .stw-r button[aria-pressed="true"]{border-color:#ffd400;background:#ffd400;color:#111;font-weight:600}
 .stw-d{gap:4px}
 .stw-d button{min-width:31px;padding-inline:0;font:600 13.5px var(--f-mono)}
+/* Monatsleiste: je Monat ein Balken, so hoch wie die beste Brücke im Monat lohnt */
+.stw-m{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
+.stw-r.stw-m button{display:grid;justify-items:center;align-content:end;gap:3px;min-height:36px;padding:3px 0 5px;font:600 12.5px/1 var(--f-mono)}
+.stw-m i{display:block;width:12px;height:2px;border-radius:2px 2px 0 0;background:#ffd400}
+.stw-m i.o{width:8px;background:#6f86a8}
+.stw-r.stw-m button[aria-pressed="true"] i{background:#111}
+.stw-m button[aria-disabled="true"]{cursor:default}
 .stw-r .opt{border-radius:999px;padding:4px 11px 4px 5px;font-size:14px}
 .stw-r .opt[aria-pressed="true"]{border-color:#ffd400;background:rgba(255,212,0,.14);color:#fff;font-weight:500}
 .stw-r .opt .sg{width:24px;height:24px}
@@ -1043,20 +1050,24 @@ const F=g.FEIERTAGE;
 const addD=(d,n)=>new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);
 const D0=new Date(1991,0,1),D1=new Date(2070,11,31);   // Datenbestand: davor und danach ist nichts bekannt
 // Grundstellung des Stellwerks. arbeit: Index = getDay() (So … Sa), true = Arbeitstag
-const GRUND={arbeit:[false,true,true,true,true,true,false],auch:[],je:4,urlaub:10,ziel:'lohnend',zeit:'jahr'};
+const GRUND={arbeit:[false,true,true,true,true,true,false],auch:[],je:4,urlaub:10,ziel:'lohnend',zeit:'jahr',monate:[]};
 // Ein Feiertag macht frei, wenn er im Land gilt (DE: bundesweit) – regional nur, wenn ausdrücklich zugeschaltet
 const gilt=(h,L,auch)=>L==='DE'?h.full.length===16:h.full.includes(L)||h.reg.includes(L)&&auch.includes(h.id);
-// rechne({land, ex, arbeit, auch, je, ziel, von, bis}) → {base, C, T}
+// rechne({land, ex, arbeit, auch, je, ziel, von, bis, monate, ohne}) → {base, C, T, O}
 // Eine Brücke reicht von einem freien Block bis zu einem späteren; dazwischen liegen u Arbeitstage (der Urlaub,
 // höchstens je), insgesamt f Tage frei, und mindestens ein Feiertag fällt auf einen Arbeitstag. Sie gehört in den
-// Zeitraum, in dem ihr erster Urlaubstag liegt (von ≤ Tag < bis). base: so viele Tage frei bringt ein Urlaubstag
-// ohne Feiertag (7/5 bei Mo–Fr). C: alle Brücken, die besser sind als base, nach Hebel f/u sortiert.
+// Zeitraum, in dem ihr erster Urlaubstag liegt (von ≤ Tag < bis). Mit monate (Monatsnummern 0–11) zählt sie nur,
+// wenn alle ihre Urlaubstage im Zeitraum und in diesen Monaten liegen. base: so viele Tage frei bringt ein
+// Urlaubstag ohne Feiertag (7/5 bei Mo–Fr). C: alle Brücken, die besser sind als base, nach Hebel f/u sortiert.
 // T: Fahrkarten – je Anlass die beste Brücke (best) und ihre Varianten (V, nach u): gleich gute Alternativen und
 // Verlängerungen, deren jeder weitere Urlaubstag mehr bringt als base. def: vorgewählte Variante.
+// O (nur mit ohne, gedacht zusammen mit monate): Urlaub ohne Feiertag für den Plan – Arbeitstage am Stück,
+// angelegt an die freien Tage davor oder danach (langes Wochenende, Woche von Samstag bis Sonntag), höchstens je
+// Urlaubstage, besser als base, alle Urlaubstage im Zeitraum. O geht nicht in die Fahrkarten ein.
 function rechne(o){
  const L=o.land,arbeit=o.arbeit||GRUND.arbeit,auch=o.auch||[],je=o.je||GRUND.je,ziel=o.ziel||GRUND.ziel;
  const wpw=arbeit.filter(Boolean).length,base=wpw?7/wpw:Infinity;
- if(!wpw||o.bis<=D0||o.von>D1)return{base,C:[],T:[]};
+ if(!wpw||o.bis<=D0||o.von>D1)return{base,C:[],T:[],O:[]};
  const lo=new Date(Math.max(D0,addD(o.von,-70))),hi=new Date(Math.min(D1,addD(o.bis,70)));
  const H=new Map();
  for(let y=lo.getFullYear();y<=hi.getFullYear();y++)for(const h of F.holidays(y,o.ex))if(gilt(h,L,auch)){const a=H.get(h.k);if(a)a.push(h);else H.set(h.k,[h]);}
@@ -1065,20 +1076,47 @@ function rechne(o){
   const hs=H.get(F.key(d))||[],w=arbeit[d.getDay()],x={d,i,hs,frei:!w||hs.length>0,hw:w&&hs.length>0,we:!w};
   const r=runs[runs.length-1];if(r&&r.frei===x.frei){r.days.push(x);if(x.hw)r.hw++;}else runs.push({frei:x.frei,days:[x],hw:x.hw?1:0});
  }
- const free=runs.map((r,i)=>(r.i=i,r)).filter(r=>r.frei),C=[];
+ const M=Array.isArray(o.monate)&&o.monate.length?new Set(o.monate):null;
+ const inz=d=>d>=o.von&&d<o.bis&&(!M||M.has(d.getMonth()));
+ const mk=tage=>{const f=tage.length,urlaub=tage.filter(x=>!x.frei).map(x=>x.d),u=urlaub.length,hs=[];
+  tage.forEach(x=>x.hs.forEach(h=>{if(!hs.includes(h))hs.push(h);}));
+  return{u,f,r:f/u,von:tage[0].d,bis:tage[f-1].d,tage,urlaub,hs,rand:+tage[0].d===+D0||+tage[f-1].d===+D1};};
+ const free=runs.map((r,i)=>(r.i=i,r)).filter(r=>r.frei),C=[],O=[];
  for(let a=0;a<free.length;a++){
   const ra=free[a],w0=runs[ra.i+1];if(!w0)continue;
-  const first=w0.days[0].d;if(first<o.von||first>=o.bis)continue;
+  if(!inz(w0.days[0].d))continue;
   let u=0,hw=ra.hw;
   for(let b=a+1;b<free.length;b++){
-   const rb=free[b];u+=runs[rb.i-1].days.length;hw+=rb.hw;
+   const rb=free[b],wr=runs[rb.i-1];u+=wr.days.length;hw+=rb.hw;
    if(u>je)break;
+   if(M&&!wr.days.every(x=>inz(x.d)))break;
    if(!hw)continue;
-   const tage=runs.slice(ra.i,rb.i+1).flatMap(r=>r.days),f=tage.length;
-   if(f/u<=base+1e-9)continue;
-   const hs=[];tage.forEach(x=>x.hs.forEach(h=>{if(!hs.includes(h))hs.push(h);}));
-   C.push({u,f,r:f/u,von:tage[0].d,bis:tage[f-1].d,tage,urlaub:tage.filter(x=>!x.frei).map(x=>x.d),hs,
-    rand:+tage[0].d===+D0||+tage[f-1].d===+D1});
+   const tage=runs.slice(ra.i,rb.i+1).flatMap(r=>r.days);
+   if(tage.length/u<=base+1e-9)continue;
+   C.push(mk(tage));
+  }
+ }
+ // Urlaub ohne Feiertag: Arbeitstage s…e, alle Arbeitstage dazwischen sind Urlaub; ein freier Block, der direkt
+ // davor oder danach anschließt, gehört dazu. Ein Feiertag an einem Arbeitstag in oder an der Strecke macht sie
+ // zur Brücke – die steht schon in C.
+ if(o.ohne){
+  const D=[],RI=[];runs.forEach((r,i)=>r.days.forEach(x=>{D.push(x);RI.push(i);}));
+  for(let s=0;s<D.length;s++){
+   const xs=D[s];if(xs.frei||!inz(xs.d))continue;
+   const r0=xs===runs[RI[s]].days[0]?runs[RI[s]-1]:null;
+   if(r0&&r0.hw)continue;
+   const pre=r0?r0.days:[];
+   let u=0;
+   for(let e=s;e<D.length;e++){
+    const x=D[e];
+    if(x.frei){if(x.hw)break;continue;}
+    if(!inz(x.d)||++u>je)break;
+    const rr=runs[RI[e]],r1=x===rr.days[rr.days.length-1]?runs[RI[e]+1]:null;
+    if(r1&&r1.hw)continue;
+    const tage=pre.concat(D.slice(s,e+1),r1?r1.days:[]);
+    if(tage.length/u<=base+1e-9)continue;
+    O.push(mk(tage));
+   }
   }
  }
  const rank=(p,q)=>q.r-p.r||q.f-p.f||p.von-q.von;
@@ -1101,7 +1139,7 @@ function rechne(o){
   T.push({best,V,def:V.indexOf(ziel==='lang'?lang:best),lang});
  }
  if(ziel==='lang')T.sort((p,q)=>q.lang.f-p.lang.f||rank(p.best,q.best));
- return{base,C,T};
+ return{base,C,T,O};
 }
 // budget(C, n, ziel) → {items, u, f}: die Brücken ohne Überschneidung, die mit höchstens n Urlaubstagen zusammen
 // am meisten freie Tage bringen (ziel 'lang': lange Strecken zählen überproportional, f²). Rucksack über Intervalle.
@@ -1232,18 +1270,22 @@ const zugPref=()=>{try{const z=localStorage.getItem('wtf-zug');return z==='ruhe'
 let ZUG=zugPref();
 // Stellwerk des Brückenzugs: die Annahmen der Rechnung (BRUECKEN.GRUND = Grundstellung). Gespeichert unter wtf-br;
 // Fremdeingaben (Hash, localStorage) nur über BRV annehmen. arbeit: Index = getDay() (So … Sa).
+// zeit 'monate': nur die Monate in monate (0–11) des eingestellten Jahrs; im Hash als zeit=mai-jun (MK).
 const BRK=window.BRUECKEN,WDK=['so','mo','di','mi','do','fr','sa'],WOCHE=[1,2,3,4,5,6,0],JE=[1,2,4,9],UMAX=40;
-const brGrund=()=>({arbeit:BRK.GRUND.arbeit.slice(),auch:[],je:BRK.GRUND.je,urlaub:BRK.GRUND.urlaub,ziel:BRK.GRUND.ziel,zeit:BRK.GRUND.zeit});
+const MK=['jan','feb','mrz','apr','mai','jun','jul','aug','sep','okt','nov','dez'];
+const brGrund=()=>({arbeit:BRK.GRUND.arbeit.slice(),auch:[],je:BRK.GRUND.je,urlaub:BRK.GRUND.urlaub,ziel:BRK.GRUND.ziel,zeit:BRK.GRUND.zeit,monate:[]});
 const BRV={
  arbeit:v=>Array.isArray(v)&&v.length===7&&v.every(x=>typeof x==='boolean')&&v.some(Boolean),
  auch:v=>Array.isArray(v)&&v.length<=ORDER.length&&v.every(isLine),
  je:v=>JE.includes(v),
  urlaub:v=>Number.isInteger(v)&&v>=1&&v<=UMAX,
  ziel:v=>v==='lohnend'||v==='lang',
- zeit:v=>v==='jahr'||v==='ab'
+ zeit:v=>v==='jahr'||v==='ab'||v==='monate',
+ monate:v=>Array.isArray(v)&&v.length<=12&&v.every(x=>Number.isInteger(x)&&x>=0&&x<=11)
 };
 let BR=brGrund();
 try{const x=JSON.parse(localStorage.getItem('wtf-br')||'{}');if(x&&typeof x==='object')for(const kk of Object.keys(BRV))if(own(x,kk)&&BRV[kk](x[kk]))BR[kk]=Array.isArray(x[kk])?[...new Set(x[kk])]:x[kk];}catch(e){}
+BR.monate.sort((a,b)=>a-b);if(BR.zeit==='monate'&&!BR.monate.length)BR.zeit='jahr';
 const saveBr=()=>{try{localStorage.setItem('wtf-br',JSON.stringify(BR));}catch(e){}};
 // Ein Link mit zug=bruecke legt das Stellwerk ganz fest: was fehlt, steht in Grundstellung
 function brFromHash(p){
@@ -1253,7 +1295,9 @@ function brFromHash(p){
  const j=p.get('je');if(j&&/^\d$/.test(j)&&BRV.je(+j))b.je=+j;
  const u=p.get('urlaub');if(u&&/^\d{1,2}$/.test(u)&&BRV.urlaub(+u))b.urlaub=+u;
  const z=p.get('ziel');if(BRV.ziel(z))b.ziel=z;
- const t=p.get('zeit');if(BRV.zeit(t))b.zeit=t;
+ const t=p.get('zeit');
+ if(t==='jahr'||t==='ab')b.zeit=t;
+ else if(t){const m=t.split('-');if(m.length<=12&&m.every(x=>MK.includes(x))){b.zeit='monate';b.monate=[...new Set(m.map(x=>MK.indexOf(x)))].sort((x,y)=>x-y);}}
  return b;
 }
 // In die Adresse kommt nur, was von der Grundstellung abweicht
@@ -1262,8 +1306,10 @@ function brToHash(p){
  if(BR.arbeit.some((v,i)=>v!==g.arbeit[i]))p.set('arbeit',WOCHE.filter(i=>BR.arbeit[i]).map(i=>WDK[i]).join('-'));
  BR.auch.forEach(id=>p.append('auch',id));
  if(BR.je!==g.je)p.set('je',BR.je);if(BR.urlaub!==g.urlaub)p.set('urlaub',BR.urlaub);
- if(BR.ziel!==g.ziel)p.set('ziel',BR.ziel);if(BR.zeit!==g.zeit)p.set('zeit',BR.zeit);
+ if(BR.ziel!==g.ziel)p.set('ziel',BR.ziel);if(BR.zeit!==g.zeit)p.set('zeit',BR.zeit==='monate'?BR.monate.map(i=>MK[i]).join('-'):BR.zeit);
 }
+// Grundstellung vergleichen: gemerkte Monate zählen nur, solange nach Monaten gerechnet wird
+const brNorm=b=>JSON.stringify({...b,monate:b.zeit==='monate'?b.monate:[]});
 const cache={};
 const hol=y=>{const ck=y+'|'+exKey();return cache[ck]||(cache[ck]=F.holidays(y,extras));};
 const findH=(y,id)=>hol(y).find(h=>h.id===id);
@@ -1799,20 +1845,37 @@ function renderRuhe(){renderRu1();renderRu2();renderRu3();renderRu4();}
    Liest S (Land, Jahr) und extras wie die anderen Züge, dazu BR, die Annahmen aus dem Stellwerk.
    Gerechnet wird in BRUECKEN (eigener Script-Block ohne DOM); hier wird nur gezeichnet. Kein Brushing. */
 const brJahr=y=>({ab:false,von:new Date(y,0,1),bis:new Date(y+1,0,1)}),brAb=()=>({ab:true,von:TODAY,bis:new Date(TY+1,TODAY.getMonth(),TODAY.getDate())});
-const brSpan=()=>BR.zeit==='ab'?brAb():brJahr(S.jahr);
+const brMon=y=>({ab:false,M:BR.monate.slice(),von:new Date(y,0,1),bis:new Date(y+1,0,1)});
+const brSpan=()=>BR.zeit==='ab'?brAb():BR.zeit==='monate'&&BR.monate.length?brMon(S.jahr):brJahr(S.jahr);
+// Monate als Text: „Mai“, „Mai und Juni“, „Mai bis Juli“, „April bis Juni und Oktober“; im: Präposition im Satz
+function monTxt(M){const g=[];M.forEach(m=>{const l=g[g.length-1];if(l&&l[1]===m-1)l[1]=m;else g.push([m,m]);});
+ const parts=g.flatMap(([a,b])=>b-a>=2?[MON[a]+' bis '+MON[b]]:a===b?[MON[a]]:[MON[a],MON[b]]);
+ return{t:und(parts),im:g.every(([a,b])=>b-a<2)?'im':g.length===1?'von':'in den Monaten'};}
+// Der Zeitraum als Text: k für Kopfzeilen, s im Satz, S am Satzanfang, i nach „findet der Zug“
+function brWann(sp){
+ if(sp.ab)return{k:'ab heute',s:'ab heute',S:'In den nächsten zwölf Monaten',i:'in den nächsten zwölf Monaten'};
+ const y=String(S.jahr);if(!sp.M)return{k:y,s:y,S:y,i:y};
+ const m=monTxt(sp.M),x=`${m.im} ${m.t} ${y}`;return{k:`${m.t} ${y}`,s:x,S:x[0].toUpperCase()+x.slice(1),i:x};}
 const brC=new Map();
 // rechne() je Land und Einstellung einmal (≈ 3 ms); r.key trennt die Ergebnisse, r.vs merkt die gewählten Varianten
 function brCalc(L,sp=brSpan()){
- const k=[L,+sp.von,+sp.bis,exKey(),BR.arbeit.map(Number).join(''),BR.auch.join(','),BR.je,BR.ziel].join('|');
+ const k=[L,+sp.von,+sp.bis,sp.M?sp.M.join(','):'',exKey(),BR.arbeit.map(Number).join(''),BR.auch.join(','),BR.je,BR.ziel].join('|');
  let r=brC.get(k);
- if(!r){if(brC.size>300)brC.clear();r=BRK.rechne({land:L,ex:extras,arbeit:BR.arbeit,auch:BR.auch,je:BR.je,ziel:BR.ziel,von:sp.von,bis:sp.bis});r.key=k;r.vs=new Map();r.P={};brC.set(k,r);}
+ if(!r){if(brC.size>300)brC.clear();r=BRK.rechne({land:L,ex:extras,arbeit:BR.arbeit,auch:BR.auch,je:BR.je,ziel:BR.ziel,von:sp.von,bis:sp.bis,monate:sp.M,ohne:!!sp.M});r.key=k;r.vs=new Map();r.P={};brC.set(k,r);}
  return r;
 }
 // die gewählte Variante einer Fahrkarte (sonst ihre Vorgabe)
 const brVar=(r,t)=>{const i=r.vs.get(String(+t.best.von));return t.V[i!=null&&i<t.V.length?i:t.def];};
 // Annahmen ohne das Kontingent – genug für Fahrkarten und Hinweise in den anderen Zügen
 const brK=()=>[BR.arbeit.map(Number).join(''),BR.auch.join(','),BR.je,BR.ziel].join('');
-const brPlan=(r,ziel)=>{const z=ziel||BR.ziel,k=BR.urlaub+z;return r.P[k]||(r.P[k]=BRK.budget(r.C,BR.urlaub,z));};
+// der Urlaubsplan; nach Monaten gerechnet auch mit Urlaub ohne Feiertag (r.O)
+const brPlan=(r,ziel)=>{const z=ziel||BR.ziel,k=BR.urlaub+z;return r.P[k]||(r.P[k]=BRK.budget(r.O.length?r.C.concat(r.O):r.C,BR.urlaub,z));};
+// je Monat des Jahrs die beste Fahrkarte (nach ihrem ersten Urlaubstag) – für die Monatsleiste im Stellwerk
+function brMonWert(L,y){const W=Array(12).fill(null);if(y<YMIN||y>YMAX)return W;
+ brCalc(L,brJahr(y)).T.forEach(t=>{const v=t.best,d=v.urlaub[0],m=d.getMonth();if(d.getFullYear()===y&&(!W[m]||v.r>W[m].r))W[m]=v;});return W;}
+// erster Monat, wenn auf „Monate“ umgestellt wird: der mit der besten Brücke, die noch kommt
+function brMonStart(){const W=brMonWert(S.land,S.jahr),ok=m=>S.jahr!==TY||m>=TODAY.getMonth();let b=-1;
+ W.forEach((v,m)=>{if(v&&ok(m)&&(b<0||v.r>W[b].r))b=m;});return b>=0?b:S.jahr===TY?TODAY.getMonth():4;}
 const brSig=()=>[S.land,S.jahr,exKey(),JSON.stringify(BR),TK].join('|');
 const nUT=n=>`${n} ${plural(n,'Urlaubstag','Urlaubstage')}`,nUTm=n=>`${n} ${plural(n,'Urlaubstag','Urlaubstagen')}`;   // „mit 10 Urlaubstagen“
 const wpw=()=>BR.arbeit.filter(Boolean).length;
@@ -1837,6 +1900,8 @@ function arbTxt(){const on=WOCHE.filter(i=>BR.arbeit[i]),a=WOCHE.indexOf(on[0]),
 const ANL={karfreitag:'Ostern',ostersonntag:'Ostern',ostermontag:'Ostern',pfingstsonntag:'Pfingsten',pfingstmontag:'Pfingsten',heiligabend:'Weihnachten','weihnachten-1':'Weihnachten','weihnachten-2':'Weihnachten'};
 const brHw=c=>{const a=[];c.tage.forEach(x=>{if(x.hw)x.hs.forEach(h=>{if(!a.includes(h))a.push(h);});});return a;};
 const anlass=c=>und([...new Set(brHw(c).map(h=>ANL[h.id]||LN[h.id].k||h.n))]);
+// Etappe im Plan: der Anlass oder, ohne Feiertag, was sie ist
+const etName=c=>brHw(c).length?anlass(c):c.f-c.u<=2&&c.f<=4?'Langes Wochenende':'Urlaub am Stück';
 // Urlaubstage als Läufe: „Mo 30.03. – Do 02.04. und Fr 10.04.“
 function uTxt(c){const R=[];c.urlaub.forEach(d=>{const r=R[R.length-1];if(r&&+addD(r[1],1)===+d)r[1]=d;else R.push([d,d]);});
  return und(R.map(([a,b])=>+a===+b?fmt(a):fmt(a)+' – '+fmt(b)));}
@@ -1858,11 +1923,15 @@ function renderStw(){
  const je=`<div class="stw-r">${JE.map(n=>b('je',n,BR.je===n,n===1?'1 Tag':'bis '+n,n===1?'1 Urlaubstag je Brücke':'bis '+n+' Urlaubstage je Brücke')).join('')}</div>`;
  const ur=`<div class="stw-st"><button data-br="urlaub" data-v="-1" aria-label="Ein Urlaubstag weniger, jetzt ${BR.urlaub}"${BR.urlaub<=1?' disabled':''}>−</button><output>${BR.urlaub}</output><button data-br="urlaub" data-v="+1" aria-label="Ein Urlaubstag mehr, jetzt ${BR.urlaub}"${BR.urlaub>=UMAX?' disabled':''}>+</button><span>Tage</span></div>`;
  const zi=`<div class="stw-r">${b('ziel','lohnend',BR.ziel==='lohnend','lohnend','möglichst lohnend: viele freie Tage je Urlaubstag')}${b('ziel','lang',BR.ziel==='lang','lang am Stück','möglichst lang am Stück')}</div>`;
- const ze=`<div class="stw-r">${b('zeit','jahr',BR.zeit==='jahr','Jahr '+S.jahr)}${b('zeit','ab',BR.zeit==='ab','ab heute, 12 Monate')}</div>`;
+ const mo=BR.zeit==='monate'&&BR.monate.length;
+ let ze=`<div class="stw-r">${b('zeit','jahr',BR.zeit==='jahr','Jahr '+S.jahr)}${b('zeit','ab',BR.zeit==='ab','ab heute','ab heute, die nächsten 12 Monate')}${b('zeit','monate',!!mo,'Monate','einzelne Monate '+S.jahr)}</div>`;
+ if(mo){const W=brMonWert(L,S.jahr),mx=Math.max(0,...W.map(v=>v?v.r:0));
+  ze+=`<div class="stw-r stw-m">${MON.map((nm,m)=>{const v=W[m],on=BR.monate.includes(m);
+   return `<button data-br="monat" data-v="${m}" aria-pressed="${on}" aria-label="${nm} ${S.jahr}${v?` – beste Brücke ${nUT(v.u)} für ${v.f} Tage frei`:' – keine Brücke'}"${on&&BR.monate.length===1?' aria-disabled="true"':''}><i${v?` style="height:${Math.round(4+9*v.r/mx)}px"`:' class="o"'}></i>${nm.slice(0,3)}</button>`;}).join('')}</div>`;}
  const regs=brRegs(L),au=`<div class="stw-r">${Object.keys(EXID).map(kk=>`<button class="opt" data-ex="${kk}" aria-pressed="${extras[kk]}">${sig(EXID[kk])}${LN[EXID[kk]].n}</button>`).join('')}${regs.map(id=>{const h=brSpanH(id,L);return `<button class="opt" data-br="auch" data-v="${id}" aria-pressed="${BR.auch.includes(id)}"${h&&h.note?` title="${h.note}"`:''}>${sig(id)}${LN[id].k||LN[id].n}</button>`;}).join('')}</div>`;
- const grund=JSON.stringify(BR)===JSON.stringify(brGrund())&&!exKey();
+ const grund=brNorm(BR)===brNorm(brGrund())&&!exKey();
  $('stw').innerHTML=`<h2 class="stw-h" id="stwh">${ICON.hebel}Stellwerk</h2><p class="stw-p">So arbeiten Sie – der Brückenzug rechnet sofort neu.</p>
- <div class="stw-gs">${g('a','Meine Arbeitstage',days,one?'Mindestens ein Arbeitstag bleibt gestellt.':'')}${g('j','Urlaub je Brücke',je)}${g('u','Urlaubstage für den Plan',ur,'für Wagen 2 und 3')}${g('z','Ziel: möglichst …',zi)}${g('t','Zeitraum',ze)}${g('f','Bei mir auch frei',au,L==='DE'?'Regionale Feiertage: oben ein Land wählen.':regs.length?'':'')}</div>
+ <div class="stw-gs">${g('a','Meine Arbeitstage',days,one?'Mindestens ein Arbeitstag bleibt gestellt.':'')}${g('j','Urlaub je Brücke',je)}${g('u','Urlaubstage für den Plan',ur,'für Wagen 2 und 3')}${g('z','Ziel: möglichst …',zi)}${g('t','Zeitraum',ze,mo?'Balken: die beste Brücke im Monat.':'')}${g('f','Bei mir auch frei',au,L==='DE'?'Regionale Feiertage: oben ein Land wählen.':regs.length?'':'')}</div>
  <button class="stw-0" data-br="reset"${grund?' disabled':''}>↺ Grundstellung</button>`;
 }
 const brSpanH=(id,L)=>{const sp=brSpan();for(let y=sp.von.getFullYear();y<=addD(sp.bis,-1).getFullYear();y++){const h=y>=YMIN&&y<=YMAX?findH(y,id):null;if(h&&h.reg.includes(L))return h;}return null;};
@@ -1886,18 +1955,21 @@ const brYr=(d,sp)=>d.getFullYear()!==sp.von.getFullYear()||sp.ab&&d.getFullYear(
 // Wagen 1: die besten Brücken des Zeitraums als Fahrkarten, mit Varianten
 function renderBr1(){
  const L=S.land,sp=brSpan(),r=brCalc(L),k=brSig()+'|'+[...r.vs].join();if(k===br1Key)return;br1Key=k;
- const el=$('br1'),wann=sp.ab?'ab heute':String(S.jahr),head=kick(1,`Die besten Brücken · ${wann} · ${stName(L)}`);
+ const el=$('br1'),W=brWann(sp),head=kick(1,`Die besten Brücken · ${W.k} · ${stName(L)}`);
  if(sp.ab&&(TY<YMIN||TY>YMAX)){el.innerHTML=head+`<h2 class="ru-h" id="br1h">Für heute liegen keine Daten vor.</h2><p class="ru-p">Die Seite rechnet für die Jahre 1991 bis 2070.</p>`;return;}
  const gone=!sp.ab&&S.jahr===TY,X=r.T.map(t=>{const v=brVar(r,t);return{t,v,ab:gone&&v.urlaub[0]<TODAY};});
  const up=X.filter(x=>!x.ab),list=up.concat(X.filter(x=>x.ab)),n=wpw();
  let h2,ps=[],go='';
- if(!X.length){h2=`${sp.ab?'In den nächsten zwölf Monaten':S.jahr} findet der Zug ${inLand(L)} keine Brücke, die sich lohnt.`;
-  ps.push(`Eine Brücke lohnt, wenn sie mindestens 60 % mehr freie Tage bringt als normaler Urlaub.${BR.je<9?' Mit mehr Urlaub je Brücke finden sich längere.':''}`);
-  if(BR.je<9)go=`<button class="br-go" data-br="je" data-v="9">Bis 9 Urlaubstage je Brücke zulassen</button>`;}
- else if(!up.length){h2=`${S.jahr} sind alle Brücken schon abgefahren.`;ps.push('Ab heute gerechnet geht es weiter – auch über den Jahreswechsel.');
+ // nach Monaten: liegt dort überhaupt ein Feiertag auf einem Arbeitstag?
+ const ft=!sp.M||hol(S.jahr).some(h=>BRK.gilt(h,L,BR.auch)&&BR.arbeit[h.d.getDay()]&&sp.M.includes(h.d.getMonth()));
+ if(!X.length){h2=ft?`${W.S} findet der Zug ${inLand(L)} keine Brücke, die sich lohnt.`:`${W.S} fällt ${inLand(L)} kein Feiertag auf einen Arbeitstag.`;
+  if(ft)ps.push(`Eine Brücke lohnt, wenn sie mindestens 60 % mehr freie Tage bringt als normaler Urlaub.${BR.je<9?' Mit mehr Urlaub je Brücke finden sich längere.':''}`);
+  if(sp.M)ps.push('Ihr Urlaub geht trotzdem: Wagen 2 legt ihn direkt an die Wochenenden.');
+  if(BR.je<9&&ft)go=`<button class="br-go" data-br="je" data-v="9">Bis 9 Urlaubstage je Brücke zulassen</button>`;}
+ else if(!up.length){h2=`${W.S} sind alle Brücken schon abgefahren.`;ps.push('Ab heute gerechnet geht es weiter – auch über den Jahreswechsel.');
   go=`<button class="br-go" data-br="zeit" data-v="ab">Ab heute rechnen</button>`;}
  else{const b=brBest(up.map(x=>x.v));
-  h2=BR.ziel==='lang'?`Am längsten frei ${wann}: ${b.t}.`:`Die ${b.n>1?'besten Brücken':'beste Brücke'} ${wann}: ${b.t}.`;
+  h2=BR.ziel==='lang'?`Am längsten frei ${W.s}: ${b.t}.`:`Die ${b.n>1?'besten Brücken':'beste Brücke'} ${W.s}: ${b.t}.`;
   ps.push(`Jede Fahrkarte nennt links den Einsatz und was er bringt: so viele Urlaubstage, so viele Tage am Stück frei. <b>Gelb</b> sind die Tage, an denen Sie Urlaub nehmen.`);
   ps.push(`${X.length===1?'Sie lohnt':'Alle '+X.length+' lohnen'} sich mehr als normaler Urlaub – der bringt ${de1(r.base)} freie Tage je Urlaubstag, eine Woche 7 für ${n}.${X.length>up.length?` ${X.length-up.length} ${plural(X.length-up.length,'ist','sind')} schon abgefahren.`:''}`);}
  const tk=(x,i)=>{const t=x.t,v=x.v,an=anlass(v),hw=brHw(v),yv=brYr(v.von,sp),yb=brYr(v.bis,sp);
@@ -1909,21 +1981,24 @@ function renderBr1(){
   <p class="tu"><span class="sr">${nUT(v.u)} für ${v.f} Tage frei am Stück. </span>${v.u===1?'Brückentag':'Urlaub'}: <b>${uTxt(v)}</b>${rand}</p>
   <div class="tk-s">${brStrip(v)}</div>${ch}</div></li>`;};
  el.innerHTML=head+`<h2 class="ru-h" id="br1h">${h2}</h2>${ps.map(p=>`<p class="ru-p">${p}</p>`).join('')}${go}
- ${list.length?`<ol class="tix" aria-label="Fahrkarten ${wann}">${list.map(tk).join('')}</ol>`:''}
+ ${list.length?`<ol class="tix" aria-label="Fahrkarten ${W.k}">${list.map(tk).join('')}</ol>`:''}
  <p class="br-as"><span class="k">Gerechnet mit</span><span>${brAnnahmen(L)}</span></p>`;
 }
 // Wagen 2: der Urlaubsplan – Brücken ohne Überschneidung, die mit dem Budget am meisten freie Tage bringen
 function renderBr2(){
  const L=S.land,sp=brSpan(),k=brSig();if(k===br2Key)return;br2Key=k;
- const el=$('br2'),r=brCalc(L),P=brPlan(r),n=BR.urlaub,wann=sp.ab?'ab heute':String(S.jahr);
- const head=kick(2,`Ihr Urlaubsplan · ${wann} · ${stName(L)}`);
- const stp=`<p class="bud"><span id="br2u">Urlaubstage für Brücken</span><span class="stp" role="group" aria-labelledby="br2u"><button data-br="urlaub" data-v="-1" aria-label="Ein Urlaubstag weniger, jetzt ${n}"${n<=1?' disabled':''}>−</button><output>${n}</output><button data-br="urlaub" data-v="+1" aria-label="Ein Urlaubstag mehr, jetzt ${n}"${n>=UMAX?' disabled':''}>+</button></span></p>`;
+ const el=$('br2'),r=brCalc(L),P=brPlan(r),n=BR.urlaub,W=brWann(sp);
+ const head=kick(2,`Ihr Urlaubsplan · ${W.k} · ${stName(L)}`);
+ const stp=`<p class="bud"><span id="br2u">${sp.M?'Urlaubstage für den Plan':'Urlaubstage für Brücken'}</span><span class="stp" role="group" aria-labelledby="br2u"><button data-br="urlaub" data-v="-1" aria-label="Ein Urlaubstag weniger, jetzt ${n}"${n<=1?' disabled':''}>−</button><output>${n}</output><button data-br="urlaub" data-v="+1" aria-label="Ein Urlaubstag mehr, jetzt ${n}"${n>=UMAX?' disabled':''}>+</button></span></p>`;
  if(sp.ab&&(TY<YMIN||TY>YMAX)){el.innerHTML=head+`<h2 class="ru-h" id="br2h">Für heute liegen keine Daten vor.</h2>`;return;}
- const m=P.items.length,left=n-P.u,gone=!sp.ab&&S.jahr===TY;
+ const m=P.items.length,left=n-P.u,gone=!sp.ab&&S.jahr===TY,po=P.items.filter(c=>!brHw(c).length).length;
  let h2,ps=[];
- if(!m){h2=`Mit ${nUTm(n)} findet der Zug ${wann==='ab heute'?'in den nächsten zwölf Monaten':S.jahr} keine Brücke, die sich lohnt.`;}
+ if(!m){h2=`Mit ${nUTm(n)} findet der Zug ${W.i} keine Brücke, die sich lohnt.`;}
  else{h2=`${P.u<n?`Mit ${P.u} von ${n} Urlaubstagen`:`Mit ${nUTm(n)}`} haben Sie <em>${P.f} Tage frei</em> – in ${m} ${plural(m,'Etappe','Etappen')}.`;
-  ps.push(`Das sind ${de1(P.f/P.u)} freie Tage je Urlaubstag; normaler Urlaub bringt ${de1(r.base)}.`+(left?` ${left} ${plural(left,'Urlaubstag bleibt','Urlaubstage bleiben')} übrig${BR.je<9?' – mit mehr Urlaub je Brücke lassen sich längere Brücken einplanen':''}.`:''));
+  const rest=left?` ${left} ${plural(left,'Urlaubstag bleibt','Urlaubstage bleiben')} übrig${BR.je<9?` – mit mehr Urlaub je ${sp.M?'Etappe':'Brücke'} lassen sich längere ${sp.M?'Etappen':'Brücken'} einplanen`:''}.`:'';
+  if(!po)ps.push(`Das sind ${de1(P.f/P.u)} freie Tage je Urlaubstag; normaler Urlaub bringt ${de1(r.base)}.`+rest);
+  else if(po===m)ps.push(`${W.S} hilft ${inLand(L)} kein Feiertag – der Plan legt Ihren Urlaub direkt an die Wochenenden.`+rest);
+  else ps.push(`${po===1?'Eine Etappe kommt':po+' Etappen kommen'} ohne Feiertag aus: Der Urlaub liegt direkt am Wochenende.`+rest);
   const lg=x=>x.items.reduce((a,c)=>Math.max(a,c.f),0),Q=brPlan(r,BR.ziel==='lang'?'lohnend':'lang');
   if(BR.ziel==='lohnend'&&lg(Q)>lg(P))ps.push(`Lieber lange am Stück? Mit dem Ziel „möglichst lang“ sind es bis zu <b>${lg(Q)} Tage am Stück</b>, insgesamt ${Q.f} Tage frei.<br><button class="br-go" data-br="ziel" data-v="lang">Ziel: möglichst lang</button>`);
   else if(BR.ziel==='lang'&&Q.f>P.f)ps.push(`Möglichst lohnend verteilt wären es insgesamt <b>${Q.f} Tage frei</b>, in ${Q.items.length} Etappen – dafür höchstens ${lg(Q)} am Stück.<br><button class="br-go" data-br="ziel" data-v="lohnend">Ziel: möglichst lohnend</button>`);}
@@ -1934,6 +2009,7 @@ function renderBr2(){
  let cal='<span class="jp-m"></span>';for(let d=1;d<=31;d++)cal+=`<span class="jp-h">${d===1||d%5===0?d:''}</span>`;
  const last=addD(sp.bis,-1);
  for(let mo=new Date(sp.von.getFullYear(),sp.von.getMonth(),1);mo<=last;mo=new Date(mo.getFullYear(),mo.getMonth()+1,1)){
+  if(sp.M&&!sp.M.includes(mo.getMonth()))continue;
   const y=mo.getFullYear(),mm=mo.getMonth(),dim=new Date(y,mm+1,0).getDate(),lbl=sp.ab&&(+mo===+new Date(sp.von.getFullYear(),sp.von.getMonth(),1)||mm===0)?`<small>${y}</small>`:'';
   cal+=`<span class="jp-m">${MON[mm].slice(0,3)}${lbl}</span>`;
   for(let dd=1;dd<=31;dd++){
@@ -1944,7 +2020,7 @@ function renderBr2(){
  }
  const showT=TODAY>=sp.von&&TODAY<sp.bis;
  const et=P.items.map((c,i)=>{const yv=brYr(c.von,sp),yb=brYr(c.bis,sp),ab=gone&&c.urlaub[0]<TODAY;
-  return `<li${ab?' class="ab"':''}><span class="etp-n" aria-hidden="true">${i+1}</span><span class="etp-t"><b>${anlass(c)}</b>${ab?' · abgefahren':''}<small>${fmt(c.von)}${yv} – ${fmt(c.bis)}${yb} · Urlaub: ${uTxt(c)}</small></span><b class="etp-c"><span aria-hidden="true"><span class="u">${c.u}</span> → ${c.f}</span><span class="sr">${nUT(c.u)} für ${c.f} Tage frei</span></b></li>`;}).join('');
+  return `<li${ab?' class="ab"':''}><span class="etp-n" aria-hidden="true">${i+1}</span><span class="etp-t"><b>${etName(c)}</b>${brHw(c).length?'':' · ohne Feiertag'}${ab?' · abgefahren':''}<small>${fmt(c.von)}${yv} – ${fmt(c.bis)}${yb} · Urlaub: ${uTxt(c)}</small></span><b class="etp-c"><span aria-hidden="true"><span class="u">${c.u}</span> → ${c.f}</span><span class="sr">${nUT(c.u)} für ${c.f} Tage frei</span></b></li>`;}).join('');
  el.innerHTML=head+`<h2 class="ru-h" id="br2h">${h2}</h2>${stp}${ps.map(p=>`<p class="ru-p">${p}</p>`).join('')}
  <div class="ru-fig jp" aria-hidden="true">${cal}</div>
  <p class="ru-cap"><span><i class="sw u"></i>Urlaub nehmen</span><span><i class="sw"></i>frei am Stück</span><span><i class="sw t"></i>Arbeitstag</span>${showT?'<span><i class="sw nw"></i>heute</span>':''}</p>
@@ -1953,8 +2029,8 @@ function renderBr2(){
 // Wagen 3: die Länder im Vergleich – derselbe Plan mit denselben Einstellungen, je Land gerechnet
 function renderBr3(){
  const L=S.land,sp=brSpan(),k=brSig();if(k===br3Key)return;br3Key=k;
- const el=$('br3'),wann=sp.ab?'ab heute':String(S.jahr),n=BR.urlaub;
- const head=kick(3,`Die Länder im Vergleich · ${wann}`);
+ const el=$('br3'),W=brWann(sp),n=BR.urlaub;
+ const head=kick(3,`Die Länder im Vergleich · ${W.k}`);
  if(sp.ab&&(TY<YMIN||TY>YMAX)){el.innerHTML=head+`<h2 class="ru-h" id="br3h">Für heute liegen keine Daten vor.</h2>`;return;}
  const R=STATES.map(s=>{const p=brPlan(brCalc(s.c));return{s,u:p.u,f:p.f};}).sort((p,q)=>q.f-p.f||p.u-q.u||p.s.n.localeCompare(q.s.n,'de'));
  const mx=R[0].f,mn=R[R.length-1].f,names=v=>R.filter(x=>x.f===v&&x.s.c!==L).map(x=>x.s.n);
@@ -1983,6 +2059,7 @@ function renderBr4(){
   <li>Eine Brücke lohnt, wenn sie mindestens 60 % mehr freie Tage bringt als normaler Urlaub. Der bringt ${de1(base)} Tage je Urlaubstag – eine Woche 7 für ${n}.</li>
   <li>Eine Variante verlängert eine Fahrkarte nur, wenn jeder weitere Urlaubstag mehr bringt als normaler Urlaub.</li>
   <li>Eine Brücke zählt zu dem Jahr, in dem ihr erster Urlaubstag liegt. Die Tage zwischen den Jahren gehören also zum alten Jahr, auch wenn die Brücke bis Neujahr reicht.</li>
+  <li>Mit gewählten Monaten zählt eine Brücke nur, wenn alle ihre Urlaubstage in diesen Monaten liegen. Der Plan nimmt dann auch Urlaub ohne Feiertag dazu – direkt am Wochenende, als langes Wochenende oder am Stück, mit höchstens so vielen Urlaubstagen wie je Brücke eingestellt.</li>
   <li>Der Plan wählt Brücken, die sich nicht überschneiden. „Möglichst lohnend“ holt die meisten freien Tage heraus, „möglichst lang“ bevorzugt lange Strecken am Stück.</li>
   <li>Es zählt das Bundesland, in dem Sie arbeiten. Feiertage, die nur in einzelnen Orten gelten, zählen erst, wenn Sie sie im Stellwerk zuschalten.</li>
   <li>Schulferien, Betriebsferien und Urlaubssperren kennt der Zug nicht – und den Urlaub genehmigt weiter Ihr Arbeitgeber.</li>
@@ -1998,7 +2075,9 @@ function setBr(a,v,t){
   case 'je':{const n=+v;if(!BRV.je(n))return;BR.je=n;break;}
   case 'urlaub':{const n=BR.urlaub+(v==='+1'?1:v==='-1'?-1:0);if(!BRV.urlaub(n)||n===BR.urlaub)return;BR.urlaub=n;break;}
   case 'ziel':if(!BRV.ziel(v))return;BR.ziel=v;break;
-  case 'zeit':if(!BRV.zeit(v))return;BR.zeit=v;if(v==='ab'){S.jahr=clampY(TY);S.fid=null;}break;
+  case 'zeit':if(!BRV.zeit(v))return;BR.zeit=v;if(v==='ab'){S.jahr=clampY(TY);S.fid=null;}if(v==='monate'&&!BR.monate.length)BR.monate=[brMonStart()];break;
+  case 'monat':{const i=+v;if(!Number.isInteger(i)||i<0||i>11)return;const m=new Set(BR.zeit==='monate'?BR.monate:[]);
+   if(m.has(i))m.delete(i);else m.add(i);if(!m.size)return;BR.monate=[...m].sort((x,y)=>x-y);BR.zeit='monate';break;}
   case 'auch':if(!isLine(v))return;BR.auch=BR.auch.includes(v)?BR.auch.filter(x=>x!==v):BR.auch.concat(v);break;
   case 'reset':BR=brGrund();Object.keys(extras).forEach(kk=>{extras[kk]=false;});try{localStorage.setItem('wtf-ex',JSON.stringify(extras));}catch(e){}boardKey='';break;
   default:return;
